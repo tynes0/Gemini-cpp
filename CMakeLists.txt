@@ -7,6 +7,12 @@ set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 
 option(GEMINI_BUILD_EXAMPLES "Build example applications" ON)
 
+file(GLOB_RECURSE GEMINI_SOURCES CONFIGURE_DEPENDS "src/*.cpp")
+file(GLOB_RECURSE GEMINI_HEADERS CONFIGURE_DEPENDS 
+    "include/*.hpp" 
+    "include/*.h"
+)
+
 # If the project is added to someone else's project, let's set the examples to OFF by default.
 if(NOT CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
     set(GEMINI_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
@@ -56,8 +62,9 @@ add_library(frenum INTERFACE)
 target_include_directories(frenum INTERFACE libs/frenum)
 
 # --- MAIN LIBRARY (CORE) ---
-add_library(gemini-core STATIC
-    src/client.cpp
+add_library(gemini-core STATIC 
+    ${GEMINI_SOURCES}
+    ${GEMINI_HEADERS}
 )
 
 add_library(gemini-cpp ALIAS gemini-core)
@@ -65,10 +72,12 @@ add_library(gemini-cpp ALIAS gemini-core)
 target_include_directories(gemini-core PUBLIC include)
 
 target_link_libraries(gemini-core 
-    PRIVATE 
-    cpr::cpr 
+PUBLIC
     nlohmann_json::nlohmann_json
     dtlog 
+
+PRIVATE 
+    cpr::cpr 
     frenum
 )
 

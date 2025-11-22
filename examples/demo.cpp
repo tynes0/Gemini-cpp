@@ -1,20 +1,21 @@
 #include <iostream>
-
 #include "gemini/client.h"
+#include "gemini/logger.h"
 
 int main() {
-    std::setlocale(LC_ALL, "Turkish");
-    
+    GeminiCPP::Log::init();
     GeminiCPP::Client client("AIzaSyCVd7tFJdtLW0kvK0E0TcIfk2IFRDJ4aBA");
 
-    std::cout << "Gemini 2.5 flash test...\n\n\n\n\n\n";
-    auto Response = client.generateContent("What are the technologies of the future?", GeminiCPP::Model::GEMINI_2_5_FLASH);
+    std::cout << "--- Fluent Builder Demo ---\n";
 
-    std::cout << Response << std::endl;
-    
-    auto QuickResponse = client.generateContent("Answer quickly!", "gemini-2.5-flash-lite"); 
+    auto response = client.request()
+          .model(GeminiCPP::Model::GEMINI_2_5_FLASH)
+          .systemInstruction("Sen profesyonel bir sanat elestirmenisin. Asiri detayli ve teknik konus.")
+          .text("Bu resimdeki kompozisyonu elestir.")
+          .image(R"(C:\Users\cihan\Desktop\portrait.jpg)") 
+          .generate();
 
-    std::cout << "\n\n\n\n\n\n" << QuickResponse;
-    
+    std::cout << "Elestirmen:\n" << response << std::endl;
+
     return 0;
 }

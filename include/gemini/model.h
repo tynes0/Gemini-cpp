@@ -4,12 +4,13 @@
 #define GEMINI_MODEL_H
 
 #include <cstdint>
+#include <string_view>
 
 namespace GeminiCPP
 {
     enum class Model :  uint8_t
     {
-        GEMINI_1_O_PRO,
+        GEMINI_1_0_PRO,
         GEMINI_1_5_FLASH,
         GEMINI_1_5_PRO,
         GEMINI_2_0_FLASH,
@@ -31,7 +32,7 @@ namespace GeminiCPP
     {
         switch (model)
         {
-        case Model::GEMINI_1_O_PRO:                 return "gemini-1.0-pro";
+        case Model::GEMINI_1_0_PRO:                 return "gemini-1.0-pro";
         case Model::GEMINI_1_5_FLASH:               return "gemini-1.5-flash";
         case Model::GEMINI_1_5_PRO:                 return "gemini-1.5-pro";
         case Model::GEMINI_2_0_FLASH:               return "gemini-2.0-flash";
