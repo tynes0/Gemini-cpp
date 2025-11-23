@@ -77,6 +77,18 @@ namespace GeminiCPP
         return ret;
     }
 
+    std::string Utils::mimeToExtension(const std::string& mimeType)
+    {
+        if (mimeType == "image/jpeg") return ".jpg";
+        if (mimeType == "image/png")  return ".png";
+        if (mimeType == "image/webp") return ".webp";
+        if (mimeType == "application/pdf") return ".pdf";
+        if (mimeType == "text/plain") return ".txt";
+        if (mimeType == "application/json") return ".json";
+    
+        return ".bin";
+    }
+
     // Standard base64 encode algorithm
     std::string Utils::base64Encode(const std::vector<unsigned char>& data)
     {

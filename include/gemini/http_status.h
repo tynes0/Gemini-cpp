@@ -4,10 +4,11 @@
 #define GEMINI_HTTP_STATUS_H
 
 #include <string_view>
-#include <frenum.h>
+#include "frenum.h"
 
 namespace GeminiCPP
 {
+    // These are generally codes filtered according to need. They don't include everything. I didn't think we'd need them.
     FrenumClassInNamespace(GeminiCPP, HttpStatusCode, int,
         OK = 200,
         CREATED = 201,
@@ -30,17 +31,17 @@ namespace GeminiCPP
     class HttpStatusHelper
     {
     public:
-        static constexpr bool isSuccess(HttpStatusCode code)
+        [[nodiscard]] static constexpr bool isSuccess(HttpStatusCode code)
         {
             return frenum::value(code) >= 200 && frenum::value(code) < 300;
         }
 
-        static constexpr bool isSuccess(int code)
+        [[nodiscard]] static constexpr bool isSuccess(int code)
         {
             return code >= 200 && code < 300;
         }
 
-        static constexpr std::string_view toString(HttpStatusCode code)
+        [[nodiscard]] static constexpr std::string_view toString(HttpStatusCode code)
         {
             return frenum::to_string_view<HttpStatusCode>(code);
         }

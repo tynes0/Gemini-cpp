@@ -23,12 +23,31 @@ namespace GeminiCPP
         RequestBuilder& text(const std::string& t);
         RequestBuilder& image(const std::string& filepath);
 
-        GenerationResult generate() const;
+        // --- GENERATION CONFIG METHODS ---
+        RequestBuilder& jsonMode();
+        RequestBuilder& temperature(float temp);
+        RequestBuilder& topP(float p);
+        RequestBuilder& topK(int k);
+        RequestBuilder& maxTokens(int count);
+        RequestBuilder& candidateCount(int count);
+        RequestBuilder& stopSequences(const std::vector<std::string>& sequences);
+        RequestBuilder& responseSchema(const nlohmann::json& schema);
+        RequestBuilder& seed(int64_t seedValue);
+        
+        RequestBuilder& safety(HarmCategory category, HarmBlockThreshold threshold);
+
+        RequestBuilder& tool(const Tool& tool);
+
+        [[nodiscard]] GenerationResult generate() const;
+        [[nodiscard]] GenerationResult stream(const StreamCallback& callback) const;
 
     private:
         Client* client_;
         Model model_ = Model::GEMINI_2_5_FLASH;
         std::string systemInstruction_;
+        GenerationConfig config_;
+        std::vector<SafetySetting> safetySettings_;
+        std::vector<Tool> tools_;
         std::vector<Part> parts_;
     };
 

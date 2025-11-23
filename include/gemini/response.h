@@ -4,7 +4,9 @@
 #define GEMINI_RESPONSE_H
 
 #include <string>
+#include <filesystem>
 
+#include <nlohmann/json.hpp>
 #include "http_status.h"
 #include "types.h"
 
@@ -16,53 +18,26 @@ namespace GeminiCPP
         Content content;
         std::string errorMessage;
         HttpStatusCode statusCode = HttpStatusCode::UNKNOWN;
+        FinishReason finishReason = FinishReason::FINISH_REASON_UNSPECIFIED;
         
-        // TODO: token usage 
-        // int inputTokens = 0;
-        // int outputTokens = 0;
+        int inputTokens = 0;
+        int outputTokens = 0;
+        int totalTokens = 0;
 
-        [[nodiscard]] std::string text() const
-        {
-            std::string fullText;
-            for (const auto& part : content.parts)
-            {
-                if (part.isText())
-                {
-                    fullText += part.text;
-                }
-            }
-            return fullText;
-        }
+        [[nodiscard]] std::string text() const;
 
-        bool saveImage(const std::string& filename) const
-        {
-            for (const auto& part : content.parts)
-            {
-                if (part.isBlob())
-                {
-                    auto data = Utils::base64Decode(part.inlineData);
-                    std::ofstream file(filename, std::ios::binary);
-                    if (file.is_open())
-                    {
-                        file.write(reinterpret_cast<const char*>(data.data()), static_cast<std::streamsize>(data.size()));
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
+        bool saveFile(const std::string& filepath, size_t blobIndex = 0) const;
+        int saveAllFiles(const std::string& directory, const std::string& prefix = "output") const;
 
-        [[nodiscard]] static GenerationResult Success(Content c, int code = 200)
-        {
-            return {true, std::move(c), "", static_cast<HttpStatusCode>(code)};
-        }
-
-        [[nodiscard]] static GenerationResult Failure(std::string err, int code = 0)
-        {
-            return {false, Content{}, std::move(err), static_cast<HttpStatusCode>(code)};
-        }
+        [[nodiscard]] static GenerationResult Success(Content c, int code = frenum::value(HttpStatusCode::OK),
+            int inTok = 0, int outTok = 0, FinishReason reason = FinishReason::STOP);
+        [[nodiscard]] static GenerationResult Failure(std::string err,
+            int code = frenum::value(HttpStatusCode::UNKNOWN), FinishReason reason = FinishReason::OTHER);
 
         [[nodiscard]] explicit operator bool() const { return success; }
+        
+        [[nodiscard]] std::optional<nlohmann::json> asJson() const;
+
     };
 }
 

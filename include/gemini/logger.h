@@ -13,7 +13,7 @@ namespace GeminiCPP
     public:
         static void init();
 
-        static std::shared_ptr<dtlog::logger<>> getLogger();
+        [[nodiscard]] static std::shared_ptr<dtlog::logger<>> getLogger();
 
     private:
         // Singleton instance

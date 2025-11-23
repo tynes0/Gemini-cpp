@@ -14,12 +14,13 @@ namespace GeminiCPP
     class Utils
     {
     public:
-        static std::string fileToBase64(const std::string& filepath);
-        static std::string getMimeType(const std::string& filepath);
-        static std::vector<unsigned char> base64Decode(const std::string& encoded_string);
+        [[nodiscard]] static std::string fileToBase64(const std::string& filepath);
+        [[nodiscard]] static std::string getMimeType(const std::string& filepath);
+        [[nodiscard]] static std::vector<unsigned char> base64Decode(const std::string& encoded_string);
+        [[nodiscard]] static std::string mimeToExtension(const std::string& mimeType);
 
     private:
-        static std::string base64Encode(const std::vector<unsigned char>& data);
+        [[nodiscard]] static std::string base64Encode(const std::vector<unsigned char>& data);
     };
 }
 #endif

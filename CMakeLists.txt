@@ -75,10 +75,10 @@ target_link_libraries(gemini-core
 PUBLIC
     nlohmann_json::nlohmann_json
     dtlog 
+    frenum
 
 PRIVATE 
     cpr::cpr 
-    frenum
 )
 
 # --- EXAMPLES (Compiles only if GEMINI_BUILD_EXAMPLES is enabled) ---
