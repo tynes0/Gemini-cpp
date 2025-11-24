@@ -3,14 +3,20 @@
 #include <nlohmann/json.hpp>
 
 #include "gemini/uuid.h"
+#include "gemini/logger.h"
 #include "internal/payload_builder.h"
 
 namespace GeminiCPP
 {
-    ChatSession::ChatSession(Client* client, Model model, std::string systemInstruction, std::string sessionId)
-        : client_(client), model_(model), systemInstruction_(std::move(systemInstruction))
+    ChatSession::ChatSession(Client* client, Model model, std::string sessionName, std::string systemInstruction, std::string sessionId)
+        : client_(client), model_(modelStringRepresentation(model)), sessionName_(std::move(sessionName)), systemInstruction_(std::move(systemInstruction))
     {
         sessionId_ = sessionId.empty() ? Uuid::generate() : std::move(sessionId);
+    }
+
+    ChatSession::ChatSession(Client* client, std::string_view model, std::string sessionName, std::string systemInstruction, std::string sessionId)
+        : client_(client), model_(model), sessionName_(std::move(sessionName)), systemInstruction_(std::move(systemInstruction))
+    {
     }
 
     ChatSession::ChatSession(const ChatSession& other)
@@ -18,7 +24,20 @@ namespace GeminiCPP
         systemInstruction_(other.systemInstruction_), history_(other.history_), tools_(other.tools_)
     {
     }
-    
+
+    ChatSession& ChatSession::operator=(const ChatSession& other)
+    {
+        if (std::addressof(other) == this)
+            return *this;
+        client_ = other.client_;
+        model_ = other.model_;
+        sessionName_ = other.sessionName_;
+        systemInstruction_ = other.systemInstruction_;
+        history_ = other.history_;
+        tools_ = other.tools_;
+        return *this;
+    }
+
     GenerationResult ChatSession::send(const Content& content)
     {
         {
@@ -48,6 +67,44 @@ namespace GeminiCPP
         return stream(Content::User().text(text), callback);
     }
 
+    void ChatSession::setModel(Model model)
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        model_ = modelStringRepresentation(model);
+    }
+
+    void ChatSession::setModel(std::string_view model)
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        model_ = model;
+    }
+
+    void ChatSession::setSystemInstruction(std::string systemInstruction)
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        systemInstruction_ = std::move(systemInstruction);
+    }
+
+    void ChatSession::setSessionName(std::string sessionName)
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        sessionName_ = std::move(sessionName);
+    }
+
+    void ChatSession::setConfig(const GenerationConfig& config)
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        config_ = config;
+    }
+
+    GenerationConfig& ChatSession::config()
+    {
+        // Warning: This method cannot be protected with a mutex because it returns a reference.
+        // Once the user receives this reference, they are responsible for thread-safety.
+        // However, config settings are usually made outside the chat flow.
+        return config_;
+    }
+
     void ChatSession::addTool(const Tool& tool)
     {
         std::lock_guard<std::mutex> lock(mutex_);
@@ -60,16 +117,28 @@ namespace GeminiCPP
         tools_ = tools;
     }
 
-    void ChatSession::changeModel(Model model)
+    void ChatSession::clearTools()
     {
         std::lock_guard<std::mutex> lock(mutex_);
-        model_ = model;
+        tools_.clear();
     }
 
-    void ChatSession::changeSystemInstruction(std::string systemInstruction)
+    void ChatSession::setSafetySettings(const std::vector<SafetySetting>& settings)
     {
         std::lock_guard<std::mutex> lock(mutex_);
-        systemInstruction_ = std::move(systemInstruction);
+        safetySettings_ = settings;
+    }
+
+    void ChatSession::addSafetySetting(HarmCategory category, HarmBlockThreshold threshold)
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        safetySettings_.emplace_back(category, threshold);
+    }
+
+    void ChatSession::clearSafetySettings()
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        safetySettings_.clear();
     }
 
     void ChatSession::clearHistory()
@@ -78,7 +147,7 @@ namespace GeminiCPP
         history_.clear();
     }
 
-    const std::vector<Content>& ChatSession::history() const
+    std::vector<Content> ChatSession::history() const
     {
         std::lock_guard<std::mutex> lock(mutex_);
         return history_;
@@ -89,12 +158,18 @@ namespace GeminiCPP
         return sessionId_;
     }
 
+    std::string ChatSession::getName() const
+    {
+        return sessionName_;
+    }
+
     nlohmann::json ChatSession::toJson() const
     {
         std::lock_guard<std::mutex> lock(mutex_);
         nlohmann::json j;
         j["id"] = sessionId_;
-        j["model"] = modelStringRepresentation(model_);
+        j["name"] = sessionName_;
+        j["model"] = model_;
         j["systemInstruction"] = systemInstruction_;
         
         nlohmann::json histArr = nlohmann::json::array();
@@ -108,12 +183,20 @@ namespace GeminiCPP
 
     ChatSession ChatSession::fromJson(Client* client, const nlohmann::json& j)
     {
-        Model m = modelFromStringRepresentation(j["model"]);
+        std::string modelName = j.value("model", "gemini-2.5-flash");
 
-        ChatSession session(client, m, j.value("systemInstruction", ""), j.value("id", ""));
+        ChatSession session(
+            client,
+            modelName,
+            j.value("name", ""),
+            j.value("systemInstruction", ""),
+            j.value("id", "")
+        );
         
-        if(j.contains("history")) {
-            for(const auto& item : j["history"]) {
+        if(j.contains("history"))
+        {
+            for(const auto& item : j["history"])
+            {
                 session.history_.push_back(Content::fromJson(item));
             }
         }
@@ -130,20 +213,19 @@ namespace GeminiCPP
         }
 
         nlohmann::json payload;
-        std::string url;
+        Url url;
         {
             std::lock_guard<std::mutex> lock(mutex_);
             
             payload = Internal::PayloadBuilder::build(
                 history_, 
                 systemInstruction_, 
-                {},
-                {},
+                config_,
+                safetySettings_,
                 tools_
             );
-            
-            url = "https://generativelanguage.googleapis.com/v1beta/models/"
-            + std::string(modelStringRepresentation(model_)) + ":generateContent";
+
+            url = Url(ModelName(model_), ":generateContent");
         }
 
         auto result = client_->submitRequest(url, payload);
@@ -165,11 +247,17 @@ namespace GeminiCPP
         nlohmann::json payload;
         {
             std::lock_guard<std::mutex> lock(mutex_);
-            payload = Internal::PayloadBuilder::build(history_, systemInstruction_);
+            payload = Internal::PayloadBuilder::build(
+                history_, 
+                systemInstruction_, 
+                config_, 
+                safetySettings_, 
+                tools_
+            );
         }
         
-        std::string url = "https://generativelanguage.googleapis.com/v1beta/models/"
-            + std::string(modelStringRepresentation(model_)) + ":streamGenerateContent?alt=sse";
+        Url url(ModelName(model_), ":streamGenerateContent");
+        url.addQuery("alt", "sse");
 
         GenerationResult result = client_->submitStreamRequest(url, payload, callback);
 

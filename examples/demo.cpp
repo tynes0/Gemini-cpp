@@ -1,19 +1,24 @@
 #include <iostream>
+#include <vector>
+#include <string>
 
 #include "gemini/client.h"
 #include "gemini/logger.h"
 
+// Windows için UTF-8 ayarı
 #ifdef _WIN32
 #include <windows.h>
 #endif
+
 
 int main() {
     #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
     #endif
+    
     GeminiCPP::Log::init();
-    GeminiCPP::Client client("API_KEY");
 
+    std::string apiKey = std::getenv("GEMINI_API_KEY") ? std::getenv("GEMINI_API_KEY") : "";
 
-    return 0;
+    GeminiCPP::Client client(apiKey);
 }

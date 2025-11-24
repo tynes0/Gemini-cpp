@@ -31,7 +31,11 @@ namespace GeminiCPP::Internal
                 };
             }
 
-            payload["generationConfig"] = config.toJson();
+            auto configJson = config.toJson();
+            if (!configJson.empty())
+            {
+                payload["generationConfig"] = configJson;
+            }
 
             if (!safetySettings.empty())
                 {
@@ -53,6 +57,36 @@ namespace GeminiCPP::Internal
             }
 
             return payload;
+        }
+
+        static nlohmann::json buildEmbedContent(
+            const Content& content,
+            const std::string& modelStr,
+            const EmbedConfig& config
+        )
+        {
+            nlohmann::json payload = config.toJson();
+            payload["content"] = content.toJson();
+            payload["model"] = modelStr;
+            return payload;
+        }
+
+        static nlohmann::json buildBatchEmbedContent(
+            const std::vector<std::string>& texts,
+            const std::string& modelStr,
+            const EmbedConfig& config
+        )
+        {
+            nlohmann::json requests = nlohmann::json::array();
+            
+            for(const auto& txt : texts)
+            {
+                nlohmann::json req = config.toJson();
+                req["content"] = Content::User().text(txt).toJson();
+                req["model"] = modelStr;
+                requests.push_back(req);
+            }
+            return { {"requests", requests} };
         }
     };
 

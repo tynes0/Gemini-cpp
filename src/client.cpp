@@ -10,6 +10,50 @@
 
 namespace GeminiCPP
 {
+    namespace 
+    {
+        template <typename ResponseStruct>
+        Result<ResponseStruct> ResponseHelper(const Url& url, const std::string& api_key, const nlohmann::json& payload)
+        {
+            cpr::Response r = cpr::Post(
+            cpr::Url{url},
+            cpr::Header{
+                {"Content-Type", "application/json"},
+                {"x-goog-api-key", api_key}},
+            cpr::Body{payload.dump()},
+            cpr::VerifySsl(false)
+        );
+
+            if (!HttpStatusHelper::isSuccess(r.status_code))
+            {
+                std::string errorMsg = r.text;
+                try
+                {
+                    auto jsonErr = nlohmann::json::parse(r.text);
+                    if(jsonErr.contains("error"))
+                        errorMsg = jsonErr["error"]["message"].get<std::string>();
+                }
+                catch(const std::exception& e)
+                {
+                    GEMINI_WARN("Error message parsing failed! ({})", e.what());
+                }
+    
+                GEMINI_ERROR("Response Error [{}]: {}", r.status_code, errorMsg);
+                
+                return Result<ResponseStruct>::Failure(errorMsg, r.status_code);
+            }
+            try
+            {
+                return Result<ResponseStruct>::Success(ResponseStruct::fromJson(nlohmann::json::parse(r.text)), r.status_code);
+            }
+            catch (const std::exception& e)
+            {
+                GEMINI_ERROR("Response Parse Error: {}", e.what());
+                return Result<ResponseStruct>::Failure(std::string("Parse Error: ") + e.what(), r.status_code);
+            }
+        }
+    }
+    
     Client::Client(std::string api_key) : api_key_(std::move(api_key)) {}
 
     RequestBuilder Client::request()
@@ -17,48 +61,108 @@ namespace GeminiCPP
         return RequestBuilder(this);
     }
 
-    ChatSession Client::startChat(Model model, std::string systemInstruction)
+    ChatSession Client::startChat(Model model, std::string sessionName, std::string systemInstruction)
     {
-        return { this, model, std::move(systemInstruction) };
+        return { this, model, std::move(sessionName), std::move(systemInstruction) };
     }
-    
-    GenerationResult Client::generateContent(const std::string& prompt, std::string_view model_id)
-    {
-        std::string url = "https://generativelanguage.googleapis.com/v1beta/models/" + std::string(model_id) + ":generateContent";
 
-        nlohmann::json payload = {
-            {"contents", {{
-                {"parts", {{{"text", prompt}}}}
-            }}}
-        };
+    ChatSession Client::startChat(std::string_view model, std::string sessionName, std::string systemInstruction)
+    {
+        return { this, model, std::move(sessionName), std::move(systemInstruction) };
+    }
+
+    GenerationResult Client::generateContent(const std::string& prompt, std::string_view model_id,
+                                             const GenerationConfig& config, const std::vector<SafetySetting>& safetySettings)
+    {
+        nlohmann::json payload = Internal::PayloadBuilder::build(
+            { Content::User().text(prompt) },
+            "",                               // System Instruction
+            config,                           // Config
+            safetySettings                    // Safety
+        );
+        
+        Url url(ModelName(model_id), ":generateContent");
 
         return submitRequest(url, payload);
     }
 
-    GenerationResult Client::generateContent(const std::string& prompt, Model model)
+    GenerationResult Client::generateContent(const std::string& prompt, Model model,
+        const GenerationConfig& config, const std::vector<SafetySetting>& safetySettings)
     {
-        return generateContent(prompt, modelStringRepresentation(model));
+        return generateContent(prompt, modelStringRepresentation(model), config, safetySettings);
     }
 
-    GenerationResult Client::streamGenerateContent(const std::string& prompt, const StreamCallback& callback, std::string_view model_id)
+    GenerationResult Client::streamGenerateContent(const std::string& prompt, const StreamCallback& callback,
+        std::string_view model_id, const GenerationConfig& config, const std::vector<SafetySetting>& safetySettings)
     {
-        return GenerationResult();
+        nlohmann::json payload = Internal::PayloadBuilder::build(
+            { Content::User().text(prompt) },
+            "",
+            config,
+            safetySettings
+        );
+        
+        Url url(ModelName(model_id), ":streamGenerateContent");
+        url.addQuery("alt", "sse");
+        
+        return submitStreamRequest(url, payload, callback);
     }
 
-    GenerationResult Client::streamGenerateContent(const std::string& prompt, const StreamCallback& callback, Model model)
+    GenerationResult Client::streamGenerateContent(const std::string& prompt, const StreamCallback& callback,
+        Model model, const GenerationConfig& config, const std::vector<SafetySetting>& safetySettings)
     {
-        return streamFromBuilder(model, "", {Part::Text(prompt)}, {}, {}, callback);
+        return streamGenerateContent(prompt, callback, modelStringRepresentation(model), config, safetySettings);
     }
 
-    std::optional<ModelInfo> Client::getModelInfo(std::string_view model_id)
+    Result<ModelInfo> Client::getModelInfo(Model model)
     {
-        std::string modelStr(model_id);
-        if (modelStr.find("models/") == std::string::npos)
+        return getModelInfo(modelStringRepresentation(model));
+    }
+
+    Result<ModelInfo> Client::getModelInfo(std::string_view model_id)
+    {
+        Url url{ ModelName(model_id) };
+        
+        cpr::Response r = cpr::Get(
+            cpr::Url{url},
+            cpr::Header{
+                {"x-goog-api-key", api_key_}
+            },
+            cpr::VerifySsl(false)
+        );
+
+        if (!HttpStatusHelper::isSuccess(r.status_code))
         {
-            modelStr = "models/" + modelStr;
+            std::string errorMsg = r.text;
+            try
+            {
+                auto jsonErr = nlohmann::json::parse(r.text);
+                if(jsonErr.contains("error"))
+                    errorMsg = jsonErr["error"]["message"].value("message", r.text);
+            }
+            catch(const std::exception& e)
+            {
+                GEMINI_WARN("Error message parsing failed! ({})", e.what());
+            }
+            GEMINI_ERROR("Model Info Error [{}]: {}", r.status_code, errorMsg);
+            
+            return Result<ModelInfo>::Failure(errorMsg, r.status_code);
         }
 
-        std::string url = "https://generativelanguage.googleapis.com/v1beta/" + modelStr;
+        try
+        {
+            return Result<ModelInfo>::Success(ModelInfo::fromJson(nlohmann::json::parse(r.text)));
+        }
+        catch (const std::exception& e)
+        {
+            GEMINI_ERROR("Model Info Parse Error: {}", e.what());
+            return Result<ModelInfo>::Failure(std::string("Parse Error: ") + e.what());
+        }
+    }
+
+    Result<std::vector<ModelInfo>> Client::listModels()
+    {
+        Url url(std::string_view("models"));
 
         cpr::Response r = cpr::Get(
             cpr::Url{url},
@@ -70,28 +174,167 @@ namespace GeminiCPP
 
         if (!HttpStatusHelper::isSuccess(r.status_code))
         {
-            GEMINI_ERROR("Model Info Error [{}]: {}", r.status_code, r.text);
-            return std::nullopt;
+            std::string errorMsg = r.text;
+            try
+            {
+                auto jsonErr = nlohmann::json::parse(r.text);
+                if(jsonErr.contains("error"))
+                    errorMsg = jsonErr["error"]["message"].value("message", r.text);
+            }
+            catch(const std::exception& e)
+            {
+                GEMINI_WARN("Error message parsing failed! ({})", e.what());
+            }
+            GEMINI_ERROR("ListModels Error [{}]: {}", r.status_code, errorMsg);
+            return Result<std::vector<ModelInfo>>::Failure(errorMsg, r.status_code);
         }
 
         try
         {
+            std::vector<ModelInfo> models;
+            
             auto json = nlohmann::json::parse(r.text);
-            return ModelInfo::fromJson(json);
+            if (json.contains("models") && json["models"].is_array())
+            {
+                for (const auto& item : json["models"])
+                {
+                    models.push_back(ModelInfo::fromJson(item));
+                }
+            }
+            return Result<std::vector<ModelInfo>>::Success(models);
         }
         catch (const std::exception& e)
         {
-            GEMINI_ERROR("Model Info Parse Error: {}", e.what());
-            return std::nullopt;
+            GEMINI_ERROR("ListModels Parse Error: {}", e.what());
+            return Result<std::vector<ModelInfo>>::Failure(std::string("Parse Error: ") + e.what());
         }
     }
 
-    std::optional<ModelInfo> Client::getModelInfo(Model model)
+    ApiValidationResult Client::verifyApiKey()
     {
-        return getModelInfo(modelStringRepresentation(model));
+        // Lightest endpoint: List models
+        Url url(std::string_view("models"));
+
+        cpr::Response r = cpr::Get(
+            cpr::Url{url},
+            cpr::Header{
+                {"x-goog-api-key", api_key_}
+            },
+            cpr::VerifySsl(false)
+        );
+
+        ApiValidationResult result;
+        result.statusCode = static_cast<HttpStatusCode>(r.status_code);
+        if (HttpStatusHelper::isSuccess(r.status_code))
+        {
+            result.isValid = true;
+            result.message = "API Key is valid. Connection successful.";
+            result.reason = "OK";
+            result.statusCode = HttpStatusCode::OK;
+            return result;
+        }
+
+        result.isValid = false;
+        result.message = "Connection failed.";
+        result.reason = "UNKNOWN";
+
+        try
+        {
+            auto jsonErr = nlohmann::json::parse(r.text);
+            if (jsonErr.contains("error"))
+            {
+                auto errorObj = jsonErr["error"];
+                result.message = errorObj.value("message", "Unknown Error");
+                result.reason = errorObj.value("status", "UNKNOWN_STATUS");
+                
+                if (errorObj.contains("details") && !errorObj["details"].empty())
+                {
+                    auto firstDetail = errorObj["details"][0];
+                    if (firstDetail.contains("reason"))
+                    {
+                        result.reason = firstDetail["reason"].get<std::string>();
+                    }
+                }
+            }
+        }
+        catch (...)
+        {
+            result.message = "Raw response: " + r.text;
+        }
+        
+        return result;
     }
 
-    GenerationResult Client::submitRequest(const std::string& url, const nlohmann::json& payload)
+    Result<EmbedContentResponse> Client::embedContent(std::string_view model, const std::string& text,
+        const EmbedConfig& config)
+    {
+        ModelName modelName(model);
+        Url url(modelName, ":embedContent");
+
+        nlohmann::json payload = Internal::PayloadBuilder::buildEmbedContent(
+            Content::User().text(text), 
+            modelName, 
+            config
+        );
+
+        return ResponseHelper<EmbedContentResponse>(url, api_key_, payload);
+    }
+
+    Result<EmbedContentResponse> Client::embedContent(Model model, const std::string& text, const EmbedConfig& config)
+    {
+        return embedContent(std::string(modelStringRepresentation(model)), text, config);
+    }
+
+    Result<BatchEmbedContentsResponse> Client::batchEmbedContents(std::string_view model,
+        const std::vector<std::string>& texts, const EmbedConfig& config)
+    {
+        ModelName modelName(model);
+        Url url(modelName, ":batchEmbedContents");
+        
+        nlohmann::json payload = Internal::PayloadBuilder::buildBatchEmbedContent(texts, modelName, config);
+
+        return ResponseHelper<BatchEmbedContentsResponse>(url, api_key_, payload);
+    }
+
+    Result<BatchEmbedContentsResponse> Client::batchEmbedContents(Model model,
+        const std::vector<std::string>& texts, const EmbedConfig& config)
+    {
+        return batchEmbedContents(std::string(modelStringRepresentation(model)), texts, config);
+    }
+
+    Result<TokenCountResponse> Client::countTokens(std::string_view model, const std::vector<Content>& contents,
+        const std::string& systemInstruction, const std::vector<Tool>& tools)
+    {
+        Url url(ModelName(model), ":countTokens");
+
+        nlohmann::json payload = Internal::PayloadBuilder::build(
+            contents, 
+            systemInstruction, 
+            {}, // Config (insignificant)
+            {}, // Safety (insignificant)
+            tools
+        );
+
+        return ResponseHelper<TokenCountResponse>(url, api_key_, payload);
+    }
+
+    Result<TokenCountResponse> Client::countTokens(Model model, const std::vector<Content>& contents,
+        const std::string& systemInstruction, const std::vector<Tool>& tools)
+    {
+        return countTokens(modelStringRepresentation(model), contents, systemInstruction, tools);
+    }
+
+    Result<TokenCountResponse> Client::countTokens(std::string_view model, const std::string& text)
+    {
+        return countTokens(model, {Content::User().text(text)});
+    }
+
+    Result<TokenCountResponse> Client::countTokens(Model model, const std::string& text)
+    {
+        return countTokens(model, {Content::User().text(text)});
+    }
+
+    GenerationResult Client::submitRequest(const Url& url, const nlohmann::json& payload)
     {
         cpr::Response r = cpr::Post(
             cpr::Url{url},
@@ -109,11 +352,11 @@ namespace GeminiCPP
             {
                 auto jsonErr = nlohmann::json::parse(r.text);
                 if(jsonErr.contains("error"))
-                    errorMsg = jsonErr["error"]["message"].get<std::string>();
+                    errorMsg = jsonErr["error"]["message"].value("message", r.text);
             }
-            catch(...)
+            catch(const std::exception& e)
             {
-                GEMINI_ERROR("Error message parsing failed!");
+                GEMINI_WARN("Error message parsing failed! ({})", e.what());
             }
     
             GEMINI_ERROR("API Error [{}]: {}", r.status_code, errorMsg);
@@ -167,8 +410,16 @@ namespace GeminiCPP
                     inTok = usage.value("promptTokenCount", 0);
                     outTok = usage.value("candidatesTokenCount", 0);
                 }
-                 
-                return GenerationResult::Success(content, r.status_code, inTok, outTok, reason);
+
+                std::optional<GroundingMetadata> grounding = std::nullopt;
+                if (candidate.contains("groundingMetadata"))
+                {
+                    grounding = GroundingMetadata::fromJson(candidate["groundingMetadata"]);
+                }
+                // Sometimes the groundingMetadata may not be in the candidate but at the root level (depending on the API version).
+                // But generally, it's in the candidate. If it's not in the root, we look at the candidate anyway.
+                
+                return GenerationResult::Success(content, r.status_code, inTok, outTok, reason, grounding);
             }
             
             return GenerationResult::Failure("Candidate has no content", frenum::value(HttpStatusCode::OK), reason);
@@ -186,7 +437,6 @@ namespace GeminiCPP
         Content userContent = Content::User();
         userContent.parts = parts; 
         
-        // PayloadBuilder ile tek satırda JSON oluştur!
         nlohmann::json payload = Internal::PayloadBuilder::build(
             {userContent},
             sys_instr, 
@@ -195,13 +445,12 @@ namespace GeminiCPP
             tools
         );
 
-        std::string url = "https://generativelanguage.googleapis.com/v1beta/models/"
-        + std::string(modelStringRepresentation(model)) + ":generateContent";
+        Url url(ModelName(modelStringRepresentation(model)), ":generateContent");
 
         return submitRequest(url, payload);
     }
 
-    GenerationResult Client::submitStreamRequest(const std::string& url, const nlohmann::json& payload, const StreamCallback& callback)
+    GenerationResult Client::submitStreamRequest(const Url& url, const nlohmann::json& payload, const StreamCallback& callback)
     {
         std::string fullTextAccumulator;
         std::string buffer;
@@ -211,7 +460,6 @@ namespace GeminiCPP
         auto write_func = [&](std::string data, intptr_t userdata) -> bool
         {
             (void)userdata;
-            
             buffer += data;
 
             while (true)
@@ -236,9 +484,7 @@ namespace GeminiCPP
                 }
 
                 if (endPos == std::string::npos)
-                {
                     break;
-                }
 
                 size_t jsonStart = startPos + 5;
                 std::string jsonStr = buffer.substr(jsonStart, endPos - jsonStart);
@@ -248,7 +494,8 @@ namespace GeminiCPP
                 if (!jsonStr.empty() && jsonStr.front() == ' ') 
                     jsonStr.erase(0, 1);
 
-                if (jsonStr.empty()) continue;
+                if (jsonStr.empty())
+                    continue;
 
                 try
                 {
@@ -281,7 +528,7 @@ namespace GeminiCPP
                 }
                 catch (const std::exception& e)
                 {
-                    GEMINI_ERROR("Stream JSON Parse Error: {} \nWrong JSON: {}", e.what(), jsonStr);
+                    GEMINI_WARN("Stream JSON Parse Error: {} \nWrong JSON: {}", e.what(), jsonStr);
                 }
             }
             return true;
@@ -301,11 +548,16 @@ namespace GeminiCPP
         if (!HttpStatusHelper::isSuccess(r.status_code))
         {
             std::string errDetails = r.text;
-            try {
+            try
+            {
                 auto jErr = nlohmann::json::parse(r.text);
                 if (jErr.contains("error")) 
-                    errDetails = jErr["error"]["message"].get<std::string>();
-            } catch(...) {}
+                    errDetails = jErr["error"]["message"].value("message", r.text);
+            }
+            catch(const std::exception& e)
+            {
+                GEMINI_WARN("Stream API Error detail parsing failed. ({})", e.what());
+            }
             
             GEMINI_ERROR("Stream API Error [{}]: {}", r.status_code, errDetails);
             return GenerationResult::Failure(errDetails, r.status_code);
@@ -330,8 +582,8 @@ namespace GeminiCPP
             tools
         );
 
-        std::string url = "https://generativelanguage.googleapis.com/v1beta/models/"
-            + std::string(modelStringRepresentation(model)) + ":streamGenerateContent?alt=sse"; 
+        Url url(ModelName(modelStringRepresentation(model)), ":streamGenerateContent");
+        url.addQuery("alt", "sse");
         
         return submitStreamRequest(url, payload, callback);
     }

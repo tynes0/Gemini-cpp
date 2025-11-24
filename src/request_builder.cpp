@@ -29,6 +29,14 @@ namespace GeminiCPP
         return *this;
     }
 
+    RequestBuilder& RequestBuilder::googleSearch()
+    {
+        Tool t;
+        t.googleSearch = GoogleSearch{};
+        tools_.push_back(t);
+        return *this;
+    }
+
     RequestBuilder& RequestBuilder::jsonMode()
     {
         config_.responseMimeType = "application/json";

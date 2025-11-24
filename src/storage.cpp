@@ -32,18 +32,22 @@ namespace GeminiCPP
         return false;
     }
 
-    std::optional<ChatSession> LocalStorage::load(const std::string& sessionId, Client* client)
+    Result<ChatSession> LocalStorage::load(const std::string& sessionId, Client* client)
     {
-        try {
+        try
+        {
             std::filesystem::path path = std::filesystem::path(rootPath_) / (sessionId + ".json");
-            if (!std::filesystem::exists(path)) return std::nullopt;
+            if (!std::filesystem::exists(path))
+                return Result<ChatSession>::Failure("Session file not found: " + path.string(), 404);
 
             std::ifstream file(path);
             nlohmann::json j;
             file >> j;
-            return ChatSession::fromJson(client, j);
-        } catch (...) {
-            return std::nullopt;
+            return Result<ChatSession>::Success(ChatSession::fromJson(client, j));
+        }
+        catch (const std::exception& e)
+        {
+            return Result<ChatSession>::Failure(std::string("Load Error: ") + e.what());
         }
     }
 
@@ -84,13 +88,14 @@ namespace GeminiCPP
             cpr::VerifySsl(false)
         );
 
-        if (HttpStatusHelper::isSuccess(r.status_code)) return true;
+        if (HttpStatusHelper::isSuccess(r.status_code))
+            return true;
             
         GEMINI_ERROR("RemoteStorage Save Error [{}]: {}", r.status_code, r.text);
         return false;
     }
 
-    std::optional<ChatSession> RemoteStorage::load(const std::string& sessionId, Client* client)
+    Result<ChatSession> RemoteStorage::load(const std::string& sessionId, Client* client)
     {
         std::string url = baseUrl_ + "/chats/" + sessionId;
             
@@ -109,13 +114,28 @@ namespace GeminiCPP
             try
             {
                 auto j = nlohmann::json::parse(r.text);
-                return ChatSession::fromJson(client, j);
-            } catch (...)
+                return Result<ChatSession>::Success(ChatSession::fromJson(client, j));
+            }
+            catch (const std::exception& e)
             {
-                GEMINI_ERROR("RemoteStorage JSON Parse Error");
+                return Result<ChatSession>::Failure(std::string("Load Error: ") + e.what());
             }
         }
-        return std::nullopt;
+
+        std::string errorMsg = r.text;
+        try
+        {
+            auto jsonErr = nlohmann::json::parse(r.text);
+            if(jsonErr.contains("error"))
+                errorMsg = jsonErr["error"]["message"].value("message", r.text);
+        }
+        catch(const std::exception& e)
+        {
+            GEMINI_WARN("Error message parsing failed! ({})", e.what());
+        }
+        
+        GEMINI_ERROR("ListModels Error [{}]: {}", r.status_code, errorMsg);
+        return Result<ChatSession>::Failure(errorMsg, r.status_code);
     }
 
     std::vector<std::string> RemoteStorage::listSessions()

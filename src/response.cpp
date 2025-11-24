@@ -1,7 +1,26 @@
 ﻿#include "gemini/response.h"
+#include "gemini/utils.h"
 
 namespace GeminiCPP
 {
+    GroundingMetadata GroundingMetadata::fromJson(const nlohmann::json& j)
+    {
+        GroundingMetadata meta;
+        meta.raw = j;
+        if (j.contains("searchEntryPoint") && j["searchEntryPoint"].contains("renderedContent"))
+        {
+            meta.searchEntryPoint = j["searchEntryPoint"]["renderedContent"].get<std::string>();
+        }
+        if (j.contains("webSearchQueries"))
+        {
+            for (const auto& q : j["webSearchQueries"])
+            {
+                meta.webSearchQueries.push_back(q.get<std::string>());
+            }
+        }
+        return meta;
+    }
+
     std::string GenerationResult::text() const
     {
         std::string fullText;
@@ -69,7 +88,8 @@ namespace GeminiCPP
         return savedCount;
     }
     
-    GenerationResult GenerationResult::Success(Content c, int code, int inTok, int outTok, FinishReason reason)
+    GenerationResult GenerationResult::Success(Content c, int code, int inTok,
+        int outTok, FinishReason reason, std::optional<GroundingMetadata> metadata)
     {
         GenerationResult r;
         r.success = true;
@@ -79,6 +99,7 @@ namespace GeminiCPP
         r.outputTokens = outTok;
         r.totalTokens = inTok + outTok;
         r.finishReason = reason;
+        r.groundingMetadata = std::move(metadata);
         return r;
     }
 

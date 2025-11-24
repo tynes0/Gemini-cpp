@@ -22,6 +22,7 @@ namespace GeminiCPP
         RequestBuilder& systemInstruction(const std::string& instruction);
         RequestBuilder& text(const std::string& t);
         RequestBuilder& image(const std::string& filepath);
+        RequestBuilder& googleSearch();
 
         // --- GENERATION CONFIG METHODS ---
         RequestBuilder& jsonMode();
