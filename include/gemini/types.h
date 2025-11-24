@@ -6,6 +6,7 @@
 #include <string>
 #include <functional>
 #include <optional>
+#include <variant>
 
 #include <frenum.h>
 #include <nlohmann/json.hpp>
@@ -52,19 +53,30 @@ namespace GeminiCPP
         [[nodiscard]] nlohmann::json toJson() const;
     };
 
-    struct Part
+    struct TextData
     {
         std::string text;
-        std::string inlineData;
-        std::string mimeType;
+    };
+    struct BlobData
+    {
+        std::string mimeType; std::string data;
+    };
 
-        std::optional<FunctionCall> functionCall;
-        std::optional<FunctionResponse> functionResponse;
+    struct Part
+    {
+        using VariantType = std::variant<std::monostate, TextData, BlobData, FunctionCall, FunctionResponse>;
+        
+        VariantType content;
 
         bool isText() const;
         bool isBlob() const;
         bool isFunctionCall() const;
         bool isFunctionResponse() const;
+
+        [[nodiscard]] const std::string* getText() const;
+        [[nodiscard]] const BlobData* getBlob() const;
+        [[nodiscard]] const FunctionCall* getFunctionCall() const;
+        [[nodiscard]] const FunctionResponse* getFunctionResponse() const;
 
         [[nodiscard]] static Part Text(std::string t);
         [[nodiscard]] static Part Media(const std::string& filepath, const std::string& customMimeType = "");

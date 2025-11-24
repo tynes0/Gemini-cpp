@@ -60,72 +60,107 @@ namespace GeminiCPP
 
     bool Part::isText() const
     {
-        return !text.empty();
+        return std::holds_alternative<TextData>(content);
     }
-
     bool Part::isBlob() const
     {
-        return !inlineData.empty();
+        return std::holds_alternative<BlobData>(content);
     }
-
     bool Part::isFunctionCall() const
     {
-        return functionCall.has_value();
+        return std::holds_alternative<FunctionCall>(content);
     }
-
     bool Part::isFunctionResponse() const
     {
-        return functionResponse.has_value();
+        return std::holds_alternative<FunctionResponse>(content);
+    }
+
+    const std::string* Part::getText() const
+    {
+        if(auto* p = std::get_if<TextData>(&content))
+            return &p->text;
+        return nullptr;
+    }
+
+    const BlobData* Part::getBlob() const
+    {
+        return std::get_if<BlobData>(&content);
+    }
+
+    const FunctionCall* Part::getFunctionCall() const
+    {
+        return std::get_if<FunctionCall>(&content);
+    }
+
+    const FunctionResponse* Part::getFunctionResponse() const
+    {
+        return std::get_if<FunctionResponse>(&content);
     }
 
     Part Part::Text(std::string t)
     {
-        return {std::move(t), "", "", std::nullopt, std::nullopt};
+        Part p;
+        p.content = TextData{std::move(t)};
+        return p;
     }
 
     Part Part::Media(const std::string& filepath, const std::string& customMimeType)
     {
         Part p;
-        p.mimeType = customMimeType.empty() ? Utils::getMimeType(filepath) : customMimeType;
-        p.inlineData = Utils::fileToBase64(filepath);
+        p.content = BlobData{
+            customMimeType.empty() ? Utils::getMimeType(filepath) : customMimeType,
+            Utils::fileToBase64(filepath)
+        };
         return p;
     }
 
     Part Part::Call(FunctionCall call)
     {
         Part p;
-        p.functionCall = std::move(call);
+        p.content = std::move(call);
         return p;
     }
 
     Part Part::Response(FunctionResponse resp)
     {
         Part p;
-        p.functionResponse = std::move(resp);
+        p.content = std::move(resp);
         return p;
     }
 
     nlohmann::json Part::toJson() const
     {
-        if (isBlob())
-        {
-            return {
-                    {"inlineData", {
-                    {"mimeType", mimeType},
-                    {"data", inlineData}
-                    }}
-            };
-        }
-        if (isFunctionCall())
-        {
-            return { {"functionCall", functionCall->toJson()} };
-        }
-        if (isFunctionResponse())
-        {
-            return { {"functionResponse", functionResponse->toJson()} };
-        }
+        return std::visit([](const auto& arg) -> nlohmann::json {
+            using T = std::decay_t<decltype(arg)>;
             
-        return { {"text", text} };
+            if constexpr (std::is_same_v<T, std::monostate>)
+            {
+                return nlohmann::json::object();
+            }
+            else if constexpr (std::is_same_v<T, TextData>)
+            {
+                return { {"text", arg.text} };
+            }
+            else if constexpr (std::is_same_v<T, BlobData>)
+            {
+                return {
+                    {"inlineData", {
+                        {"mimeType", arg.mimeType},
+                        {"data", arg.data}
+                    }}
+                };
+            }
+            else if constexpr (std::is_same_v<T, FunctionCall>)
+            {
+                return { {"functionCall", arg.toJson()} };
+            }
+            else if constexpr (std::is_same_v<T, FunctionResponse>)
+            {
+                return { {"functionResponse", arg.toJson()} };
+            }
+
+            return {"", {}};
+        }, content);
     }
 
     Content Content::User()
@@ -205,24 +240,24 @@ namespace GeminiCPP
         {
             for (const auto& item : j["parts"])
             {
-                Part p;
                 if (item.contains("text")) {
-                    p.text = item["text"].get<std::string>();
+                    c.parts.push_back(Part::Text(item["text"].get<std::string>()));
                 }
-                else if (item.contains("inlineData"))
-                {
-                    p.mimeType = item["inlineData"]["mimeType"].get<std::string>();
-                    p.inlineData = item["inlineData"]["data"].get<std::string>();
+                else if (item.contains("inlineData")) {
+                    Part p;
+                    p.content = BlobData{
+                        item["inlineData"]["mimeType"].get<std::string>(),
+                        item["inlineData"]["data"].get<std::string>()
+                    };
+                    c.parts.push_back(p);
                 }
-                else if (item.contains("functionCall"))
-                {
+                else if (item.contains("functionCall")) {
                     auto fc = item["functionCall"];
-                    p.functionCall = {
+                    c.parts.push_back(Part::Call({
                         fc["name"].get<std::string>(),
                         fc["args"]
-                    };
+                    }));
                 }
-                c.parts.push_back(p);
             }
         }
         return c;

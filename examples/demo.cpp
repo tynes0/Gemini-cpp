@@ -5,7 +5,6 @@
 #include "gemini/client.h"
 #include "gemini/logger.h"
 
-// Windows için UTF-8 ayarı
 #ifdef _WIN32
 #include <windows.h>
 #endif

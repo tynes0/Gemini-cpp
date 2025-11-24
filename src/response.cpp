@@ -28,7 +28,8 @@ namespace GeminiCPP
         {
             if (part.isText())
             {
-                fullText += part.text;
+                const auto* txtData = part.getText();
+                if (txtData) fullText += *txtData;
             }
         }
         return fullText;
@@ -43,13 +44,17 @@ namespace GeminiCPP
             {
                 if (currentBlob == blobIndex)
                 {
-                    auto data = Utils::base64Decode(part.inlineData);
-                    std::ofstream file(filepath, std::ios::binary);
-                    if (file.is_open())
+                    if (const auto* blob = part.getBlob())
                     {
-                        file.write(reinterpret_cast<const char*>(data.data()), static_cast<std::streamsize>(data.size()));
-                        return true;
+                        auto data = Utils::base64Decode(blob->data);
+                        std::ofstream file(filepath, std::ios::binary);
+                        if (file.is_open())
+                        {
+                            file.write(reinterpret_cast<const char*>(data.data()), static_cast<std::streamsize>(data.size()));
+                            return true;
+                        }
                     }
+
                     return false;
                 }
                 currentBlob++;
@@ -74,15 +79,19 @@ namespace GeminiCPP
         {
             if (part.isBlob())
             {
-                std::string ext = Utils::mimeToExtension(part.mimeType);
-                    
-                fs::path fullPath = fs::path(directory) / (prefix + "_" + std::to_string(blobIndex) + ext);
-
-                if (saveFile(fullPath.string(), blobIndex))
+                if (const auto* blob = part.getBlob())
                 {
-                    savedCount++;
+                    std::string ext = Utils::mimeToExtension(blob->mimeType);
+                    
+                    fs::path fullPath = fs::path(directory) / (prefix + "_" + std::to_string(blobIndex) + ext);
+
+                    if (saveFile(fullPath.string(), blobIndex))
+                    {
+                        savedCount++;
+                    }
+                    blobIndex++;
                 }
-                blobIndex++;
+
             }
         }
         return savedCount;
