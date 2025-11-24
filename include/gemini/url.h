@@ -17,6 +17,7 @@ namespace GeminiCPP
         TUNED_MODEL,    // tunedModels/
         CORPUS,         // corpora/
         OPERATION,      // operations/
+        CACHED_CONTENT, // cachedContents/
         NONE            // No Prefix (Raw string)
     };
     
@@ -43,6 +44,9 @@ namespace GeminiCPP
         static ResourceName File(std::string_view name);
         static ResourceName Model(std::string_view name);
         static ResourceName TunedModel(std::string_view name);
+        static ResourceName Corpus(std::string_view name);
+        static ResourceName Operation(std::string_view name);
+        static ResourceName CachedContent(std::string_view name);
         static ResourceName Raw(std::string_view name); // No Prefix
 
         ResourceName& operator=(const std::string& name);

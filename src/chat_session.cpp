@@ -243,7 +243,8 @@ namespace GeminiCPP
             
             payload = Internal::PayloadBuilder::build(
                 history_, 
-                systemInstruction_, 
+                systemInstruction_,
+                "",
                 config_,
                 safetySettings_,
                 tools_
@@ -275,7 +276,8 @@ namespace GeminiCPP
             std::lock_guard<std::mutex> lock(mutex_);
             payload = Internal::PayloadBuilder::build(
                 history_, 
-                systemInstruction_, 
+                systemInstruction_,
+                "",
                 config_, 
                 safetySettings_, 
                 tools_

@@ -371,5 +371,39 @@ namespace GeminiCPP
 
         [[nodiscard]] explicit operator bool() const { return isValid; }
     };
+
+    struct CachedContentUsage
+    {
+        int tokenCount = 0;
+    };
+
+    struct CachedContent
+    {
+        std::string name; // ID: "cachedContents/..."
+        std::string model;
+        std::string displayName;
+        std::string createTime;
+        std::string updateTime;
+        std::string expireTime;
+        std::string ttl; // Duration (e.g. "3600s")
+
+        CachedContentUsage usage;
+
+        // Content to be used when creating the cache (It will only be filled at creation time)
+        std::optional<std::string> systemInstruction;
+        std::vector<Content> contents;
+        std::vector<Tool> tools;
+
+        [[nodiscard]] static CachedContent fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const;
+    };
+
+    struct ListCachedContentsResponse
+    {
+        std::vector<CachedContent> cachedContents;
+        std::string nextPageToken;
+
+        [[nodiscard]] static ListCachedContentsResponse fromJson(const nlohmann::json& j);
+    };
 } // namespace GeminiCPP
 #endif // GEMINI_TYPES_H

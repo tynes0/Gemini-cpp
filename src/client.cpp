@@ -92,12 +92,13 @@ namespace GeminiCPP
         return { this, model, std::move(sessionName), std::move(systemInstruction) };
     }
 
-    GenerationResult Client::generateContent(const std::string& prompt, std::string_view model_id,
-        const GenerationConfig& config, const std::string& systemInstruction, const std::vector<SafetySetting>& safetySettings)
+    GenerationResult Client::generateContent(const std::string& prompt, std::string_view model_id, const std::string& systemInstruction,
+        const std::string& cachedContent, const GenerationConfig& config, const std::vector<SafetySetting>& safetySettings)
     {
         nlohmann::json payload = Internal::PayloadBuilder::build(
             { Content::User().text(prompt) },
             systemInstruction,
+            cachedContent,
             config,
             safetySettings
         );
@@ -107,18 +108,20 @@ namespace GeminiCPP
         return submitRequest(url, payload);
     }
 
-    GenerationResult Client::generateContent(const std::string& prompt, Model model, const GenerationConfig& config,
-        const std::string& systemInstruction, const std::vector<SafetySetting>& safetySettings)
+    GenerationResult Client::generateContent(const std::string& prompt, Model model, const std::string& systemInstruction,
+        const std::string& cachedContent, const GenerationConfig& config, const std::vector<SafetySetting>& safetySettings)
     {
-        return generateContent(prompt, modelStringRepresentation(model), config, systemInstruction, safetySettings);
+        return generateContent(prompt, modelStringRepresentation(model), systemInstruction, cachedContent, config, safetySettings);
     }
 
-    GenerationResult Client::streamGenerateContent(const std::string& prompt, const StreamCallback& callback, std::string_view model_id,
-        const GenerationConfig& config, const std::string& systemInstruction, const std::vector<SafetySetting>& safetySettings)
+    GenerationResult Client::streamGenerateContent(const std::string& prompt, const StreamCallback& callback,
+        std::string_view model_id, const std::string& systemInstruction, const std::string& cachedContent,
+        const GenerationConfig& config, const std::vector<SafetySetting>& safetySettings)
     {
         nlohmann::json payload = Internal::PayloadBuilder::build(
             { Content::User().text(prompt) },
             systemInstruction,
+            cachedContent,
             config,
             safetySettings
         );
@@ -129,10 +132,11 @@ namespace GeminiCPP
         return submitStreamRequest(url, payload, callback);
     }
 
-    GenerationResult Client::streamGenerateContent(const std::string& prompt, const StreamCallback& callback, Model model,
-        const GenerationConfig& config, const std::string& systemInstruction, const std::vector<SafetySetting>& safetySettings)
+    GenerationResult Client::streamGenerateContent(const std::string& prompt, const StreamCallback& callback,
+        Model model, const std::string& systemInstruction, const std::string& cachedContent,
+        const GenerationConfig& config, const std::vector<SafetySetting>& safetySettings)
     {
-        return streamGenerateContent(prompt, callback, modelStringRepresentation(model), config, systemInstruction, safetySettings);
+        return streamGenerateContent(prompt, callback, modelStringRepresentation(model), systemInstruction, cachedContent, config, safetySettings);
     }
 
     Result<File> Client::uploadFile(const std::string& path, std::string displayName)
@@ -440,7 +444,8 @@ namespace GeminiCPP
 
         nlohmann::json payload = Internal::PayloadBuilder::build(
             contents, 
-            systemInstruction, 
+            systemInstruction,
+            "",
             {}, // Config (insignificant)
             {}, // Safety (insignificant)
             tools
@@ -465,37 +470,166 @@ namespace GeminiCPP
         return countTokens(model, {Content::User().text(text)});
     }
 
+    Result<CachedContent> Client::createCachedContent(const CachedContent& contentConfig)
+    {
+        Url url(std::string_view("cachedContents"));
+        cpr::Response r = cpr::Post(
+            cpr::Url{url.str()},
+            cpr::Header{
+                {"Content-Type", "application/json"},
+                {"x-goog-api-key", api_key_}
+            },
+            cpr::Body{contentConfig.toJson().dump()},
+            cpr::VerifySsl(false)
+        );
+
+        if (!HttpStatusHelper::isSuccess(r.status_code))
+        {
+            std::string err = Utils::parseErrorMessage(r.text);
+            GEMINI_ERROR("CreateCache Error [{}]: {}", r.status_code, err);
+            return Result<CachedContent>::Failure(err, r.status_code);
+        }
+
+        try
+        {
+            return Result<CachedContent>::Success(CachedContent::fromJson(nlohmann::json::parse(r.text)));
+        }
+        catch (const std::exception& e)
+        {
+            return Result<CachedContent>::Failure("Parse Error: "s + e.what());
+        }
+    }
+
+    Result<CachedContent> Client::getCachedContent(const std::string& name)
+    {
+        Url url(ResourceName::CachedContent(name));
+
+        cpr::Response r = cpr::Get(
+            cpr::Url{url.str()},
+            cpr::Header{{"x-goog-api-key", api_key_}},
+            cpr::VerifySsl(false)
+        );
+
+        if (!HttpStatusHelper::isSuccess(r.status_code))
+        {
+            return Result<CachedContent>::Failure(Utils::parseErrorMessage(r.text), r.status_code);
+        }
+        
+        try
+        {
+            return Result<CachedContent>::Success(CachedContent::fromJson(nlohmann::json::parse(r.text)));
+        }
+        catch (const std::exception& e)
+        {
+            return Result<CachedContent>::Failure("Parse Error: "s + e.what());
+        }
+    }
+
+    Result<ListCachedContentsResponse> Client::listCachedContents(int pageSize, const std::string& pageToken)
+    {
+        Url url(std::string_view("cachedContents"));
+        cpr::Parameters params;
+        params.Add({"pageSize", std::to_string(pageSize)});
+        if(!pageToken.empty()) params.Add({"pageToken", pageToken});
+
+        cpr::Response r = cpr::Get(
+            cpr::Url{url.str()},
+            cpr::Header{{"x-goog-api-key", api_key_}},
+            params,
+            cpr::VerifySsl(false)
+        );
+
+        if (!HttpStatusHelper::isSuccess(r.status_code))
+        {
+            return Result<ListCachedContentsResponse>::Failure(Utils::parseErrorMessage(r.text), r.status_code);
+        }
+        try
+        {
+            return Result<ListCachedContentsResponse>::Success(ListCachedContentsResponse::fromJson(nlohmann::json::parse(r.text)));
+        }
+        catch (const std::exception& e)
+        {
+            return Result<ListCachedContentsResponse>::Failure("Parse Error: "s + e.what());
+        }
+    }
+
+    Result<bool> Client::deleteCachedContent(const std::string& name)
+    {
+        Url url(ResourceName::Raw(name));
+        cpr::Response r = cpr::Delete(
+            cpr::Url{url.str()},
+            cpr::Header{{"x-goog-api-key", api_key_}},
+            cpr::VerifySsl(false)
+        );
+
+        if (HttpStatusHelper::isSuccess(r.status_code))
+            return Result<bool>::Success(true);
+        
+        return Result<bool>::Failure(Utils::parseErrorMessage(r.text), r.status_code);
+    }
+
+    Result<CachedContent> Client::updateCachedContent(const std::string& name, const std::string& ttl)
+    {
+        Url url(ResourceName::Raw(name));
+        nlohmann::json payload = { {"ttl", ttl} };
+
+        cpr::Response r = cpr::Patch(
+            cpr::Url{url.str()},
+            cpr::Header{
+                {"Content-Type", "application/json"},
+                {"x-goog-api-key", api_key_}
+            },
+            cpr::Body{payload.dump()},
+            cpr::VerifySsl(false)
+        );
+
+        if (!HttpStatusHelper::isSuccess(r.status_code))
+        {
+            return Result<CachedContent>::Failure(Utils::parseErrorMessage(r.text), r.status_code);
+        }
+        try
+        {
+            return Result<CachedContent>::Success(CachedContent::fromJson(nlohmann::json::parse(r.text)));
+        }
+        catch (const std::exception& e)
+        {
+            return Result<CachedContent>::Failure("Parse Error: "s + e.what());
+        }
+    }
+
     std::future<GenerationResult> Client::generateContentAsync(std::string prompt, std::string_view model_id,
-        GenerationConfig config, std::string systemInstruction, std::vector<SafetySetting> safetySettings)
+        std::string systemInstruction, std::string cachedContent, GenerationConfig config, std::vector<SafetySetting> safetySettings)
     {
         std::string modelIdStr(model_id);
         return std::async(std::launch::async, [
             this,
             modelIdStr = std::move(modelIdStr),
             prompt = std::move(prompt),
-            config = std::move(config),
             systemInstruction = std::move(systemInstruction),
+            cachedContent = std::move(cachedContent),
+            config = std::move(config),
             safetySettings = std::move(safetySettings)]() {
-            return generateContent(prompt, modelIdStr, config, systemInstruction, safetySettings);
+            return generateContent(prompt, modelIdStr, systemInstruction, cachedContent, config, safetySettings);
         });
     }
 
-    std::future<GenerationResult> Client::generateContentAsync(std::string prompt, Model model,
-        GenerationConfig config, std::string systemInstruction, std::vector<SafetySetting> safetySettings)
+    std::future<GenerationResult> Client::generateContentAsync(std::string prompt, Model model, std::string systemInstruction,
+        std::string cachedContent, GenerationConfig config, std::vector<SafetySetting> safetySettings)
     {
         return std::async(std::launch::async, [
             this,
             model,
             prompt = std::move(prompt),
-            config = std::move(config),
             systemInstruction = std::move(systemInstruction),
+            cachedContent = std::move(cachedContent),
+            config = std::move(config),
             safetySettings = std::move(safetySettings)]() {
-            return generateContent(prompt, model, config, systemInstruction, safetySettings);
+            return generateContent(prompt, model, systemInstruction, cachedContent, config, safetySettings);
         });
     }
 
     std::future<GenerationResult> Client::streamGenerateContentAsync(std::string prompt, StreamCallback callback,
-        std::string_view model_id, GenerationConfig config, std::string systemInstruction, std::vector<SafetySetting> safetySettings)
+        std::string_view model_id, std::string systemInstruction, std::string cachedContent, GenerationConfig config,std::vector<SafetySetting> safetySettings)
     {
         std::string modelIdStr(model_id);
         return std::async(std::launch::async, [
@@ -503,25 +637,27 @@ namespace GeminiCPP
             modelIdStr = std::move(modelIdStr),
             callback = std::move(callback),
             prompt = std::move(prompt),
-            config = std::move(config),
             systemInstruction = std::move(systemInstruction),
+            cachedContent = std::move(cachedContent),
+            config = std::move(config),
             safetySettings = std::move(safetySettings)]() {
-            return streamGenerateContent(prompt, callback, modelIdStr, config, systemInstruction, safetySettings);
+            return streamGenerateContent(prompt, callback, modelIdStr, systemInstruction, cachedContent, config, safetySettings);
         });
     }
 
     std::future<GenerationResult> Client::streamGenerateContentAsync(std::string prompt, StreamCallback callback,
-        Model model, GenerationConfig config, std::string systemInstruction, std::vector<SafetySetting> safetySettings)
+        Model model, std::string systemInstruction, std::string cachedContent, GenerationConfig config, std::vector<SafetySetting> safetySettings)
     {
         return std::async(std::launch::async, [
             this,
             model,
             callback = std::move(callback),
             prompt = std::move(prompt),
-            config = std::move(config),
             systemInstruction = std::move(systemInstruction),
+            cachedContent = std::move(cachedContent),
+            config = std::move(config),
             safetySettings = std::move(safetySettings)]() {
-            return streamGenerateContent(prompt, callback, model, config, systemInstruction, safetySettings);
+            return streamGenerateContent(prompt, callback, model, systemInstruction, cachedContent, config, safetySettings);
         });
     }
 
@@ -642,6 +778,23 @@ namespace GeminiCPP
         });
     }
 
+    std::future<Result<CachedContent>> Client::createCachedContentAsync(const CachedContent& contentConfig)
+    {
+        return std::async(std::launch::async, [this, contentConfig]() { return createCachedContent(contentConfig); });
+    }
+    std::future<Result<CachedContent>> Client::getCachedContentAsync(const std::string& name)
+    {
+        return std::async(std::launch::async, [this, name]() { return getCachedContent(name); });
+    }
+    std::future<Result<ListCachedContentsResponse>> Client::listCachedContentsAsync(int pageSize, std::string pageToken)
+    {
+        return std::async(std::launch::async, [this, pageSize, pageToken]() { return listCachedContents(pageSize, pageToken); });
+    }
+    std::future<Result<bool>> Client::deleteCachedContentAsync(const std::string& name)
+    {
+        return std::async(std::launch::async, [this, name]() { return deleteCachedContent(name); });
+    }
+
     void Client::setRetryConfig(const RetryConfig& config)
     {
         retryConfig_ = config;
@@ -755,15 +908,17 @@ namespace GeminiCPP
         }
     }
 
-    GenerationResult Client::generateFromBuilder(Model model, const std::string& sys_instr, const std::vector<Part>& parts,
-        const GenerationConfig& config, const std::vector<SafetySetting>& safetySettings, const std::vector<Tool>& tools)
+    GenerationResult Client::generateFromBuilder(Model model, const std::string& sys_instr,
+        const std::string& cachedContent, const std::vector<Part>& parts, const GenerationConfig& config,
+        const std::vector<SafetySetting>& safetySettings, const std::vector<Tool>& tools)
     {
         Content userContent = Content::User();
         userContent.parts = parts; 
         
         nlohmann::json payload = Internal::PayloadBuilder::build(
             {userContent},
-            sys_instr, 
+            sys_instr,
+            cachedContent,
             config, 
             safetySettings, 
             tools
@@ -895,7 +1050,7 @@ namespace GeminiCPP
     }
 
     GenerationResult Client::streamFromBuilder(Model model, const std::string& sys_instr,
-        const std::vector<Part>& parts, const GenerationConfig& config,
+        const std::string& cachedContent, const std::vector<Part>& parts, const GenerationConfig& config,
         const std::vector<SafetySetting>& safetySettings, const StreamCallback& callback, const std::vector<Tool>& tools)
     {
         Content userContent = Content::User();
@@ -903,7 +1058,8 @@ namespace GeminiCPP
 
         nlohmann::json payload = Internal::PayloadBuilder::build(
             {userContent}, 
-            sys_instr, 
+            sys_instr,
+            cachedContent,
             config, 
             safetySettings, 
             tools
@@ -915,38 +1071,39 @@ namespace GeminiCPP
         return submitStreamRequest(url, payload, callback);
     }
 
-    std::future<GenerationResult> Client::generateFromBuilderAsync(Model model, std::string sys_instr,
-        std::vector<Part> parts, GenerationConfig config, std::vector<SafetySetting> safetySettings,
-        std::vector<Tool> tools)
+    std::future<GenerationResult> Client::generateFromBuilderAsync(Model model, std::string sys_instr, std::string cachedContent,
+        std::vector<Part> parts, GenerationConfig config, std::vector<SafetySetting> safetySettings, std::vector<Tool> tools)
     {
         return std::async(std::launch::async, [
             this,
             model,
-            sys_instr = std::move(sys_instr), 
+            sys_instr = std::move(sys_instr),
+            cachedContent = std::move(cachedContent),
             parts = std::move(parts), 
             config = std::move(config), 
             safetySettings = std::move(safetySettings), 
             tools = std::move(tools)]() 
         {
-            return generateFromBuilder(model, sys_instr, parts, config, safetySettings, tools);
+            return generateFromBuilder(model, sys_instr, cachedContent, parts, config, safetySettings, tools);
         });
     }
 
     std::future<GenerationResult> Client::streamFromBuilderAsync(Model model, std::string sys_instr,
-        std::vector<Part> parts, GenerationConfig config, std::vector<SafetySetting> safetySettings,
-        StreamCallback callback, std::vector<Tool> tools)
+        std::string cachedContent, std::vector<Part> parts, GenerationConfig config,
+        std::vector<SafetySetting> safetySettings, StreamCallback callback, std::vector<Tool> tools)
     {
         return std::async(std::launch::async, [
             this,
             model,
             sys_instr = std::move(sys_instr), 
+            cachedContent = std::move(cachedContent), 
             parts = std::move(parts), 
             config = std::move(config), 
             safetySettings = std::move(safetySettings),
             callback = std::move(callback),
             tools = std::move(tools)]() 
         {
-            return streamFromBuilder(model, sys_instr, parts, config, safetySettings, callback, tools);
+            return streamFromBuilder(model, sys_instr, cachedContent, parts, config, safetySettings, callback, tools);
         });
     }
 }

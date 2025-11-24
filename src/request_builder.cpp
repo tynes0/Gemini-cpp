@@ -107,21 +107,28 @@ namespace GeminiCPP
         return *this;
     }
 
+    RequestBuilder& RequestBuilder::cachedContent(const std::string& cacheName)
+    {
+        cachedContent_ = cacheName;
+        return *this;
+    }
+
     GenerationResult RequestBuilder::generate() const
     {
-        return client_->generateFromBuilder(model_, systemInstruction_, parts_, config_, safetySettings_, tools_);
+        return client_->generateFromBuilder(model_, systemInstruction_, cachedContent_, parts_, config_, safetySettings_, tools_);
     }
 
     GenerationResult RequestBuilder::stream(const StreamCallback& callback) const
     {
-        return client_->streamFromBuilder(model_, systemInstruction_, parts_, config_, safetySettings_, callback, tools_);
+        return client_->streamFromBuilder(model_, systemInstruction_, cachedContent_, parts_, config_, safetySettings_, callback, tools_);
     }
 
     std::future<GenerationResult> RequestBuilder::generateAsync() const
     {
         return client_->generateFromBuilderAsync(
             model_, 
-            systemInstruction_, 
+            systemInstruction_,
+            cachedContent_,
             parts_, 
             config_, 
             safetySettings_, 
@@ -133,7 +140,8 @@ namespace GeminiCPP
     {
         return client_->streamFromBuilderAsync(
             model_, 
-            systemInstruction_, 
+            systemInstruction_,
+            cachedContent_,
             parts_, 
             config_, 
             safetySettings_, 

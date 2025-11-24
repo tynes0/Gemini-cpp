@@ -12,6 +12,7 @@ namespace GeminiCPP::Internal
         static nlohmann::json build(
             const std::vector<Content>& contents,
             const std::string& systemInstruction = "",
+            const std::string& cachedContent = "",
             const GenerationConfig& config = {},
             const std::vector<SafetySetting>& safetySettings = {},
             const std::vector<Tool>& tools = {}
@@ -23,6 +24,10 @@ namespace GeminiCPP::Internal
             nlohmann::json payload = {
                 {"contents", contentsJson}
             };
+
+            if (!cachedContent.empty()) {
+                payload["cachedContent"] = cachedContent;
+            }
 
             if (!systemInstruction.empty())
             {

@@ -576,4 +576,63 @@ namespace GeminiCPP
     {
         return { j.value("totalTokens", 0) };
     }
+
+    CachedContent CachedContent::fromJson(const nlohmann::json& j)
+    {
+        CachedContent c{};
+        if(j.contains("name")) c.name = j.value("name", "");
+        if(j.contains("model")) c.model = j.value("model", "");
+        if(j.contains("displayName")) c.displayName = j.value("displayName", "");
+        if(j.contains("createTime")) c.createTime = j.value("createTime", "");
+        if(j.contains("updateTime")) c.updateTime = j.value("updateTime", "");
+        if(j.contains("expireTime")) c.expireTime = j.value("expireTime", "");
+        if(j.contains("ttl")) c.ttl = j.value("ttl", "");
+        if(j.contains("usageMetadata")) c.usage.tokenCount = j["usageMetadata"].value("totalTokenCount", 0);
+        
+        return c;
+    }
+
+    nlohmann::json CachedContent::toJson() const
+    {
+        nlohmann::json j;
+        j["model"] = model;
+        if(!displayName.empty()) j["displayName"] = displayName;
+        if(!ttl.empty()) j["ttl"] = ttl; // Ex.: "300s"
+            
+        if(systemInstruction.has_value())
+        {
+            j["systemInstruction"] = { {"parts", {{ {"text", systemInstruction.value()} }}} };
+        }
+            
+        if(!contents.empty())
+        {
+            nlohmann::json contentArr = nlohmann::json::array();
+            for(const auto& c : contents) contentArr.push_back(c.toJson());
+            j["contents"] = contentArr;
+        }
+        
+        if(!tools.empty())
+        {
+            nlohmann::json toolsArr = nlohmann::json::array();
+            for(const auto& t : tools) toolsArr.push_back(t.toJson());
+            j["tools"] = toolsArr;
+        }
+
+        return j;
+    }
+
+    ListCachedContentsResponse ListCachedContentsResponse::fromJson(const nlohmann::json& j)
+    {
+        ListCachedContentsResponse r;
+        if(j.contains("cachedContents") && j["cachedContents"].is_array())
+        {
+            for(const auto& item : j["cachedContents"])
+            {
+                r.cachedContents.push_back(CachedContent::fromJson(item));
+            }
+        }
+        if(j.contains("nextPageToken")) r.nextPageToken = j.value("nextPageToken", "");
+        
+        return r;
+    }
 }

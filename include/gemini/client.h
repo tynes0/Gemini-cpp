@@ -38,16 +38,18 @@ namespace GeminiCPP
         [[nodiscard]] GenerationResult generateContent(
             const std::string& prompt, 
             std::string_view model_id,
-            const GenerationConfig& config = {},
             const std::string& systemInstruction = "",
+            const std::string& cachedContent = "",
+            const GenerationConfig& config = {},
             const std::vector<SafetySetting>& safetySettings = {}
         );
 
         [[nodiscard]] GenerationResult generateContent(
             const std::string& prompt, 
             Model model = Model::GEMINI_2_5_FLASH,
+            const std::string& systemInstruction = "",
+            const std::string& cachedContent = "",
             const GenerationConfig& config = {},
-            const std::string& systemInstruction = "", 
             const std::vector<SafetySetting>& safetySettings = {}
         );
         
@@ -55,8 +57,9 @@ namespace GeminiCPP
             const std::string& prompt, 
             const StreamCallback& callback, 
             std::string_view model_id,
-            const GenerationConfig& config = {}, 
             const std::string& systemInstruction = "", 
+            const std::string& cachedContent = "", 
+            const GenerationConfig& config = {}, 
             const std::vector<SafetySetting>& safetySettings = {}
         );
 
@@ -64,8 +67,9 @@ namespace GeminiCPP
             const std::string& prompt, 
             const StreamCallback& callback, 
             Model model = Model::GEMINI_2_5_FLASH,
-            const GenerationConfig& config = {}, 
             const std::string& systemInstruction = "", 
+            const std::string& cachedContent = "", 
+            const GenerationConfig& config = {}, 
             const std::vector<SafetySetting>& safetySettings = {}
         );
         
@@ -154,20 +158,44 @@ namespace GeminiCPP
             const std::string& text
         );
 
+        [[nodiscard]] Result<CachedContent> createCachedContent(
+            const CachedContent& contentConfig
+        );
+        
+        [[nodiscard]] Result<CachedContent> getCachedContent(
+            const std::string& name
+        );
+
+        [[nodiscard]] Result<ListCachedContentsResponse> listCachedContents(
+            int pageSize = 10, 
+            const std::string& pageToken = ""
+        );
+
+        [[nodiscard]] Result<bool> deleteCachedContent(
+            const std::string& name
+        );
+
+        [[nodiscard]] Result<CachedContent> updateCachedContent(
+            const std::string& name,
+            const std::string& ttl
+        );
+
         // --- ASYNC METHODS (NON-BLOCKING) ---
         [[nodiscard]] std::future<GenerationResult> generateContentAsync(
             std::string prompt,
             std::string_view model_id,
-            GenerationConfig config = {},
             std::string systemInstruction = "",
+            std::string cachedContent = "",
+            GenerationConfig config = {},
             std::vector<SafetySetting> safetySettings = {}
         );
 
         [[nodiscard]] std::future<GenerationResult> generateContentAsync(
             std::string prompt,
             Model model = Model::GEMINI_2_5_FLASH,
-            GenerationConfig config = {},
             std::string systemInstruction = "",
+            std::string cachedContent = "",
+            GenerationConfig config = {},
             std::vector<SafetySetting> safetySettings = {}
         );
         
@@ -175,8 +203,9 @@ namespace GeminiCPP
             std::string prompt,
             StreamCallback callback,
             std::string_view model_id,
-            GenerationConfig config = {},
             std::string systemInstruction = "",
+            std::string cachedContent = "",
+            GenerationConfig config = {},
             std::vector<SafetySetting> safetySettings = {}
         );
 
@@ -184,8 +213,9 @@ namespace GeminiCPP
             std::string prompt,
             StreamCallback callback,
             Model model = Model::GEMINI_2_5_FLASH,
-            GenerationConfig config = {},
             std::string systemInstruction = "",
+            std::string cachedContent = "",
+            GenerationConfig config = {},
             std::vector<SafetySetting> safetySettings = {}
         );
 
@@ -272,6 +302,23 @@ namespace GeminiCPP
             std::string text
         );
 
+        [[nodiscard]] std::future<Result<CachedContent>> createCachedContentAsync(
+            const CachedContent& contentConfig
+        );
+        
+        [[nodiscard]] std::future<Result<CachedContent>> getCachedContentAsync(
+            const std::string& name
+        );
+        
+        [[nodiscard]] std::future<Result<ListCachedContentsResponse>> listCachedContentsAsync(
+            int pageSize = 10,
+            std::string pageToken = ""
+        );
+        
+        [[nodiscard]] std::future<Result<bool>> deleteCachedContentAsync(
+            const std::string& name
+        );
+
         void setRetryConfig(
             const RetryConfig& config
         );
@@ -293,6 +340,7 @@ namespace GeminiCPP
         [[nodiscard]] GenerationResult generateFromBuilder(
             Model model,
             const std::string& sys_instr,
+            const std::string& cachedContent,
             const std::vector<Part>& parts,
             const GenerationConfig& config = {},
             const std::vector<SafetySetting>& safetySettings = {},
@@ -308,6 +356,7 @@ namespace GeminiCPP
         [[nodiscard]] GenerationResult streamFromBuilder(
             Model model,
             const std::string& sys_instr,
+            const std::string& cachedContent,
             const std::vector<Part>& parts,
             const GenerationConfig& config,
             const std::vector<SafetySetting>& safetySettings,
@@ -318,6 +367,7 @@ namespace GeminiCPP
         [[nodiscard]] std::future<GenerationResult> generateFromBuilderAsync(
             Model model,
             std::string sys_instr,
+            std::string cachedContent,
             std::vector<Part> parts,
             GenerationConfig config,
             std::vector<SafetySetting> safetySettings,
@@ -327,6 +377,7 @@ namespace GeminiCPP
         [[nodiscard]] std::future<GenerationResult> streamFromBuilderAsync(
             Model model,
             std::string sys_instr,
+            std::string cachedContent,
             std::vector<Part> parts,
             GenerationConfig config,
             std::vector<SafetySetting> safetySettings,

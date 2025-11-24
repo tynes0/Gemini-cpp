@@ -36,6 +36,22 @@ namespace GeminiCPP
     {
         return {name, ResourceType::TUNED_MODEL};
     }
+
+    ResourceName ResourceName::Corpus(std::string_view name)
+    {
+        return { name, ResourceType::CORPUS };
+    }
+
+    ResourceName ResourceName::Operation(std::string_view name)
+    {
+        return { name, ResourceType::OPERATION };
+    }
+
+    ResourceName ResourceName::CachedContent(std::string_view name)
+    {
+        return {name, ResourceType::CACHED_CONTENT};
+    }
+
     ResourceName ResourceName::Raw(std::string_view name)
     {
         return {name, ResourceType::NONE};
@@ -62,11 +78,12 @@ namespace GeminiCPP
         std::string_view prefix;
         switch (type_)
         {
-        case ResourceType::MODEL:       prefix = "models/"; break;
-        case ResourceType::FILE:        prefix = "files/"; break;
-        case ResourceType::TUNED_MODEL: prefix = "tunedModels/"; break;
-        case ResourceType::CORPUS:      prefix = "corpora/"; break;
-        case ResourceType::OPERATION:   prefix = "operations/"; break;
+        case ResourceType::MODEL:           prefix = "models/"; break;
+        case ResourceType::FILE:            prefix = "files/"; break;
+        case ResourceType::TUNED_MODEL:     prefix = "tunedModels/"; break;
+        case ResourceType::CORPUS:          prefix = "corpora/"; break;
+        case ResourceType::OPERATION:       prefix = "operations/"; break;
+        case ResourceType::CACHED_CONTENT:  prefix = "cachedContents/"; break;
         case ResourceType::NONE:        return; 
         }
 
