@@ -5,6 +5,8 @@
 
 #include <string>
 #include <string_view>
+#include <future>
+
 #include "model.h"
 #include "chat_session.h"
 #include "request_builder.h"
@@ -18,7 +20,8 @@ namespace GeminiCPP
     public:
         explicit Client(std::string api_key);
 
-        [[nodiscard]] RequestBuilder request();
+        [[nodiscard]] RequestBuilder request(
+        );
         
         [[nodiscard]] ChatSession startChat(
             Model model = Model::GEMINI_2_5_FLASH,
@@ -35,14 +38,16 @@ namespace GeminiCPP
         [[nodiscard]] GenerationResult generateContent(
             const std::string& prompt, 
             std::string_view model_id,
-            const GenerationConfig& config = {}, 
+            const GenerationConfig& config = {},
+            const std::string& systemInstruction = "",
             const std::vector<SafetySetting>& safetySettings = {}
         );
 
         [[nodiscard]] GenerationResult generateContent(
             const std::string& prompt, 
             Model model = Model::GEMINI_2_5_FLASH,
-            const GenerationConfig& config = {}, 
+            const GenerationConfig& config = {},
+            const std::string& systemInstruction = "", 
             const std::vector<SafetySetting>& safetySettings = {}
         );
         
@@ -51,6 +56,7 @@ namespace GeminiCPP
             const StreamCallback& callback, 
             std::string_view model_id,
             const GenerationConfig& config = {}, 
+            const std::string& systemInstruction = "", 
             const std::vector<SafetySetting>& safetySettings = {}
         );
 
@@ -59,8 +65,33 @@ namespace GeminiCPP
             const StreamCallback& callback, 
             Model model = Model::GEMINI_2_5_FLASH,
             const GenerationConfig& config = {}, 
+            const std::string& systemInstruction = "", 
             const std::vector<SafetySetting>& safetySettings = {}
         );
+        
+        // File Upload
+        // path: Path on disk (e.g., "C:/video.mp4")
+        // displayName: Name to be displayed in the API (Optional)
+        [[nodiscard]] Result<File> uploadFile(
+            const std::string& path,
+            std::string displayName = ""
+        );
+
+        // Getting File Information
+        // name: ID in "files/..." format
+        [[nodiscard]] Result<File> getFile(
+            const std::string& name
+        );
+
+        [[nodiscard]] Result<bool> deleteFile(
+            const std::string& name
+        );
+
+        [[nodiscard]] Result<ListFilesResponse> listFiles(
+            int pageSize = 10,
+            const std::string& pageToken = ""
+        );
+        
         [[nodiscard]] Result<ModelInfo> getModelInfo(
             Model model
         );
@@ -69,9 +100,11 @@ namespace GeminiCPP
             std::string_view model_id
         );
         
-        [[nodiscard]] Result<std::vector<ModelInfo>> listModels();
+        [[nodiscard]] Result<std::vector<ModelInfo>> listModels(
+        );
 
-        [[nodiscard]] ApiValidationResult verifyApiKey();
+        [[nodiscard]] ApiValidationResult verifyApiKey(
+        );
 
         [[nodiscard]] Result<EmbedContentResponse> embedContent(
             std::string_view model,
@@ -120,9 +153,132 @@ namespace GeminiCPP
             Model model,
             const std::string& text
         );
+
+        // --- ASYNC METHODS (NON-BLOCKING) ---
+        [[nodiscard]] std::future<GenerationResult> generateContentAsync(
+            std::string prompt,
+            std::string_view model_id,
+            GenerationConfig config = {},
+            std::string systemInstruction = "",
+            std::vector<SafetySetting> safetySettings = {}
+        );
+
+        [[nodiscard]] std::future<GenerationResult> generateContentAsync(
+            std::string prompt,
+            Model model = Model::GEMINI_2_5_FLASH,
+            GenerationConfig config = {},
+            std::string systemInstruction = "",
+            std::vector<SafetySetting> safetySettings = {}
+        );
         
-        // (For internal use) We need to make the function that sends the raw request public or friend.
-        // For now, let's call it a friend class so ChatSession can access it.
+        [[nodiscard]] std::future<GenerationResult> streamGenerateContentAsync(
+            std::string prompt,
+            StreamCallback callback,
+            std::string_view model_id,
+            GenerationConfig config = {},
+            std::string systemInstruction = "",
+            std::vector<SafetySetting> safetySettings = {}
+        );
+
+        [[nodiscard]] std::future<GenerationResult> streamGenerateContentAsync(
+            std::string prompt,
+            StreamCallback callback,
+            Model model = Model::GEMINI_2_5_FLASH,
+            GenerationConfig config = {},
+            std::string systemInstruction = "",
+            std::vector<SafetySetting> safetySettings = {}
+        );
+
+        // --- FILES API ASYNC ---
+        [[nodiscard]] std::future<Result<File>> uploadFileAsync(
+            std::string path,
+            std::string displayName = ""
+        );
+
+        [[nodiscard]] std::future<Result<File>> getFileAsync(
+            std::string name
+        );
+
+        [[nodiscard]] std::future<Result<bool>> deleteFileAsync(
+            std::string name
+        );
+
+        [[nodiscard]] std::future<Result<ListFilesResponse>> listFilesAsync(
+            int pageSize = 10,
+            std::string pageToken = ""
+        );
+        
+        // --- MODEL INFO ASYNC ---
+        [[nodiscard]] std::future<Result<ModelInfo>> getModelInfoAsync(
+            Model model
+        );
+        
+        [[nodiscard]] std::future<Result<ModelInfo>> getModelInfoAsync(
+            std::string_view model_id
+        );
+        
+        [[nodiscard]] std::future<Result<std::vector<ModelInfo>>> listModelsAsync(
+        );
+
+        [[nodiscard]] std::future<ApiValidationResult> verifyApiKeyAsync(
+        );
+
+        // --- EMBEDDINGS & TOKENS ASYNC ---
+        [[nodiscard]] std::future<Result<EmbedContentResponse>> embedContentAsync(
+            std::string_view model,
+            std::string text,
+            EmbedConfig config = {}
+        );
+        
+        [[nodiscard]] std::future<Result<EmbedContentResponse>> embedContentAsync(
+            Model model,
+            std::string text,
+            EmbedConfig config = {}
+        );
+
+        [[nodiscard]] std::future<Result<BatchEmbedContentsResponse>> batchEmbedContentsAsync(
+            std::string_view model,
+            std::vector<std::string> texts,
+            EmbedConfig config = {}
+        );
+        
+        [[nodiscard]] std::future<Result<BatchEmbedContentsResponse>> batchEmbedContentsAsync(
+            Model model,
+            std::vector<std::string> texts,
+            EmbedConfig config = {}
+        );
+
+        [[nodiscard]] std::future<Result<TokenCountResponse>> countTokensAsync(
+            std::string_view model, 
+            std::vector<Content> contents,
+            std::string systemInstruction = "",
+            std::vector<Tool> tools = {}
+        );
+        
+        [[nodiscard]] std::future<Result<TokenCountResponse>> countTokensAsync(
+            Model model, 
+            std::vector<Content> contents,
+            std::string systemInstruction = "",
+            std::vector<Tool> tools = {}
+        );
+
+        [[nodiscard]] std::future<Result<TokenCountResponse>> countTokensAsync(
+            std::string_view model,
+            std::string text
+        );
+        
+        [[nodiscard]] std::future<Result<TokenCountResponse>> countTokensAsync(
+            Model model,
+            std::string text
+        );
+
+        void setRetryConfig(
+            const RetryConfig& config
+        );
+        
+        [[nodiscard]] const RetryConfig& getRetryConfig(
+        ) const;
+        
         friend class ChatSession;
         friend class RequestBuilder;
     private:
@@ -158,8 +314,28 @@ namespace GeminiCPP
             const StreamCallback& callback,
             const std::vector<Tool>& tools = {}
             );
+
+        [[nodiscard]] std::future<GenerationResult> generateFromBuilderAsync(
+            Model model,
+            std::string sys_instr,
+            std::vector<Part> parts,
+            GenerationConfig config,
+            std::vector<SafetySetting> safetySettings,
+            std::vector<Tool> tools
+        );
+
+        [[nodiscard]] std::future<GenerationResult> streamFromBuilderAsync(
+            Model model,
+            std::string sys_instr,
+            std::vector<Part> parts,
+            GenerationConfig config,
+            std::vector<SafetySetting> safetySettings,
+            StreamCallback callback,
+            std::vector<Tool> tools
+        );
         
         std::string api_key_;
+        RetryConfig retryConfig_;
     };
 
 }

@@ -18,6 +18,7 @@ namespace GeminiCPP
         [[nodiscard]] static std::string getMimeType(const std::string& filepath);
         [[nodiscard]] static std::vector<unsigned char> base64Decode(const std::string& encoded_string);
         [[nodiscard]] static std::string mimeToExtension(const std::string& mimeType);
+        [[nodiscard]] static std::string parseErrorMessage(const std::string& rawJson);
 
     private:
         [[nodiscard]] static std::string base64Encode(const std::vector<unsigned char>& data);

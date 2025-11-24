@@ -2,11 +2,16 @@
 
 #include <cpr/cpr.h>
 #include <nlohmann/json.hpp>
+#include <cmath>
+#include <random>
 
 #include "gemini/logger.h"
 #include "gemini/model.h"
 #include "gemini/http_status.h"
+#include "gemini/utils.h"
 #include "internal/payload_builder.h"
+
+using namespace std::string_literals;
 
 namespace GeminiCPP
 {
@@ -26,20 +31,8 @@ namespace GeminiCPP
 
             if (!HttpStatusHelper::isSuccess(r.status_code))
             {
-                std::string errorMsg = r.text;
-                try
-                {
-                    auto jsonErr = nlohmann::json::parse(r.text);
-                    if(jsonErr.contains("error"))
-                        errorMsg = jsonErr["error"]["message"].get<std::string>();
-                }
-                catch(const std::exception& e)
-                {
-                    GEMINI_WARN("Error message parsing failed! ({})", e.what());
-                }
-    
+                std::string errorMsg = Utils::parseErrorMessage(r.text);
                 GEMINI_ERROR("Response Error [{}]: {}", r.status_code, errorMsg);
-                
                 return Result<ResponseStruct>::Failure(errorMsg, r.status_code);
             }
             try
@@ -49,8 +42,36 @@ namespace GeminiCPP
             catch (const std::exception& e)
             {
                 GEMINI_ERROR("Response Parse Error: {}", e.what());
-                return Result<ResponseStruct>::Failure(std::string("Parse Error: ") + e.what(), r.status_code);
+                return Result<ResponseStruct>::Failure("Parse Error: "s + e.what(), r.status_code);
             }
+        }
+
+        int calculateWaitTime(const RetryConfig& config, int attempt, const cpr::Response& r)
+        {
+            if (r.header.contains("Retry-After"))
+            {
+                try
+                {
+                    return std::stoi(r.header.at("Retry-After")) * 1000;
+                }
+                catch (const std::exception& e)
+                {
+                    GEMINI_ERROR("Retry-After parsing failed: {}", e.what());
+                }
+            }
+
+            int delay = config.initialDelayMs * static_cast<int>(std::pow(config.multiplier, attempt));
+            delay = (std::min)(delay, config.maxDelayMs);
+
+            if (config.enableJitter)
+            {
+                static std::random_device rd;
+                static std::mt19937 gen(rd());
+                std::uniform_int_distribution<> dis(0, 500);
+                delay += dis(gen);
+            }
+
+            return delay;
         }
     }
     
@@ -72,46 +93,177 @@ namespace GeminiCPP
     }
 
     GenerationResult Client::generateContent(const std::string& prompt, std::string_view model_id,
-                                             const GenerationConfig& config, const std::vector<SafetySetting>& safetySettings)
+        const GenerationConfig& config, const std::string& systemInstruction, const std::vector<SafetySetting>& safetySettings)
     {
         nlohmann::json payload = Internal::PayloadBuilder::build(
             { Content::User().text(prompt) },
-            "",                               // System Instruction
-            config,                           // Config
-            safetySettings                    // Safety
-        );
-        
-        Url url(ModelName(model_id), ":generateContent");
-
-        return submitRequest(url, payload);
-    }
-
-    GenerationResult Client::generateContent(const std::string& prompt, Model model,
-        const GenerationConfig& config, const std::vector<SafetySetting>& safetySettings)
-    {
-        return generateContent(prompt, modelStringRepresentation(model), config, safetySettings);
-    }
-
-    GenerationResult Client::streamGenerateContent(const std::string& prompt, const StreamCallback& callback,
-        std::string_view model_id, const GenerationConfig& config, const std::vector<SafetySetting>& safetySettings)
-    {
-        nlohmann::json payload = Internal::PayloadBuilder::build(
-            { Content::User().text(prompt) },
-            "",
+            systemInstruction,
             config,
             safetySettings
         );
         
-        Url url(ModelName(model_id), ":streamGenerateContent");
+        Url url(ResourceName::Model(model_id), GM_GENERATE_CONTENT);
+
+        return submitRequest(url, payload);
+    }
+
+    GenerationResult Client::generateContent(const std::string& prompt, Model model, const GenerationConfig& config,
+        const std::string& systemInstruction, const std::vector<SafetySetting>& safetySettings)
+    {
+        return generateContent(prompt, modelStringRepresentation(model), config, systemInstruction, safetySettings);
+    }
+
+    GenerationResult Client::streamGenerateContent(const std::string& prompt, const StreamCallback& callback, std::string_view model_id,
+        const GenerationConfig& config, const std::string& systemInstruction, const std::vector<SafetySetting>& safetySettings)
+    {
+        nlohmann::json payload = Internal::PayloadBuilder::build(
+            { Content::User().text(prompt) },
+            systemInstruction,
+            config,
+            safetySettings
+        );
+        
+        Url url(ResourceName::Model(model_id), GM_STREAM_GENERATE_CONTENT);
         url.addQuery("alt", "sse");
         
         return submitStreamRequest(url, payload, callback);
     }
 
-    GenerationResult Client::streamGenerateContent(const std::string& prompt, const StreamCallback& callback,
-        Model model, const GenerationConfig& config, const std::vector<SafetySetting>& safetySettings)
+    GenerationResult Client::streamGenerateContent(const std::string& prompt, const StreamCallback& callback, Model model,
+        const GenerationConfig& config, const std::string& systemInstruction, const std::vector<SafetySetting>& safetySettings)
     {
-        return streamGenerateContent(prompt, callback, modelStringRepresentation(model), config, safetySettings);
+        return streamGenerateContent(prompt, callback, modelStringRepresentation(model), config, systemInstruction, safetySettings);
+    }
+
+    Result<File> Client::uploadFile(const std::string& path, std::string displayName)
+    {
+        if (!std::filesystem::exists(path))
+            return Result<File>::Failure("File not found: " + path);
+
+        std::string mimeType = Utils::getMimeType(path);
+
+        if (displayName.empty())
+            displayName = std::filesystem::path(path).filename().string();
+
+        Url url("files", EndpointType::UPLOAD);
+
+        // The Upload API may sometimes request the API Key as a query parameter.
+        // But we will add (x-goog-api-key) to the header; generally, both will work.
+        // url.addQuery("key", api_key_);
+
+        nlohmann::json metadata = {
+            {"file", {
+                    {"display_name", displayName}
+            }}
+        };
+
+        cpr::Response r = cpr::Post(
+            cpr::Url{url},
+            cpr::Header{
+                    {"x-goog-api-key", api_key_}, // Auth Header
+                    {"X-Goog-Upload-Protocol", "multipart"},
+                    {"X-Goog-Upload-Mime-Type", mimeType}
+            },
+            cpr::Multipart{
+                {"metadata", metadata.dump(), "application/json"},
+                {"file", cpr::File(path), mimeType}
+            },
+            cpr::VerifySsl(false)
+        );
+
+        if (!HttpStatusHelper::isSuccess(r.status_code))
+        {
+            std::string err = Utils::parseErrorMessage(r.text);
+            GEMINI_ERROR("Upload Failed [{}]: {}", r.status_code, err);
+            return Result<File>::Failure(err, r.status_code);
+        }
+
+        try
+        {
+            auto json = nlohmann::json::parse(r.text);
+            if (json.contains("file"))
+                return Result<File>::Success(File::fromJson(json["file"]));
+            
+            return Result<File>::Success(File::fromJson(json));
+        }
+        catch (const std::exception& e)
+        {
+            return Result<File>::Failure("Parse Error: "s + e.what());
+        }
+    }
+
+    Result<File> Client::getFile(const std::string& name)
+    {
+        Url url(ResourceName::File(name));
+
+        cpr::Response r = cpr::Get(
+            cpr::Url{url},
+            cpr::Header{{"x-goog-api-key", api_key_}},
+            cpr::VerifySsl(false)
+        );
+
+        if (!HttpStatusHelper::isSuccess(r.status_code))
+        {
+            return Result<File>::Failure(Utils::parseErrorMessage(r.text), r.status_code);
+        }
+
+        try
+        {
+            return Result<File>::Success(File::fromJson(nlohmann::json::parse(r.text)));
+        }
+        catch (const std::exception& e)
+        {
+            return Result<File>::Failure("Parse Error: "s + e.what());
+        }
+    }
+
+    Result<bool> Client::deleteFile(const std::string& name)
+    {
+        Url url(ResourceName::File(name));
+
+        cpr::Response r = cpr::Delete(
+            cpr::Url{url},
+            cpr::Header{{"x-goog-api-key", api_key_}},
+            cpr::VerifySsl(false)
+        );
+
+        if (HttpStatusHelper::isSuccess(r.status_code))
+        {
+            return Result<bool>::Success(true);
+        }
+        
+        return Result<bool>::Failure(Utils::parseErrorMessage(r.text), r.status_code);
+    }
+    
+    Result<ListFilesResponse> Client::listFiles(int pageSize, const std::string& pageToken)
+    {
+        Url url(std::string_view("files"));
+        
+        cpr::Parameters params;
+        params.Add({"pageSize", std::to_string(pageSize)});
+        if(!pageToken.empty())
+            params.Add({"pageToken", pageToken});
+
+        cpr::Response r = cpr::Get(
+            cpr::Url{url},
+            cpr::Header{{"x-goog-api-key", api_key_}},
+            params, // Query Params
+            cpr::VerifySsl(false)
+        );
+
+        if (!HttpStatusHelper::isSuccess(r.status_code))
+        {
+            return Result<ListFilesResponse>::Failure(Utils::parseErrorMessage(r.text), r.status_code);
+        }
+
+        try
+        {
+            return Result<ListFilesResponse>::Success(ListFilesResponse::fromJson(nlohmann::json::parse(r.text)));
+        }
+        catch (const std::exception& e)
+        {
+            return Result<ListFilesResponse>::Failure("Parse Error: "s + e.what());
+        }
     }
 
     Result<ModelInfo> Client::getModelInfo(Model model)
@@ -121,7 +273,7 @@ namespace GeminiCPP
 
     Result<ModelInfo> Client::getModelInfo(std::string_view model_id)
     {
-        Url url{ ModelName(model_id) };
+        Url url{ ResourceName::Model(model_id) };
         
         cpr::Response r = cpr::Get(
             cpr::Url{url},
@@ -133,19 +285,8 @@ namespace GeminiCPP
 
         if (!HttpStatusHelper::isSuccess(r.status_code))
         {
-            std::string errorMsg = r.text;
-            try
-            {
-                auto jsonErr = nlohmann::json::parse(r.text);
-                if(jsonErr.contains("error"))
-                    errorMsg = jsonErr["error"]["message"].value("message", r.text);
-            }
-            catch(const std::exception& e)
-            {
-                GEMINI_WARN("Error message parsing failed! ({})", e.what());
-            }
+            std::string errorMsg = Utils::parseErrorMessage(r.text);
             GEMINI_ERROR("Model Info Error [{}]: {}", r.status_code, errorMsg);
-            
             return Result<ModelInfo>::Failure(errorMsg, r.status_code);
         }
 
@@ -156,7 +297,7 @@ namespace GeminiCPP
         catch (const std::exception& e)
         {
             GEMINI_ERROR("Model Info Parse Error: {}", e.what());
-            return Result<ModelInfo>::Failure(std::string("Parse Error: ") + e.what());
+            return Result<ModelInfo>::Failure("Parse Error: "s + e.what());
         }
     }
 
@@ -174,17 +315,7 @@ namespace GeminiCPP
 
         if (!HttpStatusHelper::isSuccess(r.status_code))
         {
-            std::string errorMsg = r.text;
-            try
-            {
-                auto jsonErr = nlohmann::json::parse(r.text);
-                if(jsonErr.contains("error"))
-                    errorMsg = jsonErr["error"]["message"].value("message", r.text);
-            }
-            catch(const std::exception& e)
-            {
-                GEMINI_WARN("Error message parsing failed! ({})", e.what());
-            }
+            std::string errorMsg = Utils::parseErrorMessage(r.text);
             GEMINI_ERROR("ListModels Error [{}]: {}", r.status_code, errorMsg);
             return Result<std::vector<ModelInfo>>::Failure(errorMsg, r.status_code);
         }
@@ -206,7 +337,7 @@ namespace GeminiCPP
         catch (const std::exception& e)
         {
             GEMINI_ERROR("ListModels Parse Error: {}", e.what());
-            return Result<std::vector<ModelInfo>>::Failure(std::string("Parse Error: ") + e.what());
+            return Result<std::vector<ModelInfo>>::Failure("Parse Error: "s + e.what());
         }
     }
 
@@ -268,8 +399,8 @@ namespace GeminiCPP
     Result<EmbedContentResponse> Client::embedContent(std::string_view model, const std::string& text,
         const EmbedConfig& config)
     {
-        ModelName modelName(model);
-        Url url(modelName, ":embedContent");
+        ResourceName modelName = ResourceName::Model(model);
+        Url url(modelName, GM_EMBED_CONTENT);
 
         nlohmann::json payload = Internal::PayloadBuilder::buildEmbedContent(
             Content::User().text(text), 
@@ -288,8 +419,8 @@ namespace GeminiCPP
     Result<BatchEmbedContentsResponse> Client::batchEmbedContents(std::string_view model,
         const std::vector<std::string>& texts, const EmbedConfig& config)
     {
-        ModelName modelName(model);
-        Url url(modelName, ":batchEmbedContents");
+        ResourceName modelName = ResourceName::Model(model);
+        Url url(modelName, GM_BATCH_EMBED_CONTENTS);
         
         nlohmann::json payload = Internal::PayloadBuilder::buildBatchEmbedContent(texts, modelName, config);
 
@@ -305,7 +436,7 @@ namespace GeminiCPP
     Result<TokenCountResponse> Client::countTokens(std::string_view model, const std::vector<Content>& contents,
         const std::string& systemInstruction, const std::vector<Tool>& tools)
     {
-        Url url(ModelName(model), ":countTokens");
+        Url url(ResourceName::Model(model), GM_COUNT_TOKENS);
 
         nlohmann::json payload = Internal::PayloadBuilder::build(
             contents, 
@@ -334,100 +465,293 @@ namespace GeminiCPP
         return countTokens(model, {Content::User().text(text)});
     }
 
+    std::future<GenerationResult> Client::generateContentAsync(std::string prompt, std::string_view model_id,
+        GenerationConfig config, std::string systemInstruction, std::vector<SafetySetting> safetySettings)
+    {
+        std::string modelIdStr(model_id);
+        return std::async(std::launch::async, [
+            this,
+            modelIdStr = std::move(modelIdStr),
+            prompt = std::move(prompt),
+            config = std::move(config),
+            systemInstruction = std::move(systemInstruction),
+            safetySettings = std::move(safetySettings)]() {
+            return generateContent(prompt, modelIdStr, config, systemInstruction, safetySettings);
+        });
+    }
+
+    std::future<GenerationResult> Client::generateContentAsync(std::string prompt, Model model,
+        GenerationConfig config, std::string systemInstruction, std::vector<SafetySetting> safetySettings)
+    {
+        return std::async(std::launch::async, [
+            this,
+            model,
+            prompt = std::move(prompt),
+            config = std::move(config),
+            systemInstruction = std::move(systemInstruction),
+            safetySettings = std::move(safetySettings)]() {
+            return generateContent(prompt, model, config, systemInstruction, safetySettings);
+        });
+    }
+
+    std::future<GenerationResult> Client::streamGenerateContentAsync(std::string prompt, StreamCallback callback,
+        std::string_view model_id, GenerationConfig config, std::string systemInstruction, std::vector<SafetySetting> safetySettings)
+    {
+        std::string modelIdStr(model_id);
+        return std::async(std::launch::async, [
+            this,
+            modelIdStr = std::move(modelIdStr),
+            callback = std::move(callback),
+            prompt = std::move(prompt),
+            config = std::move(config),
+            systemInstruction = std::move(systemInstruction),
+            safetySettings = std::move(safetySettings)]() {
+            return streamGenerateContent(prompt, callback, modelIdStr, config, systemInstruction, safetySettings);
+        });
+    }
+
+    std::future<GenerationResult> Client::streamGenerateContentAsync(std::string prompt, StreamCallback callback,
+        Model model, GenerationConfig config, std::string systemInstruction, std::vector<SafetySetting> safetySettings)
+    {
+        return std::async(std::launch::async, [
+            this,
+            model,
+            callback = std::move(callback),
+            prompt = std::move(prompt),
+            config = std::move(config),
+            systemInstruction = std::move(systemInstruction),
+            safetySettings = std::move(safetySettings)]() {
+            return streamGenerateContent(prompt, callback, model, config, systemInstruction, safetySettings);
+        });
+    }
+
+    std::future<Result<File>> Client::uploadFileAsync(std::string path, std::string displayName)
+    {
+        return std::async(std::launch::async, [this, path = std::move(path), displayName = std::move(displayName)]() {
+            return uploadFile(path, displayName);
+        });
+    }
+
+    std::future<Result<File>> Client::getFileAsync(std::string name)
+    {
+        return std::async(std::launch::async, [this, name = std::move(name)]() {
+            return getFile(name);
+        });
+    }
+
+    std::future<Result<bool>> Client::deleteFileAsync(std::string name)
+    {
+        return std::async(std::launch::async, [this, name = std::move(name)]() {
+            return deleteFile(name);
+        });
+    }
+
+    std::future<Result<ListFilesResponse>> Client::listFilesAsync(int pageSize, std::string pageToken)
+    {
+        return std::async(std::launch::async, [this, pageSize, pageToken = std::move(pageToken)]() {
+            return listFiles(pageSize, pageToken);
+        });
+    }
+
+    std::future<Result<ModelInfo>> Client::getModelInfoAsync(Model model)
+    {
+        return std::async(std::launch::async, [this, model]() {
+            return getModelInfo(model);
+        });
+    }
+
+    std::future<Result<ModelInfo>> Client::getModelInfoAsync(std::string_view model_id)
+    {
+        std::string modelIdStr(model_id);
+        return std::async(std::launch::async, [this, modelIdStr = std::move(modelIdStr)]() {
+            return getModelInfo(modelIdStr);
+        });
+    }
+
+    std::future<Result<std::vector<ModelInfo>>> Client::listModelsAsync()
+    {
+        return std::async(std::launch::async, [this]() {
+            return listModels();
+        });
+    }
+
+    std::future<ApiValidationResult> Client::verifyApiKeyAsync()
+    {
+        return std::async(std::launch::async, [this]() {
+            return verifyApiKey();
+        });
+    }
+
+    std::future<Result<EmbedContentResponse>> Client::embedContentAsync(std::string_view model, std::string text, EmbedConfig config)
+    {
+        std::string modelIdStr(model);
+        return std::async(std::launch::async, [this, modelIdStr = std::move(modelIdStr), text = std::move(text), config = std::move(config)]() {
+            return embedContent(modelIdStr, text, config);
+        });
+    }
+
+    std::future<Result<EmbedContentResponse>> Client::embedContentAsync(Model model, std::string text, EmbedConfig config)
+    {
+        return std::async(std::launch::async, [this, model, text = std::move(text), config = std::move(config)]() {
+            return embedContent(model, text, config);
+        });
+    }
+
+    std::future<Result<BatchEmbedContentsResponse>> Client::batchEmbedContentsAsync(std::string_view model, std::vector<std::string> texts, EmbedConfig config)
+    {
+        std::string modelIdStr(model);
+        return std::async(std::launch::async, [this, modelIdStr = std::move(modelIdStr), texts = std::move(texts), config = std::move(config)]() {
+            return batchEmbedContents(modelIdStr, texts, config);
+        });
+    }
+
+    std::future<Result<BatchEmbedContentsResponse>> Client::batchEmbedContentsAsync(Model model, std::vector<std::string> texts, EmbedConfig config)
+    {
+        return std::async(std::launch::async, [this, model, texts = std::move(texts), config = std::move(config)]() {
+            return batchEmbedContents(model, texts, config);
+        });
+    }
+
+    std::future<Result<TokenCountResponse>> Client::countTokensAsync(std::string_view model, std::vector<Content> contents, std::string systemInstruction, std::vector<Tool> tools)
+    {
+        std::string modelIdStr(model);
+        return std::async(std::launch::async, [this, modelIdStr = std::move(modelIdStr), contents = std::move(contents), systemInstruction = std::move(systemInstruction), tools = std::move(tools)]() {
+            return countTokens(modelIdStr, contents, systemInstruction, tools);
+        });
+    }
+
+    std::future<Result<TokenCountResponse>> Client::countTokensAsync(Model model, std::vector<Content> contents, std::string systemInstruction, std::vector<Tool> tools)
+    {
+        return std::async(std::launch::async, [this, model, contents = std::move(contents), systemInstruction = std::move(systemInstruction), tools = std::move(tools)]() {
+            return countTokens(model, contents, systemInstruction, tools);
+        });
+    }
+
+    std::future<Result<TokenCountResponse>> Client::countTokensAsync(std::string_view model, std::string text)
+    {
+        std::string modelIdStr(model);
+        return std::async(std::launch::async, [this, modelIdStr = std::move(modelIdStr), text = std::move(text)]() {
+            return countTokens(modelIdStr, text);
+        });
+    }
+
+    std::future<Result<TokenCountResponse>> Client::countTokensAsync(Model model, std::string text)
+    {
+        return std::async(std::launch::async, [this, model, text = std::move(text)]() {
+            return countTokens(model, text);
+        });
+    }
+
+    void Client::setRetryConfig(const RetryConfig& config)
+    {
+        retryConfig_ = config;
+    }
+
+    const RetryConfig& Client::getRetryConfig() const
+    {
+        return retryConfig_;
+    }
+
     GenerationResult Client::submitRequest(const Url& url, const nlohmann::json& payload)
     {
-        cpr::Response r = cpr::Post(
-            cpr::Url{url},
-            cpr::Header{
-                {"Content-Type", "application/json"},
-                {"x-goog-api-key", api_key_}
-            },
-            cpr::Body{payload.dump()}
-        );
-    
-        if (!HttpStatusHelper::isSuccess(r.status_code))
+        int attempt = 0;
+
+        while (true)
         {
-            std::string errorMsg = r.text;
-            try
+            cpr::Response r = cpr::Post(
+                cpr::Url{url},
+                cpr::Header{
+                    {"Content-Type", "application/json"},
+                    {"x-goog-api-key", api_key_}
+                },
+                cpr::Body{payload.dump()}
+            );
+
+            if (HttpStatusHelper::isSuccess(r.status_code))
             {
-                auto jsonErr = nlohmann::json::parse(r.text);
-                if(jsonErr.contains("error"))
-                    errorMsg = jsonErr["error"]["message"].value("message", r.text);
+                try
+                {
+                    auto json_response = nlohmann::json::parse(r.text);
+        
+                    if (json_response.contains("promptFeedback"))
+                    {
+                        auto feedback = json_response["promptFeedback"];
+                        if (feedback.contains("blockReason"))
+                        {
+                            std::string reason = feedback["blockReason"].get<std::string>();
+                            if (reason == "SAFETY")
+                            {
+                                return GenerationResult::Failure("Prompt blocked by Safety Filter", frenum::value(HttpStatusCode::OK), FinishReason::PROMPT_BLOCKED);
+                            }
+                        }
+                    }
+                    
+                    if (!json_response.contains("candidates") || json_response["candidates"].empty())
+                    {
+                        return GenerationResult::Failure("No candidates returned", frenum::value(HttpStatusCode::OK));
+                    }
+            
+                    auto candidate = json_response["candidates"][0];
+        
+                    FinishReason reason = FinishReason::FINISH_REASON_UNSPECIFIED;
+                    if (candidate.contains("finishReason"))
+                    {
+                        std::string reasonStr = candidate["finishReason"].get<std::string>();
+                        reason = FinishReasonHelper::fromString(reasonStr);
+                    }
+        
+                    if (reason == FinishReason::SAFETY && !candidate.contains("content"))
+                    {
+                        return GenerationResult::Failure("Response blocked by Safety Filter", frenum::value(HttpStatusCode::OK), FinishReason::SAFETY);
+                    }
+                    
+                    if (candidate.contains("content"))
+                    {
+                         Content content = Content::fromJson(candidate["content"]);
+        
+                        int inTok = 0, outTok = 0;
+                        if (json_response.contains("usageMetadata"))
+                        {
+                            auto usage = json_response["usageMetadata"];
+                            inTok = usage.value("promptTokenCount", 0);
+                            outTok = usage.value("candidatesTokenCount", 0);
+                        }
+        
+                        std::optional<GroundingMetadata> grounding = std::nullopt;
+                        if (candidate.contains("groundingMetadata"))
+                        {
+                            grounding = GroundingMetadata::fromJson(candidate["groundingMetadata"]);
+                        }
+                        
+                        // Sometimes the groundingMetadata may not be in the candidate but at the root level (depending on the API version).
+                        // But generally, it's in the candidate. If it's not in the root, we look at the candidate anyway.
+                        return GenerationResult::Success(content, r.status_code, inTok, outTok, reason, grounding);
+                    }
+                    
+                    return GenerationResult::Failure("Candidate has no content", frenum::value(HttpStatusCode::OK), reason);
+                }
+                catch (const std::exception& e)
+                {
+                    GEMINI_ERROR("JSON Parse Error: {}", e.what());
+                    return GenerationResult::Failure("Parse error: "s + e.what(), r.status_code);
+                }
             }
-            catch(const std::exception& e)
+            
+            if (HttpStatusHelper::isRetryable(r.status_code) && attempt < retryConfig_.maxRetries)
             {
-                GEMINI_WARN("Error message parsing failed! ({})", e.what());
+                int waitMs = calculateWaitTime(retryConfig_, attempt, r);
+                
+                GEMINI_WARN("API Error [{}]. Retrying in {} ms... (Attempt {}/{})", 
+                    r.status_code, waitMs, attempt + 1, retryConfig_.maxRetries);
+
+                std::this_thread::sleep_for(std::chrono::milliseconds(waitMs));
+                attempt++;
+                continue;
             }
-    
+
+            std::string errorMsg = Utils::parseErrorMessage(r.text);
             GEMINI_ERROR("API Error [{}]: {}", r.status_code, errorMsg);
             return GenerationResult::Failure(errorMsg, r.status_code);
-        }
-    
-        try
-        {
-            auto json_response = nlohmann::json::parse(r.text);
-
-            if (json_response.contains("promptFeedback"))
-            {
-                auto feedback = json_response["promptFeedback"];
-                if (feedback.contains("blockReason"))
-                {
-                    std::string reason = feedback["blockReason"].get<std::string>();
-                    if (reason == "SAFETY")
-                    {
-                        return GenerationResult::Failure("Prompt blocked by Safety Filter", frenum::value(HttpStatusCode::OK), FinishReason::PROMPT_BLOCKED);
-                    }
-                }
-            }
-            
-            if (!json_response.contains("candidates") || json_response["candidates"].empty())
-            {
-                return GenerationResult::Failure("No candidates returned", frenum::value(HttpStatusCode::OK));
-            }
-    
-            auto candidate = json_response["candidates"][0];
-
-            FinishReason reason = FinishReason::FINISH_REASON_UNSPECIFIED;
-            if (candidate.contains("finishReason"))
-            {
-                std::string reasonStr = candidate["finishReason"].get<std::string>();
-                reason = FinishReasonHelper::fromString(reasonStr);
-            }
-
-            if (reason == FinishReason::SAFETY && !candidate.contains("content"))
-            {
-                return GenerationResult::Failure("Response blocked by Safety Filter", frenum::value(HttpStatusCode::OK), FinishReason::SAFETY);
-            }
-            
-            if (candidate.contains("content"))
-            {
-                 Content content = Content::fromJson(candidate["content"]);
-
-                int inTok = 0, outTok = 0;
-                if (json_response.contains("usageMetadata"))
-                {
-                    auto usage = json_response["usageMetadata"];
-                    inTok = usage.value("promptTokenCount", 0);
-                    outTok = usage.value("candidatesTokenCount", 0);
-                }
-
-                std::optional<GroundingMetadata> grounding = std::nullopt;
-                if (candidate.contains("groundingMetadata"))
-                {
-                    grounding = GroundingMetadata::fromJson(candidate["groundingMetadata"]);
-                }
-                // Sometimes the groundingMetadata may not be in the candidate but at the root level (depending on the API version).
-                // But generally, it's in the candidate. If it's not in the root, we look at the candidate anyway.
-                
-                return GenerationResult::Success(content, r.status_code, inTok, outTok, reason, grounding);
-            }
-            
-            return GenerationResult::Failure("Candidate has no content", frenum::value(HttpStatusCode::OK), reason);
-        }
-        catch (const std::exception& e)
-        {
-            GEMINI_ERROR("JSON Parse Error: {}", e.what());
-            return GenerationResult::Failure("Response parse error", r.status_code);
         }
     }
 
@@ -445,126 +769,129 @@ namespace GeminiCPP
             tools
         );
 
-        Url url(ModelName(modelStringRepresentation(model)), ":generateContent");
+        Url url(ResourceName::Model(modelStringRepresentation(model)), GM_GENERATE_CONTENT);
 
         return submitRequest(url, payload);
     }
 
     GenerationResult Client::submitStreamRequest(const Url& url, const nlohmann::json& payload, const StreamCallback& callback)
     {
-        std::string fullTextAccumulator;
-        std::string buffer;
-        int inputTokens = 0;
-        int outputTokens = 0;
-
-        auto write_func = [&](std::string data, intptr_t userdata) -> bool
+        int attempt = 0;
+        
+        while (true)
         {
-            (void)userdata;
-            buffer += data;
+            std::string fullTextAccumulator;
+            std::string buffer;
+            int inputTokens = 0;
+            int outputTokens = 0;
 
-            while (true)
+            auto write_func = [&](std::string data, intptr_t userdata) -> bool
             {
-                size_t startPos = buffer.find("data:");
-                
-                if (startPos == std::string::npos)
+                (void)userdata;
+                buffer += data;
+
+                while (true)
                 {
-                    if (buffer.size() > (static_cast<size_t>(1024) * 1024))
-                        buffer.clear(); 
-                    break; 
-                }
-
-                size_t endPos = buffer.find("\n\n", startPos);
-                size_t delimiterLen = 2;
-
-                size_t crlfPos = buffer.find("\r\n\r\n", startPos);
-                if (crlfPos != std::string::npos && (endPos == std::string::npos || crlfPos < endPos))
-                {
-                    endPos = crlfPos;
-                    delimiterLen = 4;
-                }
-
-                if (endPos == std::string::npos)
-                    break;
-
-                size_t jsonStart = startPos + 5;
-                std::string jsonStr = buffer.substr(jsonStart, endPos - jsonStart);
-
-                buffer.erase(0, endPos + delimiterLen);
-
-                if (!jsonStr.empty() && jsonStr.front() == ' ') 
-                    jsonStr.erase(0, 1);
-
-                if (jsonStr.empty())
-                    continue;
-
-                try
-                {
-                    auto jsonChunk = nlohmann::json::parse(jsonStr);
-
-                    if (jsonChunk.contains("candidates") && !jsonChunk["candidates"].empty())
+                    size_t startPos = buffer.find("data:");
+                    
+                    if (startPos == std::string::npos)
                     {
-                        auto candidate = jsonChunk["candidates"][0];
-                        if (candidate.contains("content") && candidate["content"].contains("parts"))
+                        if (buffer.size() > (static_cast<size_t>(1024) * 1024))
+                            buffer.clear(); 
+                        break; 
+                    }
+
+                    size_t endPos = buffer.find("\n\n", startPos);
+                    size_t delimiterLen = 2;
+
+                    size_t crlfPos = buffer.find("\r\n\r\n", startPos);
+                    if (crlfPos != std::string::npos && (endPos == std::string::npos || crlfPos < endPos))
+                    {
+                        endPos = crlfPos;
+                        delimiterLen = 4;
+                    }
+
+                    if (endPos == std::string::npos)
+                        break;
+
+                    size_t jsonStart = startPos + 5;
+                    std::string jsonStr = buffer.substr(jsonStart, endPos - jsonStart);
+
+                    buffer.erase(0, endPos + delimiterLen);
+
+                    if (!jsonStr.empty() && jsonStr.front() == ' ') 
+                        jsonStr.erase(0, 1);
+
+                    if (jsonStr.empty())
+                        continue;
+
+                    try
+                    {
+                        auto jsonChunk = nlohmann::json::parse(jsonStr);
+
+                        if (jsonChunk.contains("candidates") && !jsonChunk["candidates"].empty())
                         {
-                            auto parts = candidate["content"]["parts"];
-                            if (!parts.empty() && parts[0].contains("text"))
+                            auto candidate = jsonChunk["candidates"][0];
+                            if (candidate.contains("content") && candidate["content"].contains("parts"))
                             {
-                                std::string chunkText = parts[0]["text"].get<std::string>();
-                                
-                                if (callback)
-                                    callback(chunkText);
-                                
-                                fullTextAccumulator += chunkText;
+                                auto parts = candidate["content"]["parts"];
+                                if (!parts.empty() && parts[0].contains("text"))
+                                {
+                                    std::string chunkText = parts[0]["text"].get<std::string>();
+                                    
+                                    if (callback)
+                                        callback(chunkText);
+                                    
+                                    fullTextAccumulator += chunkText;
+                                }
                             }
                         }
+                        
+                        if (jsonChunk.contains("usageMetadata"))
+                        {
+                            inputTokens = jsonChunk["usageMetadata"].value("promptTokenCount", 0);
+                            outputTokens = jsonChunk["usageMetadata"].value("candidatesTokenCount", 0);
+                        }
+
                     }
-                    
-                    if (jsonChunk.contains("usageMetadata"))
+                    catch (const std::exception& e)
                     {
-                        inputTokens = jsonChunk["usageMetadata"].value("promptTokenCount", 0);
-                        outputTokens = jsonChunk["usageMetadata"].value("candidatesTokenCount", 0);
+                        GEMINI_WARN("Stream JSON Parse Error: {} \nWrong JSON: {}", e.what(), jsonStr);
                     }
-
                 }
-                catch (const std::exception& e)
-                {
-                    GEMINI_WARN("Stream JSON Parse Error: {} \nWrong JSON: {}", e.what(), jsonStr);
-                }
-            }
-            return true;
-        };
+                return true;
+            };
 
-        cpr::Response r = cpr::Post(
-            cpr::Url{url},
-            cpr::Header{
-                {"Content-Type", "application/json"},
-                {"x-goog-api-key", api_key_}
-            },
-            cpr::Body{payload.dump()},
-            cpr::WriteCallback(write_func),
-            cpr::VerifySsl(false)
-        );
+            cpr::Response r = cpr::Post(
+                cpr::Url{url},
+                cpr::Header{
+                    {"Content-Type", "application/json"},
+                    {"x-goog-api-key", api_key_}
+                },
+                cpr::Body{payload.dump()},
+                cpr::WriteCallback(write_func),
+                cpr::VerifySsl(false)
+            );
 
-        if (!HttpStatusHelper::isSuccess(r.status_code))
-        {
-            std::string errDetails = r.text;
-            try
+            if (HttpStatusHelper::isSuccess(r.status_code))
             {
-                auto jErr = nlohmann::json::parse(r.text);
-                if (jErr.contains("error")) 
-                    errDetails = jErr["error"]["message"].value("message", r.text);
+                Content finalContent = Content::Model().text(fullTextAccumulator);
+                return GenerationResult::Success(finalContent, r.status_code, inputTokens, outputTokens);
             }
-            catch(const std::exception& e)
+
+            if (HttpStatusHelper::isRetryable(r.status_code) && attempt < retryConfig_.maxRetries)
             {
-                GEMINI_WARN("Stream API Error detail parsing failed. ({})", e.what());
+                int waitMs = calculateWaitTime(retryConfig_, attempt, r);
+                GEMINI_WARN("Stream API Error [{}]. Retrying... ({}/{})", r.status_code, attempt + 1, retryConfig_.maxRetries);
+                std::this_thread::sleep_for(std::chrono::milliseconds(waitMs));
+                attempt++;
+                continue;
             }
-            
+
+            std::string errDetails = Utils::parseErrorMessage(r.text);
             GEMINI_ERROR("Stream API Error [{}]: {}", r.status_code, errDetails);
             return GenerationResult::Failure(errDetails, r.status_code);
         }
-
-        Content finalContent = Content::Model().text(fullTextAccumulator);
-        return GenerationResult::Success(finalContent, r.status_code, inputTokens, outputTokens);
     }
 
     GenerationResult Client::streamFromBuilder(Model model, const std::string& sys_instr,
@@ -582,9 +909,44 @@ namespace GeminiCPP
             tools
         );
 
-        Url url(ModelName(modelStringRepresentation(model)), ":streamGenerateContent");
+        Url url(ResourceName::Model(modelStringRepresentation(model)), GM_STREAM_GENERATE_CONTENT);
         url.addQuery("alt", "sse");
         
         return submitStreamRequest(url, payload, callback);
+    }
+
+    std::future<GenerationResult> Client::generateFromBuilderAsync(Model model, std::string sys_instr,
+        std::vector<Part> parts, GenerationConfig config, std::vector<SafetySetting> safetySettings,
+        std::vector<Tool> tools)
+    {
+        return std::async(std::launch::async, [
+            this,
+            model,
+            sys_instr = std::move(sys_instr), 
+            parts = std::move(parts), 
+            config = std::move(config), 
+            safetySettings = std::move(safetySettings), 
+            tools = std::move(tools)]() 
+        {
+            return generateFromBuilder(model, sys_instr, parts, config, safetySettings, tools);
+        });
+    }
+
+    std::future<GenerationResult> Client::streamFromBuilderAsync(Model model, std::string sys_instr,
+        std::vector<Part> parts, GenerationConfig config, std::vector<SafetySetting> safetySettings,
+        StreamCallback callback, std::vector<Tool> tools)
+    {
+        return std::async(std::launch::async, [
+            this,
+            model,
+            sys_instr = std::move(sys_instr), 
+            parts = std::move(parts), 
+            config = std::move(config), 
+            safetySettings = std::move(safetySettings),
+            callback = std::move(callback),
+            tools = std::move(tools)]() 
+        {
+            return streamFromBuilder(model, sys_instr, parts, config, safetySettings, callback, tools);
+        });
     }
 }

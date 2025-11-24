@@ -59,27 +59,37 @@ namespace GeminiCPP
     };
     struct BlobData
     {
-        std::string mimeType; std::string data;
+        std::string mimeType;
+        std::string data;
+    };
+
+    struct FileData
+    {
+        std::string mimeType; 
+        std::string fileUri;
     };
 
     struct Part
     {
-        using VariantType = std::variant<std::monostate, TextData, BlobData, FunctionCall, FunctionResponse>;
+        using VariantType = std::variant<std::monostate, TextData, BlobData, FileData, FunctionCall, FunctionResponse>;
         
         VariantType content;
 
-        bool isText() const;
-        bool isBlob() const;
-        bool isFunctionCall() const;
-        bool isFunctionResponse() const;
+        [[nodiscard]] bool isText() const;
+        [[nodiscard]] bool isBlob() const; // Inline Base64
+        [[nodiscard]] bool isFileData() const; // URI Reference
+        [[nodiscard]] bool isFunctionCall() const;
+        [[nodiscard]] bool isFunctionResponse() const;
 
         [[nodiscard]] const std::string* getText() const;
         [[nodiscard]] const BlobData* getBlob() const;
+        [[nodiscard]] const FileData* getFileData() const;
         [[nodiscard]] const FunctionCall* getFunctionCall() const;
         [[nodiscard]] const FunctionResponse* getFunctionResponse() const;
 
         [[nodiscard]] static Part Text(std::string t);
         [[nodiscard]] static Part Media(const std::string& filepath, const std::string& customMimeType = "");
+        [[nodiscard]] static Part Uri(std::string fileUri, std::string mimeType);
         [[nodiscard]] static Part Call(FunctionCall call);
         [[nodiscard]] static Part Response(FunctionResponse resp);
 
@@ -106,6 +116,7 @@ namespace GeminiCPP
         Content& text(const std::string& t);
         Content& image(const std::string& filepath);
         Content& file(const std::string& filepath);
+        Content& fileUri(const std::string& uri, const std::string& mimeType);
         Content& media(const std::string& filepath, const std::string& mimeType = "");
         Content& functionResponse(std::string name, nlohmann::json responseContent);
 
@@ -154,32 +165,32 @@ namespace GeminiCPP
     };
 
     FrenumClassInNamespace(GeminiCPP, HarmCategory, uint8_t,
-            HARM_CATEGORY_UNSPECIFIED, // Default, not used.
+        HARM_CATEGORY_UNSPECIFIED, // Default, not used.
 
-            // Text Categories
-            HARM_CATEGORY_HATE_SPEECH, // Content that promotes violence or hatred.
-            HARM_CATEGORY_DANGEROUS_CONTENT, // Content that promotes dangerous activities.
-            HARM_CATEGORY_HARASSMENT, // Content that contains harassment, threats or bullying.
-            HARM_CATEGORY_SEXUALLY_EXPLICIT, // Sexual content.
-            HARM_CATEGORY_CIVIC_INTEGRITY, // (Deprecated) Election security etc.
+        // Text Categories
+        HARM_CATEGORY_HATE_SPEECH, // Content that promotes violence or hatred.
+        HARM_CATEGORY_DANGEROUS_CONTENT, // Content that promotes dangerous activities.
+        HARM_CATEGORY_HARASSMENT, // Content that contains harassment, threats or bullying.
+        HARM_CATEGORY_SEXUALLY_EXPLICIT, // Sexual content.
+        HARM_CATEGORY_CIVIC_INTEGRITY, // (Deprecated) Election security etc.
 
-            // Image Categories
-            HARM_CATEGORY_IMAGE_HATE,
-            HARM_CATEGORY_IMAGE_DANGEROUS_CONTENT,
-            HARM_CATEGORY_IMAGE_HARASSMENT,
-            HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT,
+        // Image Categories
+        HARM_CATEGORY_IMAGE_HATE,
+        HARM_CATEGORY_IMAGE_DANGEROUS_CONTENT,
+        HARM_CATEGORY_IMAGE_HARASSMENT,
+        HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT,
 
-            // Special Categories
-            HARM_CATEGORY_JAILBREAK // Prompts that attempt to bypass security filters.
+        // Special Categories
+        HARM_CATEGORY_JAILBREAK // Prompts that attempt to bypass security filters.
     )
     
     FrenumClassInNamespace(GeminiCPP, HarmBlockThreshold, uint8_t,
-            UNSPECIFIED,             // Unspecified.
-            BLOCK_LOW_AND_ABOVE,     // Block low risk and above (Very Strict).
-            BLOCK_MEDIUM_AND_ABOVE,  // Block medium risk and above (Default).
-            BLOCK_ONLY_HIGH,         // Only block high risk.
-            BLOCK_NONE,              // Don't block anything (Risky).
-            OFF                      // Turn off the filter completely.
+        UNSPECIFIED,             // Unspecified.
+        BLOCK_LOW_AND_ABOVE,     // Block low risk and above (Very Strict).
+        BLOCK_MEDIUM_AND_ABOVE,  // Block medium risk and above (Default).
+        BLOCK_ONLY_HIGH,         // Only block high risk.
+        BLOCK_NONE,              // Don't block anything (Risky).
+        OFF                      // Turn off the filter completely.
     )
 
     struct SafetySetting
@@ -192,21 +203,64 @@ namespace GeminiCPP
         [[nodiscard]] nlohmann::json toJson() const;
     };
 
-    FrenumClassInNamespace(GeminiCPP, FinishReason, uint8_t,
-            FINISH_REASON_UNSPECIFIED,// Default.
-            STOP,                   // Natural ending or stopping sequence.
-            MAX_TOKENS,             // The maximum token limit has been reached.
-            SAFETY,                 // Stopped due to security breach.
-            RECITATION,             // Potential for copyright/quotation infringement.
-            OTHER,                  // Other reasons.
-            BLOCKLIST,              // It stopped because it contained banned words.
-            PROHIBITED_CONTENT,     // Potential for prohibited content.
-            SPII,                   // It stopped because it contained Sensitive Personal Data (SPII).
-            MALFORMED_FUNCTION_CALL,// The function call generated by the model is invalid.
-            MODEL_ARMOR,            // The model is blocked by the Armor layer.
+    struct RetryConfig
+    {
+        int maxRetries = 3;
+        int initialDelayMs = 1000;
+        int multiplier = 2;
+        int maxDelayMs = 10000;
+        bool enableJitter = true;
+    };
 
-            // The special case I added (it does not come from the API, it is generated by the Client)
-            PROMPT_BLOCKED
+    FrenumClassInNamespace(GeminiCPP, FileState, uint8_t,
+        STATE_UNSPECIFIED,
+        PROCESSING, // Processing file (Not immediately available)
+        ACTIVE,     // Ready to use
+        FAILED      // Processing error
+    )
+
+    struct File
+    {
+        std::string name;          // ID in "files/..." format
+        std::string displayName;   // User-given name
+        std::string mimeType;      // "image/jpeg", "video/mp4" etc.
+        std::string sizeBytes;     // String income (API standard)
+        std::string createTime;
+        std::string updateTime;
+        std::string expirationTime;
+        std::string sha256Hash;
+        std::string uri;           // "https://..." (This is used in content)
+        FileState state = FileState::STATE_UNSPECIFIED;
+        
+        std::string errorMsg; 
+
+        [[nodiscard]] static File fromJson(const nlohmann::json& j);
+        [[nodiscard]] std::string toString() const;
+    };
+    
+    struct ListFilesResponse
+    {
+        std::vector<File> files;
+        std::string nextPageToken;
+
+        [[nodiscard]] static ListFilesResponse fromJson(const nlohmann::json& j);
+    };
+
+    FrenumClassInNamespace(GeminiCPP, FinishReason, uint8_t,
+        FINISH_REASON_UNSPECIFIED,// Default.
+        STOP,                   // Natural ending or stopping sequence.
+        MAX_TOKENS,             // The maximum token limit has been reached.
+        SAFETY,                 // Stopped due to security breach.
+        RECITATION,             // Potential for copyright/quotation infringement.
+        OTHER,                  // Other reasons.
+        BLOCKLIST,              // It stopped because it contained banned words.
+        PROHIBITED_CONTENT,     // Potential for prohibited content.
+        SPII,                   // It stopped because it contained Sensitive Personal Data (SPII).
+        MALFORMED_FUNCTION_CALL,// The function call generated by the model is invalid.
+        MODEL_ARMOR,            // The model is blocked by the Armor layer.
+
+        // The special case I added (it does not come from the API, it is generated by the Client)
+        PROMPT_BLOCKED
     )
 
     struct FinishReasonHelper

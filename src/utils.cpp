@@ -1,5 +1,7 @@
 ﻿#include "gemini/utils.h"
 
+#include <nlohmann/json.hpp>
+
 namespace GeminiCPP
 {
     std::string Utils::fileToBase64(const std::string& filepath)
@@ -87,6 +89,24 @@ namespace GeminiCPP
         if (mimeType == "application/json") return ".json";
     
         return ".bin";
+    }
+
+    std::string Utils::parseErrorMessage(const std::string& rawJson)
+    {
+        std::string err = rawJson;
+            
+        try
+        {
+            auto j = nlohmann::json::parse(rawJson);
+            if(j.contains("error"))
+                err = j["error"].value("message", rawJson);
+        }
+        catch(const std::exception& e)
+        {
+            GEMINI_WARN("Error message parsing failed! ({})", e.what());
+        }
+
+        return err;
     }
 
     // Standard base64 encode algorithm

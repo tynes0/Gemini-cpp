@@ -83,14 +83,24 @@ namespace GeminiCPP
     class HttpStatusHelper
     {
     public:
-        [[nodiscard]] static constexpr bool isSuccess(HttpStatusCode code)
-        {
-            return frenum::value(code) >= 200 && frenum::value(code) < 300;
-        }
-
         [[nodiscard]] static constexpr bool isSuccess(int code)
         {
             return code >= 200 && code < 300;
+        }
+        
+        [[nodiscard]] static constexpr bool isSuccess(HttpStatusCode code)
+        {
+            return isSuccess(frenum::value(code));
+        }
+        
+        [[nodiscard]] static constexpr bool isRetryable(int code)
+        {
+            return code == 429 || code == 500 || code == 502 || code == 503 || code == 504;
+        }
+
+        [[nodiscard]] static constexpr bool isRetryable(HttpStatusCode code)
+        {
+            return isRetryable(frenum::value(code));
         }
 
         [[nodiscard]] static constexpr std::string_view toString(HttpStatusCode code)

@@ -7,9 +7,9 @@ namespace GeminiCPP
     nlohmann::json FunctionDeclaration::toJson() const
     {
         return {
-                                {"name", name},
-                                {"description", description},
-                                {"parameters", parameters}
+            {"name", name},
+            {"description", description},
+            {"parameters", parameters}
         };
     }
 
@@ -66,6 +66,12 @@ namespace GeminiCPP
     {
         return std::holds_alternative<BlobData>(content);
     }
+
+    bool Part::isFileData() const
+    {
+        return std::holds_alternative<FileData>(content);
+    }
+    
     bool Part::isFunctionCall() const
     {
         return std::holds_alternative<FunctionCall>(content);
@@ -87,6 +93,11 @@ namespace GeminiCPP
         return std::get_if<BlobData>(&content);
     }
 
+    const FileData* Part::getFileData() const
+    {
+        return std::get_if<FileData>(&content);
+    }
+
     const FunctionCall* Part::getFunctionCall() const
     {
         return std::get_if<FunctionCall>(&content);
@@ -100,7 +111,9 @@ namespace GeminiCPP
     Part Part::Text(std::string t)
     {
         Part p;
-        p.content = TextData{std::move(t)};
+        p.content = TextData{
+            std::move(t)
+        };
         return p;
     }
 
@@ -110,6 +123,16 @@ namespace GeminiCPP
         p.content = BlobData{
             customMimeType.empty() ? Utils::getMimeType(filepath) : customMimeType,
             Utils::fileToBase64(filepath)
+        };
+        return p;
+    }
+
+    Part Part::Uri(std::string fileUri, std::string mimeType)
+    {
+        Part p;
+        p.content = FileData{
+            std::move(mimeType),
+            std::move(fileUri)
         };
         return p;
     }
@@ -148,6 +171,14 @@ namespace GeminiCPP
                         {"mimeType", arg.mimeType},
                         {"data", arg.data}
                     }}
+                };
+            }
+            else if constexpr (std::is_same_v<T, FileData>) {
+                return { 
+                    {"fileData", { 
+                        {"mimeType", arg.mimeType}, 
+                        {"fileUri", arg.fileUri} 
+                    }} 
                 };
             }
             else if constexpr (std::is_same_v<T, FunctionCall>)
@@ -192,6 +223,12 @@ namespace GeminiCPP
     Content& Content::file(const std::string& filepath)
     {
         return media(filepath);
+    }
+
+    Content& Content::fileUri(const std::string& uri, const std::string& mimeType)
+    {
+        parts.push_back(Part::Uri(uri, mimeType));
+        return *this;
     }
 
     Content& Content::media(const std::string& filepath, const std::string& mimeType)
@@ -248,6 +285,14 @@ namespace GeminiCPP
                     p.content = BlobData{
                         item["inlineData"]["mimeType"].get<std::string>(),
                         item["inlineData"]["data"].get<std::string>()
+                    };
+                    c.parts.push_back(p);
+                }
+                else if (item.contains("fileData")) {
+                    Part p;
+                    p.content = FileData{
+                        item["fileData"].value("mimeType", ""),
+                        item["fileData"].value("fileUri", "")
                     };
                     c.parts.push_back(p);
                 }
@@ -320,6 +365,57 @@ namespace GeminiCPP
         };
     }
 
+    File File::fromJson(const nlohmann::json& j)
+    {
+        File f{};
+        
+        if(j.contains("name")) f.name = j.value("name", "");
+        if(j.contains("displayName")) f.displayName = j.value("displayName", "");
+        if(j.contains("mimeType")) f.mimeType = j.value("mimeType", "");
+        if(j.contains("sizeBytes")) f.sizeBytes = j.value("sizeBytes", "0");
+        if(j.contains("createTime")) f.createTime = j.value("createTime", "");
+        if(j.contains("updateTime")) f.updateTime = j.value("updateTime", "");
+        if(j.contains("expirationTime")) f.expirationTime = j.value("expirationTime", "");
+        if(j.contains("sha256Hash")) f.sha256Hash = j.value("sha256Hash", "");
+        if(j.contains("uri")) f.uri = j.value("uri", "");
+            
+        if(j.contains("state"))
+        {
+            auto s = frenum::cast<FileState>(j.value("state", ""));
+            if(s.has_value()) f.state = s.value();
+        }
+        
+        if(j.contains("error") && j["error"].contains("message"))
+        {
+            f.errorMsg = j["error"]["message"].get<std::string>();
+        }
+
+        return f;
+    }
+
+    std::string File::toString() const
+    {
+        return "File: " + displayName + " (" + name + ")\n" +
+               "URI: " + uri + "\n" +
+               "State: " + frenum::to_string(state) + "\n" +
+               "MIME: " + mimeType + " (" + sizeBytes + " bytes)";
+    }
+
+    ListFilesResponse ListFilesResponse::fromJson(const nlohmann::json& j)
+    
+    {
+        ListFilesResponse r;
+        if(j.contains("files") && j["files"].is_array())
+        {
+            for(const auto& item : j["files"])
+            {
+                r.files.push_back(File::fromJson(item));
+            }
+        }
+        if(j.contains("nextPageToken")) r.nextPageToken = j.value("nextPageToken", "");
+        return r;
+    }
+
     FinishReason FinishReasonHelper::fromString(const std::string& reason)
     {
         auto result = frenum::cast<FinishReason>(reason);
@@ -378,7 +474,7 @@ namespace GeminiCPP
         case GM_UNSPECIFIED:
             break;
         }
-        return "none";    
+        return "";    
     }
 
     std::string GenerationMethodHelper::bitmaskToString(uint32_t flags)
@@ -402,7 +498,8 @@ namespace GeminiCPP
         if (flags & GM_PREDICT_LONG_RUNNING)        s += "predictLongRunning, ";
         if (flags & GM_STREAM_GENERATE_CONTENT)     s += "streamGenerateContent, ";
         
-        if (s.length() > 2) s.resize(s.length() - 2);
+        if (s.length() > 2)
+            s.resize(s.length() - 2);
         
         return "[" + s + "]";
     }

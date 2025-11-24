@@ -1,14 +1,17 @@
 ﻿#include "gemini/storage.h"
 
-
 #include <fstream>
 #include <cpr/cpr.h>
 #include "gemini/logger.h"
 #include "gemini/http_status.h"
+#include "gemini/utils.h"
+
+using namespace std::string_literals;
 
 namespace GeminiCPP
 {
-    LocalStorage::LocalStorage(std::string rootPath) : rootPath_(std::move(rootPath))
+    LocalStorage::LocalStorage(std::string rootPath)
+        : rootPath_(std::move(rootPath))
     {
         if (!std::filesystem::exists(rootPath_)) {
             std::filesystem::create_directories(rootPath_);
@@ -22,11 +25,14 @@ namespace GeminiCPP
             std::filesystem::path path = std::filesystem::path(rootPath_) / filename;
                 
             std::ofstream file(path);
-            if (file.is_open()) {
+            if (file.is_open())
+            {
                 file << session.toJson().dump(4);
                 return true;
             }
-        } catch (const std::exception& e) {
+        }
+        catch (const std::exception& e)
+        {
             GEMINI_ERROR("LocalStorage Save Error: {}", e.what());
         }
         return false;
@@ -38,7 +44,7 @@ namespace GeminiCPP
         {
             std::filesystem::path path = std::filesystem::path(rootPath_) / (sessionId + ".json");
             if (!std::filesystem::exists(path))
-                return Result<ChatSession>::Failure("Session file not found: " + path.string(), 404);
+                return Result<ChatSession>::Failure("Session file not found: " + path.string(), frenum::value(HttpStatusCode::OK));
 
             std::ifstream file(path);
             nlohmann::json j;
@@ -47,7 +53,7 @@ namespace GeminiCPP
         }
         catch (const std::exception& e)
         {
-            return Result<ChatSession>::Failure(std::string("Load Error: ") + e.what());
+            return Result<ChatSession>::Failure("Load Error: "s + e.what());
         }
     }
 
@@ -56,12 +62,99 @@ namespace GeminiCPP
         std::vector<std::string> sessions;
         if (!std::filesystem::exists(rootPath_)) return sessions;
 
-        for (const auto& entry : std::filesystem::directory_iterator(rootPath_)) {
-            if (entry.path().extension() == ".json") {
+        for (const auto& entry : std::filesystem::directory_iterator(rootPath_))
+        {
+            if (entry.path().extension() == ".json")
+            {
                 sessions.push_back(entry.path().stem().string());
             }
         }
         return sessions;
+    }
+
+    std::future<bool> LocalStorage::saveAsync(const ChatSession& session)
+    {
+        // Copying the session can be expensive, so instead of a const reference,
+        // it might make more sense to retrieve and pass the JSON output.
+        // However, since the session.toJson() call is thread-safe,
+        // we can call it here and pass the string data to the lambda.
+        
+        nlohmann::json data = session.toJson();
+        std::string id = session.getId();
+
+        return std::async(std::launch::async, [this, id, data = std::move(data)]() {
+            try
+            {
+                std::string filename = id + ".json";
+                std::filesystem::path path = std::filesystem::path(rootPath_) / filename;
+                std::ofstream file(path);
+                if (file.is_open()) {
+                    file << data.dump(4);
+                    return true;
+                }
+            } catch (const std::exception& e)
+            {
+                GEMINI_ERROR("LocalStorage Save Error: {}", e.what());
+            }
+            return false;
+        });
+    }
+
+    std::future<Result<ChatSession>> LocalStorage::loadAsync(const std::string& sessionId, Client* client)
+    {
+        return std::async(std::launch::async, [this, sessionId, client = client]() {
+            return load(sessionId, client);
+        });
+    }
+
+    std::future<std::vector<std::string>> LocalStorage::listSessionsAsync()
+    {
+        return std::async(std::launch::async, [this]() {
+            return listSessions();
+        });
+    }
+
+    std::future<bool> RemoteStorage::saveAsync(const ChatSession& session)
+    {
+        nlohmann::json payload = session.toJson();
+        std::string id = session.getId();
+
+        return std::async(std::launch::async, [this, id, payload = std::move(payload)]() {
+            std::string url = baseUrl_ + "/chats/" + id;
+
+            cpr::Header headers = {{"Content-Type", "application/json"}};
+            if (!authToken_.empty()) {
+                headers.insert({"Authorization", "Bearer " + authToken_});
+            }
+
+            cpr::Response r = cpr::Put(
+                cpr::Url{url},
+                headers,
+                cpr::Body{payload.dump()},
+                cpr::VerifySsl(false)
+            );
+
+            if (HttpStatusHelper::isSuccess(r.status_code)) {
+                return true;
+            }
+
+            GEMINI_ERROR("RemoteStorage Async Save Error [{}]: {}", r.status_code, Utils::parseErrorMessage(r.text));
+            return false;
+        });
+    }
+
+    std::future<Result<ChatSession>> RemoteStorage::loadAsync(const std::string& sessionId, Client* client)
+    {
+        return std::async(std::launch::async, [this, sessionId, client]() {
+            return load(sessionId, client);
+        });
+    }
+
+    std::future<std::vector<std::string>> RemoteStorage::listSessionsAsync()
+    {
+        return std::async(std::launch::async, [this]() {
+            return listSessions();
+        });
     }
 
     RemoteStorage::RemoteStorage(std::string baseUrl, std::string authToken)
@@ -91,7 +184,7 @@ namespace GeminiCPP
         if (HttpStatusHelper::isSuccess(r.status_code))
             return true;
             
-        GEMINI_ERROR("RemoteStorage Save Error [{}]: {}", r.status_code, r.text);
+        GEMINI_ERROR("RemoteStorage Save Error [{}]: {}", r.status_code, Utils::parseErrorMessage(r.text));
         return false;
     }
 
@@ -122,18 +215,7 @@ namespace GeminiCPP
             }
         }
 
-        std::string errorMsg = r.text;
-        try
-        {
-            auto jsonErr = nlohmann::json::parse(r.text);
-            if(jsonErr.contains("error"))
-                errorMsg = jsonErr["error"]["message"].value("message", r.text);
-        }
-        catch(const std::exception& e)
-        {
-            GEMINI_WARN("Error message parsing failed! ({})", e.what());
-        }
-        
+        std::string errorMsg = Utils::parseErrorMessage(r.text);
         GEMINI_ERROR("ListModels Error [{}]: {}", r.status_code, errorMsg);
         return Result<ChatSession>::Failure(errorMsg, r.status_code);
     }
@@ -164,9 +246,10 @@ namespace GeminiCPP
                     for(const auto& item : j)
                         sessions.push_back(item.get<std::string>());
                 }
-            } catch (...)
+            }
+            catch (const std::exception& e)
             {
-                GEMINI_ERROR("RemoteStorage JSON Parse Error");
+                GEMINI_ERROR("RemoteStorage JSON Parse Error: {}", e.what());
             }
         }
         return sessions;

@@ -20,6 +20,10 @@ namespace GeminiCPP
         virtual bool save(const ChatSession& session) = 0;
         [[nodiscard]] virtual Result<ChatSession> load(const std::string& sessionId, Client* client) = 0;
         [[nodiscard]] virtual std::vector<std::string> listSessions() = 0;
+
+        [[nodiscard]] virtual std::future<bool> saveAsync(const ChatSession& session) = 0;
+        [[nodiscard]] virtual std::future<Result<ChatSession>> loadAsync(const std::string& sessionId, Client* client) = 0;
+        [[nodiscard]] virtual std::future<std::vector<std::string>> listSessionsAsync() = 0;
     };
 
     class LocalStorage : public IChatStorage
@@ -30,6 +34,10 @@ namespace GeminiCPP
         bool save(const ChatSession& session) override;
         [[nodiscard]] Result<ChatSession> load(const std::string& sessionId, Client* client) override;
         [[nodiscard]] std::vector<std::string> listSessions() override;
+        
+        [[nodiscard]] std::future<bool> saveAsync(const ChatSession& session) override;
+        [[nodiscard]] std::future<Result<ChatSession>> loadAsync(const std::string& sessionId, Client* client) override;
+        [[nodiscard]] std::future<std::vector<std::string>> listSessionsAsync() override;
 
     private:
         std::string rootPath_;
@@ -48,6 +56,10 @@ namespace GeminiCPP
         bool save(const ChatSession& session) override;
         [[nodiscard]] Result<ChatSession> load(const std::string& sessionId, Client* client) override;
         [[nodiscard]] std::vector<std::string> listSessions() override;
+
+        [[nodiscard]] std::future<bool> saveAsync(const ChatSession& session) override;
+        [[nodiscard]] std::future<Result<ChatSession>> loadAsync(const std::string& sessionId, Client* client) override;
+        [[nodiscard]] std::future<std::vector<std::string>> listSessionsAsync() override;
 
     private:
         std::string baseUrl_;

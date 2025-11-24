@@ -15,7 +15,7 @@ namespace GeminiCPP
     }
 
     ChatSession::ChatSession(Client* client, std::string_view model, std::string sessionName, std::string systemInstruction, std::string sessionId)
-        : client_(client), model_(model), sessionName_(std::move(sessionName)), systemInstruction_(std::move(systemInstruction))
+        : client_(client), model_(model), sessionId_(std::move(sessionId)), sessionName_(std::move(sessionName)), systemInstruction_(std::move(systemInstruction))
     {
     }
 
@@ -65,6 +65,30 @@ namespace GeminiCPP
     GenerationResult ChatSession::stream(const std::string& text, const StreamCallback& callback)
     {
         return stream(Content::User().text(text), callback);
+    }
+
+    std::future<GenerationResult> ChatSession::sendAsync(const Content& content)
+    {
+        return std::async(std::launch::async, [this, content]() {
+            return this->send(content);
+        });
+    }
+
+    std::future<GenerationResult> ChatSession::sendAsync(const std::string& text)
+    {
+        return sendAsync(Content::User().text(text));
+    }
+
+    std::future<GenerationResult> ChatSession::streamAsync(const Content& content, const StreamCallback& callback)
+    {
+        return std::async(std::launch::async, [this, content, callback]() {
+            return this->stream(content, callback);
+        });
+    }
+
+    std::future<GenerationResult> ChatSession::streamAsync(const std::string& text, const StreamCallback& callback)
+    {
+        return streamAsync(Content::User().text(text), callback);
     }
 
     void ChatSession::setModel(Model model)
@@ -225,7 +249,7 @@ namespace GeminiCPP
                 tools_
             );
 
-            url = Url(ModelName(model_), ":generateContent");
+            url = Url(ResourceName::Model(model_), ":generateContent");
         }
 
         auto result = client_->submitRequest(url, payload);
@@ -242,8 +266,10 @@ namespace GeminiCPP
     GenerationResult ChatSession::streamInternal(const StreamCallback& callback)
     {
         if (!client_)
+        {
+            GEMINI_ERROR("Error: Client is null");
             return GenerationResult::Failure("Client is null");
-
+        }
         nlohmann::json payload;
         {
             std::lock_guard<std::mutex> lock(mutex_);
@@ -256,7 +282,7 @@ namespace GeminiCPP
             );
         }
         
-        Url url(ModelName(model_), ":streamGenerateContent");
+        Url url(ResourceName::Model(model_), ":streamGenerateContent");
         url.addQuery("alt", "sse");
 
         GenerationResult result = client_->submitStreamRequest(url, payload, callback);

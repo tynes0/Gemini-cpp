@@ -2,88 +2,115 @@
 
 namespace GeminiCPP
 {
-    ModelName::ModelName(std::string name)
-        : value_(std::move(name))
+    ResourceName::ResourceName(std::string name, ResourceType type)
+    : value_(std::move(name)), type_(type)
+    {
+        ensurePrefix();
+    }
+    ResourceName::ResourceName(std::string_view name, ResourceType type)
+        : value_(name), type_(type)
+    {
+        ensurePrefix();
+    }
+    ResourceName::ResourceName(const char* name, ResourceType type)
+        : value_(name), type_(type)
+    {
+        ensurePrefix();
+    }
+    
+    ResourceName::ResourceName(GeminiCPP::Model model)
+        : value_(modelStringRepresentation(model)), type_(ResourceType::MODEL)
     {
         ensurePrefix();
     }
 
-    ModelName::ModelName(std::string_view name)
-        : value_(name)
+    ResourceName ResourceName::File(std::string_view name)
     {
-        ensurePrefix();
+        return {name, ResourceType::FILE};
+    }
+    ResourceName ResourceName::Model(std::string_view name)
+    {
+        return {name, ResourceType::MODEL};
+    }
+    ResourceName ResourceName::TunedModel(std::string_view name)
+    {
+        return {name, ResourceType::TUNED_MODEL};
+    }
+    ResourceName ResourceName::Raw(std::string_view name)
+    {
+        return {name, ResourceType::NONE};
     }
 
-    ModelName::ModelName(const char* name)
-        : value_(name)
-    {
-        ensurePrefix();
-    }
-
-    ModelName::ModelName(Model model)
-        : value_(modelStringRepresentation(model))
-    {
-        ensurePrefix();
-    }
-
-    ModelName& ModelName::operator=(const std::string& name)
+    ResourceName& ResourceName::operator=(const std::string& name)
     {
         value_ = name;
         ensurePrefix();
         return *this;
     }
 
-    ModelName& ModelName::operator=(std::string_view name)
+    std::string ResourceName::str() const
     {
-        value_ = name;
-        ensurePrefix();
-        return *this;
+        return value_;
     }
-
-    ModelName& ModelName::operator=(Model model)
-    {
-        value_ = modelStringRepresentation(model);
-        ensurePrefix();
-        return *this;
-    }
-
-    std::string ModelName::str() const
+    ResourceName::operator std::string() const
     {
         return value_;
     }
 
-    ModelName::operator std::string() const
+    void ResourceName::ensurePrefix()
     {
-        return value_;
-    }
-
-    void ModelName::ensurePrefix()
-    {
-        if (!value_.starts_with("models/"))
+        std::string_view prefix;
+        switch (type_)
         {
-            value_.insert(0, "models/");
+        case ResourceType::MODEL:       prefix = "models/"; break;
+        case ResourceType::FILE:        prefix = "files/"; break;
+        case ResourceType::TUNED_MODEL: prefix = "tunedModels/"; break;
+        case ResourceType::CORPUS:      prefix = "corpora/"; break;
+        case ResourceType::OPERATION:   prefix = "operations/"; break;
+        case ResourceType::NONE:        return; 
+        }
+
+        if (!prefix.empty() && !value_.starts_with(prefix))
+        {
+            value_.insert(0, prefix);
         }
     }
 
-    Url::Url(const ModelName& model, std::string_view action)
+    Url::Url(const ResourceName& resource, std::string_view action)
     {
-        full_url_.reserve(BASE_URL.size() + model.str().size() + action.size());
-        full_url_ += BASE_URL;
-        full_url_ += model.str();
+        auto base = getBase(EndpointType::REST);
+        full_url_.reserve(base.size() + resource.str().size() + action.size());
+        full_url_ += base;
+        full_url_ += resource.str();
         full_url_ += action;
     }
 
-    Url::Url(const ModelName& model)
+    Url::Url(const ResourceName& resource, GenerationMethod action)
     {
-        full_url_.reserve(BASE_URL.size() + model.str().size());
-        full_url_ += BASE_URL;
-        full_url_ += model.str();
+        auto base = getBase(EndpointType::REST);
+        std::string actionStr = GenerationMethodHelper::toString(action);
+        
+        full_url_.reserve(base.size() + resource.str().size() + 1 + actionStr.size());
+        
+        full_url_ += base;
+        full_url_ += resource.str();
+        full_url_ += ':';
+        full_url_ += actionStr;
     }
 
-    Url::Url(std::string_view endpoint)
+    Url::Url(const ResourceName& resource)
     {
-        full_url_.reserve(BASE_URL.size() + endpoint.size());
-        full_url_ += BASE_URL;
+        auto base = getBase(EndpointType::REST);
+        full_url_.reserve(base.size() + resource.str().size());
+        full_url_ += base;
+        full_url_ += resource.str();
+    }
+
+    Url::Url(std::string_view endpoint, EndpointType type)
+    {
+        auto base = getBase(type);
+        full_url_.reserve(base.size() + endpoint.size());
+        full_url_ += base;
         full_url_ += endpoint;
     }
 
@@ -108,5 +135,15 @@ namespace GeminiCPP
     Url::operator std::string() const
     {
         return full_url_;
+    }
+
+    std::string_view Url::getBase(EndpointType type)
+    {
+        switch (type)
+        {
+        case EndpointType::REST: return BASE_URL_REST;
+        case EndpointType::UPLOAD: return BASE_URL_UPLOAD;
+        }
+        return BASE_URL_REST;
     }
 }

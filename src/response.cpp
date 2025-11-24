@@ -159,10 +159,12 @@ namespace GeminiCPP
 
             if (start != std::string::npos && end != std::string::npos && end > start) 
             {
-                try {
+                try
+                {
                     std::string cleanJson = txt.substr(start, end - start + 1);
                     return nlohmann::json::parse(cleanJson);
-                } catch(...) {
+                } catch(...)
+                {
                     return std::nullopt;
                 }
             }

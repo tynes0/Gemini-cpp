@@ -3,6 +3,7 @@
 #ifndef GEMINI_REQUEST_BUILDER_H
 #define GEMINI_REQUEST_BUILDER_H
 
+#include <future>
 #include <string>
 #include <vector>
 #include "types.h"
@@ -41,6 +42,9 @@ namespace GeminiCPP
 
         [[nodiscard]] GenerationResult generate() const;
         [[nodiscard]] GenerationResult stream(const StreamCallback& callback) const;
+
+        [[nodiscard]] std::future<GenerationResult> generateAsync() const;
+        [[nodiscard]] std::future<GenerationResult> streamAsync(const StreamCallback& callback) const;
 
     private:
         Client* client_;

@@ -116,4 +116,30 @@ namespace GeminiCPP
     {
         return client_->streamFromBuilder(model_, systemInstruction_, parts_, config_, safetySettings_, callback, tools_);
     }
+
+    std::future<GenerationResult> RequestBuilder::generateAsync() const
+    {
+        return client_->generateFromBuilderAsync(
+            model_, 
+            systemInstruction_, 
+            parts_, 
+            config_, 
+            safetySettings_, 
+            tools_
+        );
+    }
+
+    std::future<GenerationResult> RequestBuilder::streamAsync(const StreamCallback& callback) const
+    {
+        return client_->streamFromBuilderAsync(
+            model_, 
+            systemInstruction_, 
+            parts_, 
+            config_, 
+            safetySettings_, 
+            callback, 
+            tools_
+        );
+    }
 }
+    

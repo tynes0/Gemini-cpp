@@ -3,6 +3,7 @@
 #ifndef GEMINI_CHAT_SESSION_H
 #define GEMINI_CHAT_SESSION_H
 
+#include <future>
 #include <vector>
 #include <string>
 #include <mutex>
@@ -29,13 +30,19 @@ namespace GeminiCPP
         [[nodiscard]] GenerationResult stream(const Content& content, const StreamCallback& callback);
         [[nodiscard]] GenerationResult stream(const std::string& text, const StreamCallback& callback);
 
+        [[nodiscard]] std::future<GenerationResult> sendAsync(const Content& content);
+        [[nodiscard]] std::future<GenerationResult> sendAsync(const std::string& text);
+
+        [[nodiscard]] std::future<GenerationResult> streamAsync(const Content& content, const StreamCallback& callback);
+        [[nodiscard]] std::future<GenerationResult> streamAsync(const std::string& text, const StreamCallback& callback);
+
         void setModel(Model model);
         void setModel(std::string_view model);
         void setSystemInstruction(std::string systemInstruction);
         void setSessionName(std::string sessionName);
 
         void setConfig(const GenerationConfig& config);
-        GenerationConfig& config();
+        [[nodiscard]] GenerationConfig& config();
         
         void addTool(const Tool& tool);
         void setTools(const std::vector<Tool>& tools);
