@@ -37,6 +37,14 @@ namespace GeminiCPP
         return *this;
     }
 
+    RequestBuilder& RequestBuilder::codeExecution()
+    {
+        Tool t;
+        t.codeExecution = CodeExecution{};
+        tools_.push_back(t);
+        return *this;
+    }
+
     RequestBuilder& RequestBuilder::jsonMode()
     {
         config_.responseMimeType = "application/json";

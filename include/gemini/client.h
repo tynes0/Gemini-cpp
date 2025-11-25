@@ -20,6 +20,12 @@ namespace GeminiCPP
     public:
         explicit Client(std::string api_key);
 
+        Client(const Client&) = delete;
+        Client& operator=(const Client&) = delete;
+        Client(Client&&) = default;
+        Client& operator=(Client&&) = default;
+        ~Client() = default;
+
         [[nodiscard]] RequestBuilder request(
         );
         

@@ -18,6 +18,46 @@ namespace GeminiCPP
         return nlohmann::json::object();
     }
 
+    nlohmann::json CodeExecution::toJson() const
+    {
+        return nlohmann::json::object();
+    }
+
+    ExecutableCode ExecutableCode::fromJson(const nlohmann::json& j)
+    {
+        return {
+            j.value("language", "PYTHON"),
+            j.value("code", "")
+        };
+    }
+
+    nlohmann::json ExecutableCode::toJson() const
+    {
+        return {
+                {"language", language},
+                {"code", code}
+        };
+    }
+
+    CodeExecutionResult CodeExecutionResult::fromJson(const nlohmann::json& j)
+    {
+        std::optional<CodeExecutionOutcome> outcomeOpt = frenum::cast<CodeExecutionOutcome>(j.value("outcome", ""));
+        CodeExecutionOutcome outcome = outcomeOpt.has_value() ? outcomeOpt.value() : CodeExecutionOutcome::OUTCOME_FAILED;
+        return {
+            outcome,
+            j.value("output", ""),
+            std::nullopt
+        };
+    }
+
+    nlohmann::json CodeExecutionResult::toJson() const
+    {
+        return {
+                {"outcome", frenum::to_string(outcome)},
+                {"output", output}
+        };
+    }
+
     nlohmann::json Tool::toJson() const
     {
         nlohmann::json j = nlohmann::json::object();
@@ -34,6 +74,11 @@ namespace GeminiCPP
         if (googleSearch.has_value())
         {
             j["googleSearch"] = googleSearch->toJson();
+        }
+
+        if (codeExecution.has_value())
+        {
+            j["codeExecution"] = codeExecution->toJson();
         }
             
         return j;
@@ -81,6 +126,16 @@ namespace GeminiCPP
         return std::holds_alternative<FunctionResponse>(content);
     }
 
+    bool Part::isExecutableCode() const
+    {
+        return std::holds_alternative<ExecutableCode>(content);
+    }
+
+    bool Part::isCodeExecutionResult() const
+    {
+        return std::holds_alternative<CodeExecutionResult>(content);
+    }
+
     const std::string* Part::getText() const
     {
         if(auto* p = std::get_if<TextData>(&content))
@@ -106,6 +161,16 @@ namespace GeminiCPP
     const FunctionResponse* Part::getFunctionResponse() const
     {
         return std::get_if<FunctionResponse>(&content);
+    }
+
+    const ExecutableCode* Part::getExecutableCode() const
+    {
+        return std::get_if<ExecutableCode>(&content);
+    }
+
+    const CodeExecutionResult* Part::getCodeExecutionResult() const
+    {
+        return std::get_if<CodeExecutionResult>(&content);
     }
 
     Part Part::Text(std::string t)
@@ -151,6 +216,20 @@ namespace GeminiCPP
         return p;
     }
 
+    Part Part::Code(ExecutableCode code)
+    {
+        Part p;
+        p.content = std::move(code);
+        return p;
+    }
+
+    Part Part::ExecutionResult(CodeExecutionResult result)
+    {
+        Part p;
+        p.content = std::move(result);
+        return p;
+    }
+
     nlohmann::json Part::toJson() const
     {
         return std::visit([](const auto& arg) -> nlohmann::json {
@@ -188,6 +267,13 @@ namespace GeminiCPP
             else if constexpr (std::is_same_v<T, FunctionResponse>)
             {
                 return { {"functionResponse", arg.toJson()} };
+            }
+
+            if constexpr (std::is_same_v<T, ExecutableCode>) {
+                return { {"executableCode", arg.toJson()} };
+            }
+            else if constexpr (std::is_same_v<T, CodeExecutionResult>) {
+                return { {"codeExecutionResult", arg.toJson()} };
             }
 
             return {"", {}};
@@ -277,10 +363,12 @@ namespace GeminiCPP
         {
             for (const auto& item : j["parts"])
             {
-                if (item.contains("text")) {
+                if (item.contains("text"))
+                {
                     c.parts.push_back(Part::Text(item["text"].get<std::string>()));
                 }
-                else if (item.contains("inlineData")) {
+                else if (item.contains("inlineData"))
+                {
                     Part p;
                     p.content = BlobData{
                         item["inlineData"]["mimeType"].get<std::string>(),
@@ -288,7 +376,8 @@ namespace GeminiCPP
                     };
                     c.parts.push_back(p);
                 }
-                else if (item.contains("fileData")) {
+                else if (item.contains("fileData"))
+                {
                     Part p;
                     p.content = FileData{
                         item["fileData"].value("mimeType", ""),
@@ -296,12 +385,21 @@ namespace GeminiCPP
                     };
                     c.parts.push_back(p);
                 }
-                else if (item.contains("functionCall")) {
+                else if (item.contains("functionCall"))
+                {
                     auto fc = item["functionCall"];
                     c.parts.push_back(Part::Call({
                         fc["name"].get<std::string>(),
                         fc["args"]
                     }));
+                }
+                else if (item.contains("executableCode"))
+                {
+                    c.parts.push_back(Part::Code(ExecutableCode::fromJson(item["executableCode"])));
+                }
+                else if (item.contains("codeExecutionResult"))
+                {
+                    c.parts.push_back(Part::ExecutionResult(CodeExecutionResult::fromJson(item["codeExecutionResult"])));
                 }
             }
         }

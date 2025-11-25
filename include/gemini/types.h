@@ -29,10 +29,41 @@ namespace GeminiCPP
         [[nodiscard]] nlohmann::json toJson() const;
     };
 
+    FrenumClassInNamespace(GeminiCPP, CodeExecutionOutcome, uint8_t,
+        OUTCOME_OK,  // Code execution completed successfully. 
+        OUTCOME_FAILED, // Code execution finished but with a failure. stderr should contain the reason.
+        OUTCOME_DEADLINE_EXCEEDED // Code execution ran for too long, and was cancelled. There may or may not be a partial output present.
+    )
+    
+    struct CodeExecution
+    {
+        [[nodiscard]] nlohmann::json toJson() const;
+    };
+
+    struct ExecutableCode
+    {
+        std::string language; // python
+        std::string code;
+
+        [[nodiscard]] static ExecutableCode fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const;
+    };
+
+    struct CodeExecutionResult
+    {
+        CodeExecutionOutcome outcome;
+        std::string output;  // Console output
+        std::optional<CodeExecution> codeExecution;
+
+        [[nodiscard]] static CodeExecutionResult fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const;
+    };
+
     struct Tool
     {
         std::vector<FunctionDeclaration> functionDeclarations;
         std::optional<GoogleSearch> googleSearch;
+        std::optional<CodeExecution> codeExecution;
 
         [[nodiscard]] nlohmann::json toJson() const;
     };
@@ -57,6 +88,7 @@ namespace GeminiCPP
     {
         std::string text;
     };
+    
     struct BlobData
     {
         std::string mimeType;
@@ -71,7 +103,16 @@ namespace GeminiCPP
 
     struct Part
     {
-        using VariantType = std::variant<std::monostate, TextData, BlobData, FileData, FunctionCall, FunctionResponse>;
+        using VariantType = std::variant<
+            std::monostate, 
+            TextData, 
+            BlobData, 
+            FileData, 
+            FunctionCall, 
+            FunctionResponse,
+            ExecutableCode,
+            CodeExecutionResult 
+        >;
         
         VariantType content;
 
@@ -80,18 +121,24 @@ namespace GeminiCPP
         [[nodiscard]] bool isFileData() const; // URI Reference
         [[nodiscard]] bool isFunctionCall() const;
         [[nodiscard]] bool isFunctionResponse() const;
+        [[nodiscard]] bool isExecutableCode() const;
+        [[nodiscard]] bool isCodeExecutionResult() const;
 
         [[nodiscard]] const std::string* getText() const;
         [[nodiscard]] const BlobData* getBlob() const;
         [[nodiscard]] const FileData* getFileData() const;
         [[nodiscard]] const FunctionCall* getFunctionCall() const;
         [[nodiscard]] const FunctionResponse* getFunctionResponse() const;
+        [[nodiscard]] const ExecutableCode* getExecutableCode() const;
+        [[nodiscard]] const CodeExecutionResult* getCodeExecutionResult() const;
 
         [[nodiscard]] static Part Text(std::string t);
         [[nodiscard]] static Part Media(const std::string& filepath, const std::string& customMimeType = "");
         [[nodiscard]] static Part Uri(std::string fileUri, std::string mimeType);
         [[nodiscard]] static Part Call(FunctionCall call);
         [[nodiscard]] static Part Response(FunctionResponse resp);
+        [[nodiscard]] static Part Code(ExecutableCode code);
+        [[nodiscard]] static Part ExecutionResult(CodeExecutionResult result);
 
         [[nodiscard]] nlohmann::json toJson() const;
     };

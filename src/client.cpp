@@ -940,9 +940,15 @@ namespace GeminiCPP
             int inputTokens = 0;
             int outputTokens = 0;
 
+            bool dataReceived = false;
+
             auto write_func = [&](std::string data, intptr_t userdata) -> bool
             {
                 (void)userdata;
+
+                if (!data.empty())
+                    dataReceived = true;
+                
                 buffer += data;
 
                 while (true)
@@ -1034,7 +1040,7 @@ namespace GeminiCPP
                 return GenerationResult::Success(finalContent, r.status_code, inputTokens, outputTokens);
             }
 
-            if (HttpStatusHelper::isRetryable(r.status_code) && attempt < retryConfig_.maxRetries)
+            if (HttpStatusHelper::isRetryable(r.status_code) && attempt < retryConfig_.maxRetries && !dataReceived)
             {
                 int waitMs = calculateWaitTime(retryConfig_, attempt, r);
                 GEMINI_WARN("Stream API Error [{}]. Retrying... ({}/{})", r.status_code, attempt + 1, retryConfig_.maxRetries);

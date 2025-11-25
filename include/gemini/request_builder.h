@@ -23,6 +23,7 @@ namespace GeminiCPP
         RequestBuilder& text(const std::string& t);
         RequestBuilder& image(const std::string& filepath);
         RequestBuilder& googleSearch();
+        RequestBuilder& codeExecution();
         
         RequestBuilder& systemInstruction(const std::string& instruction);
         RequestBuilder& jsonMode();
