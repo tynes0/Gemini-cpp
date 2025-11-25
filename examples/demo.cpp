@@ -22,48 +22,37 @@ int main() {
     std::string apiKey = std::getenv("GEMINI_API_KEY") ? std::getenv("GEMINI_API_KEY") : "";
 
     GeminiCPP::Client client(apiKey);
-    GeminiCPP::CacheRegistry registry("my_caches.json");
-
-    std::string alias = "Project_Alpha_Docs";
-
-    auto cacheIdOpt = registry.getCacheId(alias);
-
-    if (cacheIdOpt) {
-        std::string cacheId = cacheIdOpt.value();
-        std::cout << "Local record found! ID: " << cacheId << "\n";
-        
-        auto check = client.getCachedContent(cacheId);
-        if (!check) {
-            std::cout << "But it has expired or been deleted. The record is being deleted...\n";
-            registry.unregisterCache(alias);
-        } else {
-            std::cout << "Cache is active! Being used...\n";
-            auto chat = client.startChat();
-            chat.setCachedContent(cacheId);
-            // ...
-            return 0;
-        }
-    }
-
-    std::cout << "Cache not found, creating a new one...\n";
+    auto chat = client.startChat(GeminiCPP::Model::GEMINI_2_0_FLASH);
     
-    GeminiCPP::CachedContent cc;
-    cc.model = GeminiCPP::ResourceName(GeminiCPP::Model::GEMINI_2_5_FLASH);
-    cc.displayName = "Project Alpha Documentation";
-    cc.ttl = "120s"; // 2 min
-    cc.contents.push_back(
-        GeminiCPP::Content::User().file(R"(C:\Users\cihan\Desktop\file.pdf)")
+    chat.registerFunction(
+        "topla", 
+        [](int a, int b) { 
+            std::cout << ">> C++: Toplama yapiliyor: " << a << " + " << b << "\n";
+            return a + b; 
+        }, 
+        "Iki tamsayiyi toplar.", 
+        {"a", "b"}
     );
 
-    auto createRes = client.createCachedContent(cc);
+    chat.registerFunction(
+        "hava_durumu",
+        [](std::string sehir) -> std::string {
+            std::cout << ">> C++: Hava durumu sorgulaniyor: " << sehir << "\n";
+            if(sehir == "Ankara") return "Soguk, 5 derece";
+            return "Gunesli, 25 derece";
+        },
+        "Bir sehrin hava durumunu verir.",
+        {"sehir"}
+    );
+
+    std::cout << "Ben: Ankara'da hava nasil ve 5 ile 10'u toplarsan kac eder?\n";
     
-    if (createRes) {
-        std::cout << "Cache created: " << createRes->name << "\n";
-        
-        registry.registerCache(alias, *createRes);
-        std::cout << "Added to the registry as '" << alias << "'\n";
+    auto res = chat.send("Ankara'da hava nasil ve 5 ile 10'u toplarsan kac eder?");
+
+    if (res) {
+        std::cout << "Gemini: " << res.text() << "\n";
     } else {
-        std::cout << "Error: " << createRes.errorMessage << "\n";
+        std::cout << "Hata: " << res.errorMessage << "\n";
     }
 
     return 0;

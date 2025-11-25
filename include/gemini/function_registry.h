@@ -25,6 +25,27 @@ namespace GeminiCPP
             std::function<nlohmann::json(const nlohmann::json&)> invoker; 
         };
 
+        template <typename T>
+        struct function_traits;
+
+        // Lambda / Functor
+        template <typename ClassType, typename ReturnT, typename... Args>
+        struct function_traits<ReturnT(ClassType::*)(Args...) const>
+        {
+            using ArgsTuple = std::tuple<Args...>;
+            using ReturnType = ReturnT;
+        };
+        
+        template <typename ReturnT, typename... Args>
+        struct function_traits<ReturnT(*)(Args...)> {
+            using ArgsTuple = std::tuple<Args...>;
+            using ReturnType = ReturnT;
+        };
+
+        // Functor Wrapper
+        template <typename T>
+        struct function_traits : public function_traits<decltype(&T::operator())> {};
+
         template <typename Func>
         void registerFunction(const std::string& name, Func&& func, const std::string& description, const std::vector<std::string>& argNames)
         {
@@ -39,18 +60,15 @@ namespace GeminiCPP
             {
                 try
                 {
-                    // JSON -> Tuple
-                    auto tupleArgs = Internal::jsonToTuple<typename Traits::ArgsTuple>(args, argNames, std::make_index_sequence<std::tuple_size_v<typename Traits::ArgsTuple>>{});
-
+                    auto tupleArgs = Internal::jsonToTuple<typename Traits::ArgsTuple>(args, argNames);
+                    
                     if constexpr (std::is_void_v<typename Traits::ReturnType>)
                     {
                         std::apply(func, tupleArgs);
                         return {{"result", "ok"}};
-                    }
-                    else
+                    } else
                     {
-                        auto result = std::apply(func, tupleArgs);
-                        return result;
+                        return std::apply(func, tupleArgs);
                     }
                 }
                 catch (const std::exception& e)
@@ -61,9 +79,11 @@ namespace GeminiCPP
             };
 
             functions_[name] = {decl, invoker};
+            GEMINI_INFO("Function registered: {}", name);
         }
 
-        [[nodiscard]] std::optional<nlohmann::json> invoke(const std::string& name, const nlohmann::json& args) {
+        [[nodiscard]] std::optional<nlohmann::json> invoke(const std::string& name, const nlohmann::json& args)
+        {
             if (functions_.contains(name))
             {
                 return functions_[name].invoker(args);
@@ -71,44 +91,20 @@ namespace GeminiCPP
             return std::nullopt;
         }
 
-        [[nodiscard]] std::vector<FunctionDeclaration> getDeclarations() const
-        {
-            std::vector<FunctionDeclaration> decls;
-            for (const auto& reg : std::views::values(functions_))
-            {
-                decls.push_back(reg.declaration);
-            }
-            return decls;
-        }
-        
         [[nodiscard]] Tool getTool() const
         {
             Tool t;
-            t.functionDeclarations = getDeclarations();
+            for (const auto& reg : std::views::values(functions_))
+            {
+                t.functionDeclarations.push_back(reg.declaration);
+            }
             return t;
         }
 
+        [[nodiscard]] bool empty() const { return functions_.empty(); }
+
     private:
         std::map<std::string, RegisteredFunction> functions_;
-
-        template <typename T> struct function_traits;
-
-        template <typename ClassType, typename ReturnT, typename... Args>
-        struct function_traits<ReturnT(ClassType::*)(Args...) const>
-        {
-            using ArgsTuple = std::tuple<Args...>;
-            using ReturnType = ReturnT;
-        };
-        
-        template <typename ReturnT, typename... Args>
-        struct function_traits<ReturnT(*)(Args...)>
-        {
-            using ArgsTuple = std::tuple<Args...>;
-            using ReturnType = ReturnT;
-        };
-
-        template <typename T>
-        struct function_traits : public function_traits<decltype(&T::operator())> {};
 
         template <typename TupleType, std::size_t... Is>
         nlohmann::json generateSchemaImpl(const std::vector<std::string>& argNames, std::index_sequence<Is...>)

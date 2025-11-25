@@ -41,12 +41,66 @@ namespace GeminiCPP
 
     GenerationResult ChatSession::send(const Content& content)
     {
+        int remainingTurns = 0;
+
         {
             std::lock_guard<std::mutex> lock(mutex_);
             history_.push_back(content);
+            remainingTurns = maxFunctionCallTurns_;
+        }
+        
+        while (remainingTurns--)
+        {
+            GenerationResult result = sendInternal();
+
+            if (!result.success)
+                return result;
+            
+            bool autoReplyEnabled;
+            {
+                std::lock_guard<std::mutex> lock(mutex_);
+                autoReplyEnabled = autoReply_;
+            }
+            
+            if (!autoReplyEnabled)
+                return result;
+
+            bool hasFunctionCall = false;
+            Content functionResponseContent = Content::Function();
+
+            for (const auto& part : result.content.parts)
+            {
+                if (part.isFunctionCall())
+                {
+                    hasFunctionCall = true;
+                    auto call = part.getFunctionCall();
+
+                    auto jsonResult = functionRegistry_.invoke(call->name, call->args);
+                    
+                    if (jsonResult.has_value())
+                    {
+                        functionResponseContent.functionResponse(call->name, jsonResult.value());
+                    }
+                    else
+                    {
+                        GEMINI_ERROR("Function invocation failed: {}", call->name);
+                        functionResponseContent.functionResponse(call->name, {{"error", "Function execution failed or not found"}});
+                    }
+                }
+            }
+
+            if (!hasFunctionCall)
+            {
+                return result;
+            }
+
+            {
+                std::lock_guard<std::mutex> lock(mutex_);
+                history_.push_back(functionResponseContent);
+            }
         }
 
-        return sendInternal();
+        return GenerationResult::Failure("Max function call turns exceeded");
     }
 
     GenerationResult ChatSession::send(const std::string& text)
@@ -198,6 +252,24 @@ namespace GeminiCPP
         safetySettings_.clear();
     }
 
+    void ChatSession::setAutoReply(bool enabled)
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        autoReply_ = enabled;
+    }
+
+    void ChatSession::setMaxFunctionCallTurns(int maxTurns)
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        maxFunctionCallTurns_ = maxTurns;
+    }
+
+    int ChatSession::getMaxFunctionCallTurns() const
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        return maxFunctionCallTurns_;
+    }
+
     void ChatSession::clearHistory()
     {
         std::lock_guard<std::mutex> lock(mutex_);
@@ -270,7 +342,7 @@ namespace GeminiCPP
                 cachedContent_,
                 config_,
                 safetySettings_,
-                tools_
+                getCombinedTools()
             );
 
             url = Url(ResourceName::Model(model_), ":generateContent");
@@ -303,7 +375,7 @@ namespace GeminiCPP
                 cachedContent_,
                 config_, 
                 safetySettings_, 
-                tools_
+                getCombinedTools()
             );
         }
         
@@ -319,5 +391,13 @@ namespace GeminiCPP
         }
 
         return result;
+    }
+
+    std::vector<Tool> ChatSession::getCombinedTools() const
+    {
+        std::vector<Tool> combined = tools_;
+        if (!functionRegistry_.empty())
+            combined.push_back(functionRegistry_.getTool());
+        return combined;
     }
 }

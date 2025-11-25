@@ -7,9 +7,11 @@
 #include <vector>
 #include <string>
 #include <mutex>
+
 #include "types.h"
 #include "model.h"
 #include "response.h"
+#include "function_registry.h"
 
 namespace GeminiCPP
 {
@@ -61,6 +63,18 @@ namespace GeminiCPP
         void setSafetySettings(const std::vector<SafetySetting>& settings);
         void addSafetySetting(HarmCategory category, HarmBlockThreshold threshold);
         void clearSafetySettings();
+
+        template <typename Func>
+        void registerFunction(const std::string& name, Func&& func, const std::string& doc, const std::vector<std::string>& argNames)
+        {
+            std::lock_guard<std::mutex> lock(mutex_);
+            functionRegistry_.registerFunction(name, std::forward<Func>(func), doc, argNames);
+        }
+
+        void setAutoReply(bool enabled);
+        
+        void setMaxFunctionCallTurns(int maxTurns);
+        [[nodiscard]] int getMaxFunctionCallTurns() const;
         
         void clearHistory();
         
@@ -71,6 +85,7 @@ namespace GeminiCPP
     private:
         [[nodiscard]] GenerationResult sendInternal();
         [[nodiscard]] GenerationResult streamInternal(const StreamCallback& callback);
+        [[nodiscard]] std::vector<Tool> getCombinedTools() const;
 
         Client* client_;
         std::string model_;
@@ -80,6 +95,9 @@ namespace GeminiCPP
         std::string cachedContent_;
         std::vector<Content> history_;
         std::vector<Tool> tools_;
+        FunctionRegistry functionRegistry_;
+        bool autoReply_ = true;
+        int maxFunctionCallTurns_ = 10;
 
         GenerationConfig config_;
         std::vector<SafetySetting> safetySettings_;

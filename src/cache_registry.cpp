@@ -1,5 +1,7 @@
 ﻿#include "gemini/cache_registry.h"
 
+#include "gemini/logger.h"
+
 namespace GeminiCPP
 {
     nlohmann::json CachedItemInfo::toJson() const

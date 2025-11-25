@@ -7,10 +7,8 @@
 #include <vector>
 #include <optional>
 #include <filesystem>
-#include <fstream>
 #include <nlohmann/json.hpp>
 #include "types.h"
-#include "logger.h"
 
 namespace GeminiCPP
 {

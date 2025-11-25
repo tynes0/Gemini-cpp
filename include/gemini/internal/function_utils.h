@@ -83,18 +83,37 @@ namespace GeminiCPP::Internal
     {
         if (!j.contains(name))
         {
-            if constexpr (std::is_default_constructible_v<T>)
+            if constexpr
+            (std::is_default_constructible_v<T>)
                 return T{};
             
             throw std::runtime_error("Missing argument: " + name);
         }
-        return j.at(name).get<T>();
+        
+        if constexpr (frenum::is_frenum_v<T>)
+        {
+            auto val = frenum::cast<T>(j.at(name).get<std::string>());
+            if(val)
+                return *val;
+            
+            throw std::runtime_error("Invalid enum value for: " + name);
+        } 
+        else
+        {
+            return j.at(name).get<T>();
+        }
     }
 
-    template <typename... Args, std::size_t... Is>
-    std::tuple<Args...> jsonToTuple(const nlohmann::json& j, const std::vector<std::string>& argNames, std::index_sequence<Is...>) 
+    template <typename TupleType, std::size_t... Is>
+    TupleType jsonToTupleImpl(const nlohmann::json& j, const std::vector<std::string>& argNames, std::index_sequence<Is...>) 
     {
-        return std::make_tuple(parseArg<std::decay_t<Args>>(j, argNames[Is])...);
+        return std::make_tuple(parseArg<std::tuple_element_t<Is, TupleType>>(j, argNames[Is])...);
+    }
+
+    template <typename TupleType>
+    TupleType jsonToTuple(const nlohmann::json& j, const std::vector<std::string>& argNames) 
+    {
+        return jsonToTupleImpl<TupleType>(j, argNames, std::make_index_sequence<std::tuple_size_v<TupleType>>{});
     }
 }
 
