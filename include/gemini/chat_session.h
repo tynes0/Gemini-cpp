@@ -36,10 +36,20 @@ namespace GeminiCPP
         [[nodiscard]] std::future<GenerationResult> streamAsync(const Content& content, const StreamCallback& callback);
         [[nodiscard]] std::future<GenerationResult> streamAsync(const std::string& text, const StreamCallback& callback);
 
+        [[nodiscard]] std::string getId() const;
+        
         void setModel(Model model);
         void setModel(std::string_view model);
+        [[nodiscard]] std::string getModel() const;
+        
         void setSystemInstruction(std::string systemInstruction);
+        [[nodiscard]] std::string getSystemInstruction() const;
+        
         void setSessionName(std::string sessionName);
+        [[nodiscard]] std::string getSessionName() const;
+
+        void setCachedContent(std::string cacheName);
+        [[nodiscard]] std::string getCachedContent() const;
 
         void setConfig(const GenerationConfig& config);
         [[nodiscard]] GenerationConfig& config();
@@ -55,9 +65,6 @@ namespace GeminiCPP
         void clearHistory();
         
         [[nodiscard]] std::vector<Content> history() const;
-
-        [[nodiscard]] std::string getId() const;
-        [[nodiscard]] std::string getName() const;
         
         [[nodiscard]] nlohmann::json toJson() const;
         [[nodiscard]] static ChatSession fromJson(Client* client, const nlohmann::json& j);
@@ -70,6 +77,7 @@ namespace GeminiCPP
         std::string sessionId_;
         std::string sessionName_;
         std::string systemInstruction_;
+        std::string cachedContent_;
         std::vector<Content> history_;
         std::vector<Tool> tools_;
 

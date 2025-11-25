@@ -4,6 +4,7 @@
 
 #include "gemini/uuid.h"
 #include "gemini/logger.h"
+#include "gemini/storage.h"
 #include "internal/payload_builder.h"
 
 namespace GeminiCPP
@@ -91,6 +92,11 @@ namespace GeminiCPP
         return streamAsync(Content::User().text(text), callback);
     }
 
+    std::string ChatSession::getId() const
+    {
+        return sessionId_;
+    }
+
     void ChatSession::setModel(Model model)
     {
         std::lock_guard<std::mutex> lock(mutex_);
@@ -103,16 +109,43 @@ namespace GeminiCPP
         model_ = model;
     }
 
+    std::string ChatSession::getModel() const
+    {
+        return model_;
+    }
+
+
     void ChatSession::setSystemInstruction(std::string systemInstruction)
     {
         std::lock_guard<std::mutex> lock(mutex_);
         systemInstruction_ = std::move(systemInstruction);
     }
 
+    std::string ChatSession::getSystemInstruction() const
+    {
+        return systemInstruction_;
+    }
+
     void ChatSession::setSessionName(std::string sessionName)
     {
         std::lock_guard<std::mutex> lock(mutex_);
         sessionName_ = std::move(sessionName);
+    }
+
+    std::string ChatSession::getSessionName() const
+    {
+        return sessionName_;
+    }
+    
+    void ChatSession::setCachedContent(std::string cacheName)
+    {
+        std::lock_guard<std::mutex> lock(mutex_);
+        cachedContent_ = std::move(cacheName);
+    }
+
+    std::string ChatSession::getCachedContent() const
+    {
+        return cachedContent_;
     }
 
     void ChatSession::setConfig(const GenerationConfig& config)
@@ -176,17 +209,7 @@ namespace GeminiCPP
         std::lock_guard<std::mutex> lock(mutex_);
         return history_;
     }
-
-    std::string ChatSession::getId() const
-    {
-        return sessionId_;
-    }
-
-    std::string ChatSession::getName() const
-    {
-        return sessionName_;
-    }
-
+    
     nlohmann::json ChatSession::toJson() const
     {
         std::lock_guard<std::mutex> lock(mutex_);
@@ -244,7 +267,7 @@ namespace GeminiCPP
             payload = Internal::PayloadBuilder::build(
                 history_, 
                 systemInstruction_,
-                "",
+                cachedContent_,
                 config_,
                 safetySettings_,
                 tools_
@@ -277,7 +300,7 @@ namespace GeminiCPP
             payload = Internal::PayloadBuilder::build(
                 history_, 
                 systemInstruction_,
-                "",
+                cachedContent_,
                 config_, 
                 safetySettings_, 
                 tools_
