@@ -4,6 +4,34 @@
 
 namespace GeminiCPP
 {
+    nlohmann::json LatLng::toJson() const
+    {
+        return {
+                {"latitude", latitude},
+                {"longitude", longitude}
+        };
+    }
+
+    nlohmann::json RetrievalConfig::toJson() const
+    {
+        nlohmann::json j = nlohmann::json::object();
+        if (latLng.has_value())
+        {
+            j["latLng"] = latLng->toJson();
+        }
+        return j;
+    }
+
+    nlohmann::json ToolConfig::toJson() const
+    {
+        nlohmann::json j = nlohmann::json::object();
+        if (retrievalConfig.has_value())
+        {
+            j["retrievalConfig"] = retrievalConfig->toJson();
+        }
+        return j;
+    }
+
     nlohmann::json FunctionDeclaration::toJson() const
     {
         return {
@@ -15,6 +43,13 @@ namespace GeminiCPP
 
     nlohmann::json GoogleSearch::toJson() const
     {
+        return nlohmann::json::object();
+    }
+
+    nlohmann::json GoogleMaps::toJson() const
+    {
+        if (enableWidget)
+            return { {"enableWidget", true} };
         return nlohmann::json::object();
     }
 
@@ -79,6 +114,11 @@ namespace GeminiCPP
         if (codeExecution.has_value())
         {
             j["codeExecution"] = codeExecution->toJson();
+        }
+
+        if (googleMaps.has_value())
+        {
+            j["googleMaps"] = googleMaps->toJson();
         }
             
         return j;

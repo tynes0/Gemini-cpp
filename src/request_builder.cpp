@@ -51,9 +51,39 @@ namespace GeminiCPP
         return *this;
     }
 
+    RequestBuilder& RequestBuilder::googleMaps(bool enableWidget)
+    {
+        Tool t;
+        GoogleMaps maps;
+        maps.enableWidget = enableWidget;
+        
+        t.googleMaps = maps;
+        tools_.push_back(t);
+        return *this;
+    }
+
     RequestBuilder& RequestBuilder::tool(const Tool& tool)
     {
         tools_.push_back(tool);
+        return *this;
+    }
+
+    RequestBuilder& RequestBuilder::location(double latitude, double longitude)
+    {
+        if (!toolConfig_.has_value())
+            toolConfig_ = ToolConfig{};
+        
+        if (!toolConfig_->retrievalConfig.has_value())
+            toolConfig_->retrievalConfig = RetrievalConfig{};
+            
+        toolConfig_->retrievalConfig->latLng = LatLng{latitude, longitude};
+        
+        return *this;
+    }
+
+    RequestBuilder& RequestBuilder::toolConfig(const ToolConfig& config)
+    {
+        toolConfig_ = config;
         return *this;
     }
 
@@ -175,7 +205,8 @@ namespace GeminiCPP
             parts_, 
             config_, 
             safetySettings_, 
-            tools_
+            tools_,
+            toolConfig_
         );
     }
 
@@ -189,7 +220,8 @@ namespace GeminiCPP
             config_, 
             safetySettings_, 
             callback, 
-            tools_
+            tools_,
+            toolConfig_
         );
     }
 }

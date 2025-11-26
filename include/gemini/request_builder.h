@@ -25,7 +25,12 @@ namespace GeminiCPP
         RequestBuilder& googleSearch();
         RequestBuilder& codeExecution();
         RequestBuilder& cachedContent(const std::string& cacheName);
+        RequestBuilder& googleMaps(bool enableWidget = false);
+        
         RequestBuilder& tool(const Tool& tool);
+
+        RequestBuilder& location(double latitude, double longitude);
+        RequestBuilder& toolConfig(const ToolConfig& config);
         
         RequestBuilder& systemInstruction(const std::string& instruction);
         RequestBuilder& jsonMode();
@@ -59,6 +64,7 @@ namespace GeminiCPP
         std::vector<Tool> tools_;
         std::vector<Part> parts_;
         std::string cachedContent_;
+        std::optional<ToolConfig> toolConfig_;
     };
 
 }

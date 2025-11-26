@@ -15,6 +15,30 @@
 
 namespace GeminiCPP
 {
+    struct LatLng
+    {
+        double latitude;
+        double longitude;
+
+        [[nodiscard]] nlohmann::json toJson() const;
+    };
+
+    struct RetrievalConfig
+    {
+        std::optional<LatLng> latLng;
+
+        [[nodiscard]] nlohmann::json toJson() const;
+    };
+
+    struct ToolConfig
+    {
+        std::optional<RetrievalConfig> retrievalConfig;
+
+        // FunctionCallingConfig can also be added here in the future.
+        
+        [[nodiscard]] nlohmann::json toJson() const;
+    };
+    
     struct FunctionDeclaration
     {
         std::string name;
@@ -26,6 +50,13 @@ namespace GeminiCPP
 
     struct GoogleSearch
     {
+        [[nodiscard]] nlohmann::json toJson() const;
+    };
+
+    struct GoogleMaps
+    {
+        bool enableWidget = false;
+        
         [[nodiscard]] nlohmann::json toJson() const;
     };
 
@@ -42,7 +73,7 @@ namespace GeminiCPP
 
     struct ExecutableCode
     {
-        std::string language; // python
+        std::string language; // for now only PYTHON
         std::string code;
 
         [[nodiscard]] static ExecutableCode fromJson(const nlohmann::json& j);
@@ -64,6 +95,7 @@ namespace GeminiCPP
         std::vector<FunctionDeclaration> functionDeclarations;
         std::optional<GoogleSearch> googleSearch;
         std::optional<CodeExecution> codeExecution;
+        std::optional<GoogleMaps> googleMaps;
 
         [[nodiscard]] nlohmann::json toJson() const;
     };

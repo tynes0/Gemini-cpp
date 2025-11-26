@@ -16,6 +16,7 @@ namespace GeminiCPP::Internal
             const GenerationConfig& config = {},
             const std::vector<SafetySetting>& safetySettings = {},
             const std::vector<Tool>& tools = {}
+            const std::optional<ToolConfig>& toolConfig = {}
         ) {
             nlohmann::json contentsJson = nlohmann::json::array();
             for (const auto& msg : contents)
@@ -59,6 +60,11 @@ namespace GeminiCPP::Internal
                     toolsJson.push_back(t.toJson());
                 }
                 payload["tools"] = toolsJson;
+            }
+
+            if (toolConfig.has_value())
+            {
+                payload["toolConfig"] = toolConfig->toJson();
             }
 
             return payload;

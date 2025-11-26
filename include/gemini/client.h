@@ -43,40 +43,24 @@ namespace GeminiCPP
         
         [[nodiscard]] GenerationResult generateContent(
             const std::string& prompt, 
-            std::string_view model_id,
-            const std::string& systemInstruction = "",
-            const std::string& cachedContent = "",
-            const GenerationConfig& config = {},
-            const std::vector<SafetySetting>& safetySettings = {}
+            std::string_view model_id
         );
 
         [[nodiscard]] GenerationResult generateContent(
             const std::string& prompt, 
-            Model model = Model::GEMINI_2_5_FLASH,
-            const std::string& systemInstruction = "",
-            const std::string& cachedContent = "",
-            const GenerationConfig& config = {},
-            const std::vector<SafetySetting>& safetySettings = {}
+            Model model = Model::GEMINI_2_5_FLASH
         );
         
         [[nodiscard]] GenerationResult streamGenerateContent(
             const std::string& prompt, 
             const StreamCallback& callback, 
-            std::string_view model_id,
-            const std::string& systemInstruction = "", 
-            const std::string& cachedContent = "", 
-            const GenerationConfig& config = {}, 
-            const std::vector<SafetySetting>& safetySettings = {}
+            std::string_view model_id
         );
 
         [[nodiscard]] GenerationResult streamGenerateContent(
             const std::string& prompt, 
             const StreamCallback& callback, 
-            Model model = Model::GEMINI_2_5_FLASH,
-            const std::string& systemInstruction = "", 
-            const std::string& cachedContent = "", 
-            const GenerationConfig& config = {}, 
-            const std::vector<SafetySetting>& safetySettings = {}
+            Model model = Model::GEMINI_2_5_FLASH
         );
         
         // File Upload
@@ -189,40 +173,24 @@ namespace GeminiCPP
         // --- ASYNC METHODS (NON-BLOCKING) ---
         [[nodiscard]] std::future<GenerationResult> generateContentAsync(
             std::string prompt,
-            std::string_view model_id,
-            std::string systemInstruction = "",
-            std::string cachedContent = "",
-            GenerationConfig config = {},
-            std::vector<SafetySetting> safetySettings = {}
+            std::string_view model_id
         );
 
         [[nodiscard]] std::future<GenerationResult> generateContentAsync(
             std::string prompt,
-            Model model = Model::GEMINI_2_5_FLASH,
-            std::string systemInstruction = "",
-            std::string cachedContent = "",
-            GenerationConfig config = {},
-            std::vector<SafetySetting> safetySettings = {}
+            Model model = Model::GEMINI_2_5_FLASH
         );
         
         [[nodiscard]] std::future<GenerationResult> streamGenerateContentAsync(
             std::string prompt,
             StreamCallback callback,
-            std::string_view model_id,
-            std::string systemInstruction = "",
-            std::string cachedContent = "",
-            GenerationConfig config = {},
-            std::vector<SafetySetting> safetySettings = {}
+            std::string_view model_id
         );
 
         [[nodiscard]] std::future<GenerationResult> streamGenerateContentAsync(
             std::string prompt,
             StreamCallback callback,
-            Model model = Model::GEMINI_2_5_FLASH,
-            std::string systemInstruction = "",
-            std::string cachedContent = "",
-            GenerationConfig config = {},
-            std::vector<SafetySetting> safetySettings = {}
+            Model model = Model::GEMINI_2_5_FLASH
         );
 
         // --- FILES API ASYNC ---
@@ -341,7 +309,13 @@ namespace GeminiCPP
         [[nodiscard]] GenerationResult submitRequest(
             const Url&  url,
             const nlohmann::json& payload
-            );
+        );
+
+        [[nodiscard]] GenerationResult submitStreamRequest(
+            const Url& url,
+            const nlohmann::json& payload,
+            const StreamCallback& callback
+        );
         
         [[nodiscard]] GenerationResult generateFromBuilder(
             Model model,
@@ -350,14 +324,9 @@ namespace GeminiCPP
             const std::vector<Part>& parts,
             const GenerationConfig& config = {},
             const std::vector<SafetySetting>& safetySettings = {},
-            const std::vector<Tool>& tools = {}
-            );
-
-        [[nodiscard]] GenerationResult submitStreamRequest(
-            const Url& url,
-            const nlohmann::json& payload,
-            const StreamCallback& callback
-            );
+            const std::vector<Tool>& tools = {},
+            const std::optional<ToolConfig>& toolConfig = std::nullopt
+        );
         
         [[nodiscard]] GenerationResult streamFromBuilder(
             Model model,
@@ -367,8 +336,9 @@ namespace GeminiCPP
             const GenerationConfig& config,
             const std::vector<SafetySetting>& safetySettings,
             const StreamCallback& callback,
-            const std::vector<Tool>& tools = {}
-            );
+            const std::vector<Tool>& tools = {},
+            const std::optional<ToolConfig>& toolConfig = std::nullopt
+        );
 
         [[nodiscard]] std::future<GenerationResult> generateFromBuilderAsync(
             Model model,
@@ -377,7 +347,8 @@ namespace GeminiCPP
             std::vector<Part> parts,
             GenerationConfig config,
             std::vector<SafetySetting> safetySettings,
-            std::vector<Tool> tools
+            std::vector<Tool> tools,
+            std::optional<ToolConfig> toolConfig = std::nullopt
         );
 
         [[nodiscard]] std::future<GenerationResult> streamFromBuilderAsync(
@@ -388,7 +359,8 @@ namespace GeminiCPP
             GenerationConfig config,
             std::vector<SafetySetting> safetySettings,
             StreamCallback callback,
-            std::vector<Tool> tools
+            std::vector<Tool> tools,
+            std::optional<ToolConfig> toolConfig = std::nullopt
         );
         
         std::string api_key_;
