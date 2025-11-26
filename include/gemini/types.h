@@ -144,12 +144,11 @@ namespace GeminiCPP
     };
 
     // Who's talking?
-    enum class Role : uint8_t
-    {
+    FrenumClassInNamespace(GeminiCPP, Role, uint8_t,
         USER,
         MODEL,
         FUNCTION
-    };
+    )
 
     struct Content
     {
@@ -171,6 +170,20 @@ namespace GeminiCPP
         [[nodiscard]] static Content fromJson(const nlohmann::json& j);
     };
 
+    FrenumClassInNamespace(GeminiCPP, ThinkingLevel, uint8_t,
+        LOW,
+        HIGH
+    )
+    
+    struct ThinkingConfig
+    {
+        bool includeThoughts = true;
+        std::optional<ThinkingLevel> thinkingLevel;
+        std::optional<int> thinkingBudget;
+
+        [[nodiscard]] nlohmann::json toJson() const;
+    };
+
     struct GenerationConfig
     {
         // Optional fields to allow API defaults when not set
@@ -187,6 +200,7 @@ namespace GeminiCPP
         std::optional<float> frequencyPenalty;
         std::optional<int64_t> seed;
         std::optional<nlohmann::json> responseSchema; // For structured output schemas
+        std::optional<ThinkingConfig> thinkingConfig;
 
         [[nodiscard]] nlohmann::json toJson() const;
     };
@@ -316,8 +330,7 @@ namespace GeminiCPP
         [[nodiscard]] static std::string toString(FinishReason reason);
     };
 
-    enum GenerationMethod : uint32_t
-    {
+    FrenumInNamespace(GeminiCPP, GenerationMethod, uint32_t,
         GM_NONE                         = 0,
         GM_UNSPECIFIED                  = (1 <<  0),
         GM_ASYNC_BATCH_EMBED_CONTENT    = (1 <<  1), // Queues a group of EmbedContent requests for batch processing.
@@ -337,7 +350,7 @@ namespace GeminiCPP
         GM_PREDICT                      = (1 << 15), // Requests a prediction.
         GM_PREDICT_LONG_RUNNING         = (1 << 16), // Same as prediction but returns LRO.
         GM_STREAM_GENERATE_CONTENT      = (1 << 17) // Generates a response published from the model using the GenerateContentRequest input.
-    };
+    )
 
     inline GenerationMethod operator|(GenerationMethod a, GenerationMethod b)
     {

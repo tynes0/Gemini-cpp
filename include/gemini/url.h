@@ -10,8 +10,7 @@
 
 namespace GeminiCPP
 {
-    enum class ResourceType : uint8_t
-    {
+    FrenumClassInNamespace(GeminiCPP, ResourceType, uint8_t,
         MODEL,          // models/
         FILE,           // files/
         TUNED_MODEL,    // tunedModels/
@@ -19,13 +18,12 @@ namespace GeminiCPP
         OPERATION,      // operations/
         CACHED_CONTENT, // cachedContents/
         NONE            // No Prefix (Raw string)
-    };
+    )
     
-    enum class EndpointType : uint8_t
-    {
+    FrenumClassInNamespace(GeminiCPP, EndpointType, uint8_t,
         REST, // Standard API (generativelanguage.googleapis.com/v1beta/)
         UPLOAD // File Upload (generativelanguage.googleapis.com/upload/v1beta/)
-    };
+    )
     
     // --- GENERAL RESOURCE MANAGER ---
     // ResourceName("gemini-2.5", ResourceType::MODEL) -> "models/gemini-1.5"

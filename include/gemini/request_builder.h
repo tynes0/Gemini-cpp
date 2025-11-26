@@ -37,6 +37,10 @@ namespace GeminiCPP
         RequestBuilder& stopSequences(const std::vector<std::string>& sequences);
         RequestBuilder& responseSchema(const nlohmann::json& schema);
         RequestBuilder& seed(int64_t seedValue);
+        RequestBuilder& thinking(int budget, bool includeThoughts = true);
+        RequestBuilder& thinking(ThinkingLevel level, bool includeThoughts = true);
+        RequestBuilder& thinking(bool includeThoughts = true);
+        RequestBuilder& thinking(const ThinkingConfig& thinkingConfig);
         
         RequestBuilder& safety(HarmCategory category, HarmBlockThreshold threshold);
         

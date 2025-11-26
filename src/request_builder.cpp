@@ -115,6 +115,41 @@ namespace GeminiCPP
         return *this;
     }
 
+    RequestBuilder& RequestBuilder::thinking(int budget, bool includeThoughts)
+    {
+        ThinkingConfig tc;
+        tc.includeThoughts = includeThoughts;
+        tc.thinkingBudget = budget;
+        
+        config_.thinkingConfig = tc;
+        return *this;
+    }
+
+    RequestBuilder& RequestBuilder::thinking(ThinkingLevel level, bool includeThoughts)
+    {
+        ThinkingConfig tc;
+        tc.includeThoughts = includeThoughts;
+        tc.thinkingLevel = level;
+        
+        config_.thinkingConfig = tc;
+        return *this;
+    }
+
+    RequestBuilder& RequestBuilder::thinking(bool includeThoughts)
+    {
+        ThinkingConfig tc;
+        tc.includeThoughts = includeThoughts;
+        
+        config_.thinkingConfig = tc;
+        return *this;
+    }
+
+    RequestBuilder& RequestBuilder::thinking(const ThinkingConfig& thinkingConfig)
+    {
+        config_.thinkingConfig = thinkingConfig;
+        return *this;
+    }
+
     RequestBuilder& RequestBuilder::safety(HarmCategory category, HarmBlockThreshold threshold)
     {
         safetySettings_.emplace_back(category, threshold);

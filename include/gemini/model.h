@@ -4,12 +4,12 @@
 #define GEMINI_MODEL_H
 
 #include <cstdint>
+#include <frenum.h>
 #include <string_view>
 
 namespace GeminiCPP
 {
-    enum class Model :  uint8_t
-    {
+    FrenumClassInNamespace(GeminiCPP, Model,  uint8_t,
         GEMINI_2_0_FLASH,
         GEMINI_2_0_FLASH_LITE,
         GEMINI_2_5_FLASH,
@@ -23,7 +23,7 @@ namespace GeminiCPP
 
         GEMINI_FLASH_LATEST,
         GEMINI_PRO_LATEST
-    };
+    )
 
     [[nodiscard]] constexpr std::string_view modelStringRepresentation(Model model)
     {

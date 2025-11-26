@@ -406,6 +406,29 @@ namespace GeminiCPP
         return c;
     }
 
+    nlohmann::json ThinkingConfig::toJson() const
+    {
+        nlohmann::json j;
+        
+        j["includeThoughts"] = includeThoughts;
+
+        if (thinkingBudget.has_value())
+        {
+            j["thinkingBudget"] = thinkingBudget.value();
+        }
+
+        if (thinkingLevel.has_value())
+        {
+            switch (thinkingLevel.value())
+            {
+            case ThinkingLevel::LOW:  j["thinkingLevel"] = "low"; break;
+            case ThinkingLevel::HIGH: j["thinkingLevel"] = "high"; break;
+            }
+        }
+
+        return j;
+    }
+
     nlohmann::json GenerationConfig::toJson() const
     {
         nlohmann::json j;
@@ -423,6 +446,7 @@ namespace GeminiCPP
         if (frequencyPenalty.has_value()) j["frequencyPenalty"] = frequencyPenalty.value();
         if (seed.has_value())             j["seed"] = seed.value();
         if (responseSchema.has_value())   j["responseSchema"] = responseSchema.value();
+        if (thinkingConfig.has_value())   j["thinkingConfig"] = thinkingConfig->toJson();
 
         return j;
     }
