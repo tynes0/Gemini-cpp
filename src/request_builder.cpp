@@ -45,6 +45,18 @@ namespace GeminiCPP
         return *this;
     }
 
+    RequestBuilder& RequestBuilder::cachedContent(const std::string& cacheName)
+    {
+        cachedContent_ = cacheName;
+        return *this;
+    }
+
+    RequestBuilder& RequestBuilder::tool(const Tool& tool)
+    {
+        tools_.push_back(tool);
+        return *this;
+    }
+
     RequestBuilder& RequestBuilder::jsonMode()
     {
         config_.responseMimeType = "application/json";
@@ -106,18 +118,6 @@ namespace GeminiCPP
     RequestBuilder& RequestBuilder::safety(HarmCategory category, HarmBlockThreshold threshold)
     {
         safetySettings_.emplace_back(category, threshold);
-        return *this;
-    }
-
-    RequestBuilder& RequestBuilder::tool(const Tool& tool)
-    {
-        tools_.push_back(tool);
-        return *this;
-    }
-
-    RequestBuilder& RequestBuilder::cachedContent(const std::string& cacheName)
-    {
-        cachedContent_ = cacheName;
         return *this;
     }
 

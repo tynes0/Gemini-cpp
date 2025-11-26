@@ -24,6 +24,8 @@ namespace GeminiCPP
         RequestBuilder& image(const std::string& filepath);
         RequestBuilder& googleSearch();
         RequestBuilder& codeExecution();
+        RequestBuilder& cachedContent(const std::string& cacheName);
+        RequestBuilder& tool(const Tool& tool);
         
         RequestBuilder& systemInstruction(const std::string& instruction);
         RequestBuilder& jsonMode();
@@ -35,9 +37,8 @@ namespace GeminiCPP
         RequestBuilder& stopSequences(const std::vector<std::string>& sequences);
         RequestBuilder& responseSchema(const nlohmann::json& schema);
         RequestBuilder& seed(int64_t seedValue);
+        
         RequestBuilder& safety(HarmCategory category, HarmBlockThreshold threshold);
-        RequestBuilder& tool(const Tool& tool);
-        RequestBuilder& cachedContent(const std::string& cacheName);
         
         [[nodiscard]] GenerationResult generate() const;
         [[nodiscard]] GenerationResult stream(const StreamCallback& callback) const;

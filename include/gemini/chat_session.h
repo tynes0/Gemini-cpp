@@ -25,6 +25,8 @@ namespace GeminiCPP
         
         ChatSession(const ChatSession& other);
         ChatSession& operator=(const ChatSession& other);
+
+        ~ChatSession() = default;
         
         [[nodiscard]] GenerationResult send(const Content& content);
         [[nodiscard]] GenerationResult send(const std::string& text);

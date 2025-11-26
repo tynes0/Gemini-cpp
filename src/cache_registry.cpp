@@ -41,7 +41,6 @@ namespace GeminiCPP
 
         registry_[alias] = info.toJson();
         save();
-        GEMINI_INFO("Cache registered: {} -> {}", alias, info.id);
     }
 
     std::optional<std::string> CacheRegistry::getCacheId(const std::string& alias) const
@@ -68,7 +67,6 @@ namespace GeminiCPP
         {
             registry_.erase(alias);
             save();
-            GEMINI_INFO("Cache unregistered: {}", alias);
         }
     }
 
