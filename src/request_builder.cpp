@@ -19,13 +19,13 @@ namespace GeminiCPP
 
     RequestBuilder& RequestBuilder::text(const std::string& t)
     {
-        parts_.push_back(Part::Text(t));
+        parts_.push_back(Part::Text(TextData{.text = t}));
         return *this;
     }
 
     RequestBuilder& RequestBuilder::image(const std::string& filepath)
     {
-        parts_.push_back(Part::Media(filepath));
+        parts_.push_back(Part::Media(Blob::createFromPath(filepath)));
         return *this;
     }
 

@@ -19,7 +19,7 @@ namespace GeminiCPP
     }
     
     ResourceName::ResourceName(GeminiCPP::Model model)
-        : value_(modelStringRepresentation(model)), type_(ResourceType::MODEL)
+        : value_(ModelHelper::stringRepresentation(model)), type_(ResourceType::MODEL)
     {
         ensurePrefix();
     }

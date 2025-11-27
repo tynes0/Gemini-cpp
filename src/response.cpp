@@ -28,8 +28,8 @@ namespace GeminiCPP
         {
             if (part.isText())
             {
-                const auto* txtData = part.getText();
-                if (txtData) fullText += *txtData;
+                if (const auto* txtData = part.getText())
+                    fullText += txtData->text;
             }
         }
         return fullText;

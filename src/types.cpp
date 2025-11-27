@@ -1,35 +1,121 @@
 ﻿#include "gemini/types.h"
 
+#include "gemini/base.h"
 #include "gemini/utils.h"
 
 namespace GeminiCPP
 {
+    FunctionCallingConfig FunctionCallingConfig::fromJson(const nlohmann::json& j)
+    {
+        FunctionCallingConfig result{};
+
+        if (j.contains("mode"))
+            result.mode = frenum::cast<FunctionCallingMode>(j["mode"]);
+
+        if (j.contains("allowedFunctionNames"))
+        {
+            result.allowedFunctionNames = std::vector<std::string>{};
+            result.allowedFunctionNames->reserve(j["allowedFunctionNames"].size());
+            for (const auto& name : j["allowedFunctionNames"])
+                result.allowedFunctionNames->push_back(name);
+        }
+
+        return result;
+    }
+
+    nlohmann::json FunctionCallingConfig::toJson() const
+    {
+        nlohmann::json j = nlohmann::json::object();
+
+        if (mode.has_value())
+            j["mode"] = frenum::to_string(mode.value());
+
+        if (allowedFunctionNames.has_value())
+        {
+            j["allowedFunctionNames"] = nlohmann::json::array();
+            for (const auto& name : *allowedFunctionNames)
+                j["allowedFunctionNames"].push_back(name);
+        }
+        return j;
+    }
+
+    LatLng LatLng::fromJson(const nlohmann::json& j)
+    {
+        LatLng result;
+        result.latitude = j.value("latitude", 0);
+        result.longitude = j.value("longitude", 0);
+        return result;
+    }
+    
     nlohmann::json LatLng::toJson() const
     {
         return {
-                {"latitude", latitude},
-                {"longitude", longitude}
+            {"latitude", latitude},
+            {"longitude", longitude}
         };
     }
 
+    RetrievalConfig RetrievalConfig::fromJson(const nlohmann::json& j)
+    {
+        RetrievalConfig result{};
+
+        if (j.contains("latLng"))
+            result.latLng = LatLng::fromJson(j["latLng"]);
+
+        if (j.contains("languageCode"))
+            result.languageCode = j["languageCode"];
+        
+        return result;
+    }
+    
     nlohmann::json RetrievalConfig::toJson() const
     {
         nlohmann::json j = nlohmann::json::object();
         if (latLng.has_value())
-        {
             j["latLng"] = latLng->toJson();
-        }
+        
+        if (languageCode.has_value())
+            j["languageCode"] = *languageCode;
         return j;
     }
 
+    ToolConfig ToolConfig::fromJson(const nlohmann::json& j)
+    {
+        ToolConfig result{};
+
+        if (j.contains("functionCallingConfig"))
+            result.functionCallingConfig = FunctionCallingConfig::fromJson(j["functionCallingConfig"]);
+
+        if (j.contains("retrievalConfig"))
+            result.retrievalConfig = RetrievalConfig::fromJson(j["retrievalConfig"]);
+
+        return result;
+    }
+    
     nlohmann::json ToolConfig::toJson() const
     {
         nlohmann::json j = nlohmann::json::object();
+
+        if (functionCallingConfig.has_value())
+            j["functionCallingConfig"] = functionCallingConfig->toJson();
+        
         if (retrievalConfig.has_value())
-        {
             j["retrievalConfig"] = retrievalConfig->toJson();
-        }
+        
         return j;
+    }
+
+    FunctionDeclaration FunctionDeclaration::fromJson(const nlohmann::json& j)
+    {
+        FunctionDeclaration result{};
+
+        result.name = j.value("name", "");
+        result.description = j.value("description", "");
+
+        if (j.contains("parameters"))
+            result.parameters = j["parameters"];
+
+        return result;
     }
 
     nlohmann::json FunctionDeclaration::toJson() const
@@ -41,9 +127,21 @@ namespace GeminiCPP
         };
     }
 
+    GoogleSearch GoogleSearch::fromJson(const nlohmann::json& j)
+    {
+        GEMINI_UNUSED(j);
+        return GoogleSearch{};
+    }
+
     nlohmann::json GoogleSearch::toJson() const
     {
         return nlohmann::json::object();
+    }
+
+    GoogleMaps GoogleMaps::fromJson(const nlohmann::json& j)
+    {
+        GEMINI_UNUSED(j);
+        return GoogleMaps{};
     }
 
     nlohmann::json GoogleMaps::toJson() const
@@ -53,44 +151,39 @@ namespace GeminiCPP
         return nlohmann::json::object();
     }
 
+    CodeExecution CodeExecution::fromJson(const nlohmann::json& j)
+    {
+        GEMINI_UNUSED(j);
+        return CodeExecution{};
+    }
+
     nlohmann::json CodeExecution::toJson() const
     {
         return nlohmann::json::object();
     }
 
-    ExecutableCode ExecutableCode::fromJson(const nlohmann::json& j)
+    Tool Tool::fromJson(const nlohmann::json& j)
     {
-        return {
-            j.value("language", "PYTHON"),
-            j.value("code", "")
-        };
-    }
+        Tool result{};
+        
+        if (j.contains("FunctionDeclarations"))
+        {
+            result.functionDeclarations.reserve(j["FunctionDeclarations"].size());
+            
+            for (const auto& functionDeclaration : j["FunctionDeclarations"])
+                result.functionDeclarations.push_back(FunctionDeclaration::fromJson(functionDeclaration));
+        }
 
-    nlohmann::json ExecutableCode::toJson() const
-    {
-        return {
-                {"language", language},
-                {"code", code}
-        };
-    }
+        if (j.contains("codeExecution"))
+            result.codeExecution = CodeExecution::fromJson(j["codeExecution"]);
 
-    CodeExecutionResult CodeExecutionResult::fromJson(const nlohmann::json& j)
-    {
-        std::optional<CodeExecutionOutcome> outcomeOpt = frenum::cast<CodeExecutionOutcome>(j.value("outcome", ""));
-        CodeExecutionOutcome outcome = outcomeOpt.has_value() ? outcomeOpt.value() : CodeExecutionOutcome::OUTCOME_FAILED;
-        return {
-            outcome,
-            j.value("output", ""),
-            std::nullopt
-        };
-    }
+        if (j.contains("googleSearch"))
+            result.googleSearch = GoogleSearch::fromJson(j["googleSearch"]);
 
-    nlohmann::json CodeExecutionResult::toJson() const
-    {
-        return {
-                {"outcome", frenum::to_string(outcome)},
-                {"output", output}
-        };
+        if (j.contains("googleMaps"))
+            result.googleMaps = GoogleMaps::fromJson(j["googleMaps"]);
+
+        return result;
     }
 
     nlohmann::json Tool::toJson() const
@@ -103,7 +196,7 @@ namespace GeminiCPP
             for(const auto& f : functionDeclarations)
                 funcs.push_back(f.toJson());
             
-            j["function_declarations"] = funcs;
+            j["functionDeclarations"] = funcs;
         }
             
         if (googleSearch.has_value())
@@ -124,220 +217,454 @@ namespace GeminiCPP
         return j;
     }
 
-    nlohmann::json FunctionCall::toJson() const
+    FunctionResponseBlob FunctionResponseBlob::fromJson(const nlohmann::json& j)
     {
-        return {
-            {"name", name},
-            {"args", args}
+        FunctionResponseBlob result;
+        result.mimeType = j.value("mimeType", "");
+        result.data = j.value("data", "");
+        return result;
+    }
+
+    nlohmann::json FunctionResponseBlob::toJson() const
+    {
+        nlohmann::json j = nlohmann::json::object();
+        j["mimeType"] = mimeType;
+        j["data"] = data;
+        return j;
+    }
+
+    FunctionResponsePart FunctionResponsePart::fromJson(const nlohmann::json& j)
+    {
+        FunctionResponsePart part{};
+        if (j.contains("inlineData"))
+            part.data = FunctionResponseBlob::fromJson(j["inlineData"]);
+
+        return part;
+    }
+
+    nlohmann::json FunctionResponsePart::toJson() const
+    {
+        nlohmann::json j = nlohmann::json::object();
+        
+        std::visit([&j](const auto& arg)
+        {
+            using T = std::decay_t<decltype(arg)>;
+
+            if constexpr (std::is_same_v<T, FunctionResponseBlob>) j["inlineData"] = arg.toJson();
+        }, data);
+
+        return j;
+    }
+
+    TextData TextData::fromJson(const nlohmann::json& j)
+    {
+        TextData result{};
+        
+        if (j.is_string())
+            result.text = j.get<std::string>();
+        if (j.is_object())
+            result.text = j.value("text", "");
+        
+        return result;
+    }
+    
+    nlohmann::json TextData::toJson() const
+    {
+        nlohmann::json j = text;
+        return j;
+    }
+
+    Blob Blob::createFromPath(const std::string& filepath, const std::string& customMimeType)
+    {
+        return Blob{
+            .mimeType = customMimeType.empty() ? Utils::getMimeType(filepath) : customMimeType,
+            .data = Utils::fileToBase64(filepath)
         };
     }
 
+    Blob Blob::fromJson(const nlohmann::json& j)
+    {
+        Blob result;
+        result.mimeType = j.value("mimeType", "");
+        result.data = j.value("data", "");
+        return result;
+    }
+
+    nlohmann::json Blob::toJson() const
+    {
+        nlohmann::json j = nlohmann::json::object();
+        j["mimeType"] = mimeType;
+        j["data"] = data;
+        return j;
+    }
+
+    FunctionCall FunctionCall::fromJson(const nlohmann::json& j)
+    {
+        FunctionCall result{};
+        if (j.contains("id"))
+            result.id = j["id"];
+
+        result.name = j.value("name", "");
+        result.args = j.value("args", nlohmann::json::object());
+
+        return result;
+    }
+    
+    nlohmann::json FunctionCall::toJson() const
+    {
+        nlohmann::json j = nlohmann::json::object();
+        j["name"] = name;
+        j["args"] = args;
+        if (id.has_value())
+            j["id"] = id.value();
+        return j;
+    }
+    
+    FunctionResponse FunctionResponse::fromJson(const nlohmann::json& j)
+    {
+        FunctionResponse result;
+        if (j.contains("id")) result.id = j["id"];
+        if (j.contains("willContinue")) result.willContinue = j["willContinue"];
+        if (j.contains("scheduling")) result.scheduling = frenum::cast<Scheduling>(j["scheduling"]);
+        
+        if (j.contains("parts"))
+        {
+            result.parts = std::vector<FunctionResponsePart>{};
+            result.parts->reserve(j["parts"].size());
+            
+            for (const auto& p : j["parts"])
+                result.parts->push_back(FunctionResponsePart::fromJson(p));
+        }
+        
+        result.name = j.value("name", "");
+
+        result.responseContent = j.contains("response")
+            ? j["response"].value("content", nlohmann::json::object())
+            : nlohmann::json::object();
+
+        return result;
+    }
+    
     nlohmann::json FunctionResponse::toJson() const
     {
-        return {
-                {"name", name},
-                {"response", {
-                {"name", name},
-                {"content", response}
-                }}
+        nlohmann::json j = nlohmann::json::object();
+
+        if (id.has_value())
+        {
+            j["id"] = id.value();
+        }
+        
+        j["name"] = name;
+
+        j["response"] = {
+            {"name", name},
+            {"content", responseContent}
         };
+
+        if (parts.has_value())
+        {
+            j["parts"] = nlohmann::json::array();
+            for (const auto& p : *parts)
+                j["parts"].push_back(p.toJson());
+        }
+
+        if (willContinue.has_value())
+        {
+            j["willContinue"] = willContinue.value();
+        }
+
+        if (scheduling.has_value())
+        {
+            j["scheduling"] = frenum::to_string(scheduling.value());
+        }
+
+        return j;
+    }
+    
+    FileData FileData::fromJson(const nlohmann::json& j)
+    {
+        FileData result{};
+        if (j.contains("mimeType"))
+            result.mimeType = j["mimeType"];
+
+        result.fileUri = j.value("fileUri", "");
+        return result;
+    }
+
+    nlohmann::json FileData::toJson() const
+    {
+        nlohmann::json j = nlohmann::json::object();
+        if (mimeType.has_value())
+            j["mimeType"] = *mimeType;
+
+        j["fileUri"] = fileUri;
+        return j;
+    }
+
+    ExecutableCode ExecutableCode::fromJson(const nlohmann::json& j)
+    {
+        return {
+            .language = frenum::cast<Language>(j.value("language", "PYTHON")).value_or(Language::PYTHON),
+            .code = j.value("code", "")
+        };
+    }
+
+    nlohmann::json ExecutableCode::toJson() const
+    {
+        return {
+            {"language", frenum::to_string(language)},
+            {"code", code}
+        };
+    }
+
+    CodeExecutionResult CodeExecutionResult::fromJson(const nlohmann::json& j)
+    {
+        return {
+            .outcome = frenum::cast<Outcome>(j.value("outcome", "")).value_or(Outcome::OUTCOME_UNSPECIFIED),
+            .output = j.value("output", ""),
+        };
+    }
+
+    nlohmann::json CodeExecutionResult::toJson() const
+    {
+        nlohmann::json j = nlohmann::json::object();
+        j["outcome"] = frenum::to_string(outcome);
+
+        if (output.has_value())
+            j["output"] = output.value();
+
+        return j;
+    }
+
+    VideoMetadata VideoMetadata::fromJson(const nlohmann::json& j)
+    {
+        VideoMetadata result{};
+        if (j.contains("startOffset"))
+            result.startOffset = Duration::fromJson(j["startOffset"]);
+
+        
+        if (j.contains("endOffset"))
+            result.endOffset = Duration::fromJson(j["endOffset"]);
+
+        if (j.contains("fps"))
+            result.fps = j["fps"];
+
+        return result;
+    }
+
+    nlohmann::json VideoMetadata::toJson() const
+    {
+        nlohmann::json j = nlohmann::json::object();
+        
+        if (startOffset.has_value()) j["startOffset"] = startOffset->toJson();
+        if (endOffset.has_value()) j["endOffset"] = endOffset->toJson();
+        if (fps.has_value()) j["fps"] = *fps;
+        
+        return j;
     }
 
     bool Part::isText() const
     {
-        return std::holds_alternative<TextData>(content);
+        return std::holds_alternative<TextData>(data);
     }
     bool Part::isBlob() const
     {
-        return std::holds_alternative<BlobData>(content);
+        return std::holds_alternative<Blob>(data);
     }
 
-    bool Part::isFileData() const
-    {
-        return std::holds_alternative<FileData>(content);
-    }
-    
     bool Part::isFunctionCall() const
     {
-        return std::holds_alternative<FunctionCall>(content);
+        return std::holds_alternative<FunctionCall>(data);
     }
+    
     bool Part::isFunctionResponse() const
     {
-        return std::holds_alternative<FunctionResponse>(content);
+        return std::holds_alternative<FunctionResponse>(data);
+    }
+    
+    bool Part::isFileData() const
+    {
+        return std::holds_alternative<FileData>(data);
     }
 
     bool Part::isExecutableCode() const
     {
-        return std::holds_alternative<ExecutableCode>(content);
+        return std::holds_alternative<ExecutableCode>(data);
     }
 
     bool Part::isCodeExecutionResult() const
     {
-        return std::holds_alternative<CodeExecutionResult>(content);
+        return std::holds_alternative<CodeExecutionResult>(data);
     }
 
-    const std::string* Part::getText() const
+    const TextData* Part::getText() const
     {
-        if(auto* p = std::get_if<TextData>(&content))
-            return &p->text;
-        return nullptr;
+        return std::get_if<TextData>(&data);
     }
 
-    const BlobData* Part::getBlob() const
+    const Blob* Part::getBlob() const
     {
-        return std::get_if<BlobData>(&content);
-    }
-
-    const FileData* Part::getFileData() const
-    {
-        return std::get_if<FileData>(&content);
+        return std::get_if<Blob>(&data);
     }
 
     const FunctionCall* Part::getFunctionCall() const
     {
-        return std::get_if<FunctionCall>(&content);
+        return std::get_if<FunctionCall>(&data);
     }
 
     const FunctionResponse* Part::getFunctionResponse() const
     {
-        return std::get_if<FunctionResponse>(&content);
+        return std::get_if<FunctionResponse>(&data);
+    }
+
+    const FileData* Part::getFileData() const
+    {
+        return std::get_if<FileData>(&data);
     }
 
     const ExecutableCode* Part::getExecutableCode() const
     {
-        return std::get_if<ExecutableCode>(&content);
+        return std::get_if<ExecutableCode>(&data);
     }
 
     const CodeExecutionResult* Part::getCodeExecutionResult() const
     {
-        return std::get_if<CodeExecutionResult>(&content);
+        return std::get_if<CodeExecutionResult>(&data);
     }
 
-    Part Part::Text(std::string t)
+    Part Part::Text(TextData t)
     {
         Part p;
-        p.content = TextData{
-            std::move(t)
-        };
+        p.data = std::move(t);
         return p;
     }
 
-    Part Part::Media(const std::string& filepath, const std::string& customMimeType)
+    Part Part::Media(Blob blobData)
     {
         Part p;
-        p.content = BlobData{
-            customMimeType.empty() ? Utils::getMimeType(filepath) : customMimeType,
-            Utils::fileToBase64(filepath)
-        };
+        p.data = std::move(blobData);
         return p;
     }
 
-    Part Part::Uri(std::string fileUri, std::string mimeType)
+    Part Part::Uri(FileData fileData)
     {
         Part p;
-        p.content = FileData{
-            std::move(mimeType),
-            std::move(fileUri)
-        };
+        p.data = std::move(fileData);
         return p;
     }
 
     Part Part::Call(FunctionCall call)
     {
         Part p;
-        p.content = std::move(call);
+        p.data = std::move(call);
         return p;
     }
 
     Part Part::Response(FunctionResponse resp)
     {
         Part p;
-        p.content = std::move(resp);
+        p.data = std::move(resp);
         return p;
     }
 
     Part Part::Code(ExecutableCode code)
     {
         Part p;
-        p.content = std::move(code);
+        p.data = std::move(code);
         return p;
     }
 
     Part Part::ExecutionResult(CodeExecutionResult result)
     {
         Part p;
-        p.content = std::move(result);
+        p.data = std::move(result);
         return p;
+    }
+
+    Part Part::fromJson(const nlohmann::json& j)
+    {
+        Part result{};
+
+        if (j.contains("text")) result.data = TextData::fromJson(j["text"]);
+        else if (j.contains("inlineData")) result.data = Blob::fromJson(j["inlineData"]);
+        else if (j.contains("functionCall")) result.data = FunctionCall::fromJson(j["functionCall"]);
+        else if (j.contains("functionResponse")) result.data = FunctionResponse::fromJson(j["functionResponse"]);
+        else if (j.contains("fileData")) result.data = FileData::fromJson(j["fileData"]);
+        else if (j.contains("executableCode")) result.data = ExecutableCode::fromJson(j["executableCode"]);
+        else if (j.contains("codeExecutionResult")) result.data = CodeExecutionResult::fromJson(j["codeExecutionResult"]);
+
+        if (j.contains("thought"))
+            result.thought = j["thought"];
+        if (j.contains("thoughtSignature"))
+            result.thoughtSignature = j["thoughtSignature"];
+        result.partMetadata = j.value("partMetadata", nlohmann::json::object());
+
+        if (j.contains("videoMetadata"))
+            result.metadata = VideoMetadata::fromJson(j["videoMetadata"]);
+        
+        return result;
     }
 
     nlohmann::json Part::toJson() const
     {
-        return std::visit([](const auto& arg) -> nlohmann::json {
+        nlohmann::json j = nlohmann::json::object();
+        
+        std::visit([&j](const auto& arg) {
             using T = std::decay_t<decltype(arg)>;
             
-            if constexpr (std::is_same_v<T, std::monostate>)
-            {
-                return nlohmann::json::object();
-            }
-            else if constexpr (std::is_same_v<T, TextData>)
-            {
-                return { {"text", arg.text} };
-            }
-            else if constexpr (std::is_same_v<T, BlobData>)
-            {
-                return {
-                    {"inlineData", {
-                        {"mimeType", arg.mimeType},
-                        {"data", arg.data}
-                    }}
-                };
-            }
-            else if constexpr (std::is_same_v<T, FileData>) {
-                return { 
-                    {"fileData", { 
-                        {"mimeType", arg.mimeType}, 
-                        {"fileUri", arg.fileUri} 
-                    }} 
-                };
-            }
-            else if constexpr (std::is_same_v<T, FunctionCall>)
-            {
-                return { {"functionCall", arg.toJson()} };
-            }
-            else if constexpr (std::is_same_v<T, FunctionResponse>)
-            {
-                return { {"functionResponse", arg.toJson()} };
-            }
+            if constexpr (std::is_same_v<T, TextData>) j["text"] = arg.text;
+            else if constexpr (std::is_same_v<T, Blob>) j["inlineData"] = arg.toJson();
+            else if constexpr (std::is_same_v<T, FileData>) j["fileData"] = arg.toJson();
+            else if constexpr (std::is_same_v<T, FunctionCall>) j["functionCall"] = arg.toJson();
+            else if constexpr (std::is_same_v<T, FunctionResponse>) j["functionResponse"] = arg.toJson();
+            else if constexpr (std::is_same_v<T, ExecutableCode>) j["executableCode"] = arg.toJson();
+            else if constexpr (std::is_same_v<T, CodeExecutionResult>) j["codeExecutionResult"] = arg.toJson();
+        }, data);
 
-            if constexpr (std::is_same_v<T, ExecutableCode>) {
-                return { {"executableCode", arg.toJson()} };
-            }
-            else if constexpr (std::is_same_v<T, CodeExecutionResult>) {
-                return { {"codeExecutionResult", arg.toJson()} };
-            }
+        if (thought.has_value())
+            j["thought"] = *thought;
 
-            return {"", {}};
-        }, content);
+        if (thoughtSignature.has_value())
+            j["thoughtSignature"] = *thoughtSignature;
+
+        j["partMetadata"] = partMetadata;
+        
+        std::visit([&j](const auto& arg) {
+            using T = std::decay_t<decltype(arg)>;
+
+            if constexpr (std::is_same_v<T, VideoMetadata>) j["videoMetadata"] = arg.toJson();
+        }, metadata);
+
+        return j;
     }
 
     Content Content::User()
     {
-        return {Role::USER, {}};
+        return {
+            .role = Role::USER,
+            .parts = {}
+        };
     }
 
     Content Content::Model()
     {
-        return {Role::MODEL, {}};
+        return {
+            .role = Role::MODEL,
+            .parts = {}
+        };
     }
 
     Content Content::Function()
     {
-        return {Role::FUNCTION, {}};
+        return {
+            .role = Role::FUNCTION,
+            .parts = {}
+        };
     }
 
     Content& Content::text(const std::string& t)
     {
-        parts.push_back(Part::Text(t));
+        parts.push_back(Part::Text(TextData{ .text = t }));
         return *this;
     }
 
@@ -353,37 +680,43 @@ namespace GeminiCPP
 
     Content& Content::fileUri(const std::string& uri, const std::string& mimeType)
     {
-        parts.push_back(Part::Uri(uri, mimeType));
+        FileData data{
+            .mimeType = mimeType,
+            .fileUri = uri,
+        };
+        
+        parts.push_back(Part::Uri(data));
         return *this;
     }
 
     Content& Content::media(const std::string& filepath, const std::string& mimeType)
     {
-        parts.push_back(Part::Media(filepath, mimeType));
+        parts.push_back(Part::Media(Blob::createFromPath(filepath, mimeType)));
         return *this;
     }
 
-    Content& Content::functionResponse(std::string name, nlohmann::json responseContent)
+    Content& Content::functionResponse(FunctionResponse response)
     {
-        parts.push_back(Part::Response({std::move(name), std::move(responseContent)}));
+        parts.push_back(Part::Response(std::move(response)));
         role = Role::FUNCTION; 
         return *this;
     }
 
     nlohmann::json Content::toJson() const
     {
+        std::string roleStr = "user";
+        if (role == Role::MODEL)
+            roleStr = "model";
+        
         nlohmann::json partsJson = nlohmann::json::array();
         
         for (const auto& p : parts)
             partsJson.push_back(p.toJson());
             
-        std::string roleStr = "user";
-        if (role == Role::MODEL)
-            roleStr = "model";
-        if (role == Role::FUNCTION)
-            roleStr = "function";
-            
-        return { {"role", roleStr}, {"parts", partsJson} };
+        return {
+            {"role", roleStr},
+            {"parts", partsJson}
+        };
     }
 
     Content Content::fromJson(const nlohmann::json& j)
@@ -401,48 +734,11 @@ namespace GeminiCPP
     
         if (j.contains("parts"))
         {
+            c.parts.reserve(j["parts"].size());
             for (const auto& item : j["parts"])
-            {
-                if (item.contains("text"))
-                {
-                    c.parts.push_back(Part::Text(item["text"].get<std::string>()));
-                }
-                else if (item.contains("inlineData"))
-                {
-                    Part p;
-                    p.content = BlobData{
-                        item["inlineData"]["mimeType"].get<std::string>(),
-                        item["inlineData"]["data"].get<std::string>()
-                    };
-                    c.parts.push_back(p);
-                }
-                else if (item.contains("fileData"))
-                {
-                    Part p;
-                    p.content = FileData{
-                        item["fileData"].value("mimeType", ""),
-                        item["fileData"].value("fileUri", "")
-                    };
-                    c.parts.push_back(p);
-                }
-                else if (item.contains("functionCall"))
-                {
-                    auto fc = item["functionCall"];
-                    c.parts.push_back(Part::Call({
-                        fc["name"].get<std::string>(),
-                        fc["args"]
-                    }));
-                }
-                else if (item.contains("executableCode"))
-                {
-                    c.parts.push_back(Part::Code(ExecutableCode::fromJson(item["executableCode"])));
-                }
-                else if (item.contains("codeExecutionResult"))
-                {
-                    c.parts.push_back(Part::ExecutionResult(CodeExecutionResult::fromJson(item["codeExecutionResult"])));
-                }
-            }
+                c.parts.push_back(Part::fromJson(item));
         }
+        
         return c;
     }
 
@@ -589,119 +885,6 @@ namespace GeminiCPP
         return frenum::to_string(reason);
     }
 
-    GenerationMethod GenerationMethodHelper::fromString(const std::string& method)
-    {
-        if (method == "asyncBatchEmbedContent") return GM_ASYNC_BATCH_EMBED_CONTENT;
-        if (method == "batchEmbedContents")     return GM_BATCH_EMBED_CONTENTS;
-        if (method == "batchEmbedText")         return GM_BATCH_EMBED_TEXT;
-        if (method == "batchGenerateContent")   return GM_BATCH_GENERATE_CONTENT;
-        if (method == "countMessageTokens")     return GM_COUNT_MESSAGE_TOKENS;
-        if (method == "countTextTokens")        return GM_COUNT_TEXT_TOKENS;
-        if (method == "countTokens")            return GM_COUNT_TOKENS;
-        if (method == "embedContent")           return GM_EMBED_CONTENT;
-        if (method == "embedText")              return GM_EMBED_TEXT;
-        if (method == "generateContent")        return GM_GENERATE_CONTENT;
-        if (method == "generateMessage")        return GM_GENERATE_MESSAGE;
-        if (method == "generateText")           return GM_GENERATE_TEXT;
-        if (method == "get")                    return GM_GET;
-        if (method == "list")                   return GM_LIST;
-        if (method == "predict")                return GM_PREDICT;
-        if (method == "predictLongRunning")     return GM_PREDICT_LONG_RUNNING;
-        if (method == "streamGenerateContent")  return GM_STREAM_GENERATE_CONTENT;
-        return GM_UNSPECIFIED;
-    }
-
-    std::string GenerationMethodHelper::toString(GenerationMethod method)
-    {
-        switch (method)
-        {
-        case GM_ASYNC_BATCH_EMBED_CONTENT:  return "asyncBatchEmbedContents";
-        case GM_BATCH_EMBED_CONTENTS:       return "batchEmbedContents";
-        case GM_BATCH_EMBED_TEXT:           return "batchEmbedText";
-        case GM_BATCH_GENERATE_CONTENT:     return "batchGenerateContent";
-        case GM_COUNT_MESSAGE_TOKENS:       return "countMessageTokens";
-        case GM_COUNT_TEXT_TOKENS:          return "countTextTokens";
-        case GM_COUNT_TOKENS:               return "countTokens";
-        case GM_EMBED_CONTENT:              return "embedContent";
-        case GM_EMBED_TEXT:                 return "embedText";
-        case GM_GENERATE_CONTENT:           return "generateContent";
-        case GM_GENERATE_MESSAGE:           return "generateMessage";
-        case GM_GENERATE_TEXT:              return "generateText";
-        case GM_GET:                        return "get";
-        case GM_LIST:                       return "list";
-        case GM_PREDICT:                    return "predict";
-        case GM_PREDICT_LONG_RUNNING:       return "predictLongRunning";
-        case GM_STREAM_GENERATE_CONTENT:    return "streamGenerateContent";
-        case GM_NONE:
-        case GM_UNSPECIFIED:
-            break;
-        }
-        return "";    
-    }
-
-    std::string GenerationMethodHelper::bitmaskToString(uint32_t flags)
-    {
-        std::string s;
-        if (flags & GM_ASYNC_BATCH_EMBED_CONTENT)   s += "asyncBatchEmbedContents, ";
-        if (flags & GM_BATCH_EMBED_CONTENTS)        s += "batchEmbedContents, ";
-        if (flags & GM_BATCH_EMBED_TEXT)            s += "batchEmbedText, ";
-        if (flags & GM_BATCH_GENERATE_CONTENT)      s += "batchGenerateContent, ";
-        if (flags & GM_COUNT_MESSAGE_TOKENS)        s += "countMessageTokens, ";
-        if (flags & GM_COUNT_TEXT_TOKENS)           s += "countTextTokens, ";
-        if (flags & GM_COUNT_TOKENS)                s += "countTokens, ";
-        if (flags & GM_EMBED_CONTENT)               s += "embedContent, ";
-        if (flags & GM_EMBED_TEXT)                  s += "embedText, ";
-        if (flags & GM_GENERATE_CONTENT)            s += "generateContent, ";
-        if (flags & GM_GENERATE_MESSAGE)            s += "generateMessage, ";
-        if (flags & GM_GENERATE_TEXT)               s += "generateText, ";
-        if (flags & GM_GET)                         s += "get, ";
-        if (flags & GM_LIST)                        s += "list, ";
-        if (flags & GM_PREDICT)                     s += "predict, ";
-        if (flags & GM_PREDICT_LONG_RUNNING)        s += "predictLongRunning, ";
-        if (flags & GM_STREAM_GENERATE_CONTENT)     s += "streamGenerateContent, ";
-        
-        if (s.length() > 2)
-            s.resize(s.length() - 2);
-        
-        return "[" + s + "]";
-    }
-
-
-    ModelInfo ModelInfo::fromJson(const nlohmann::json& j)
-    {
-        ModelInfo info;
-        if(j.contains("name"))
-            info.name = j.value("name", "");
-        if(j.contains("version"))
-            info.version = j.value("version", "");
-        if(j.contains("displayName"))
-            info.displayName = j.value("displayName", "");
-        if(j.contains("description"))
-            info.description = j.value("description", "");
-            
-        info.inputTokenLimit = j.value("inputTokenLimit", 0);
-        info.outputTokenLimit = j.value("outputTokenLimit", 0);
-        info.temperature = j.value("temperature", 0.0);
-        info.topP = j.value("topP", 0.0);
-        info.topK = j.value("topK", 0);
-
-        info.supportedGenerationMethods = GM_NONE;
-        if(j.contains("supportedGenerationMethods"))
-        {
-            for(const auto& methodJson : j["supportedGenerationMethods"])
-                info.supportedGenerationMethods |= GenerationMethodHelper::fromString(methodJson.get<std::string>());
-        }
-        return info;
-    }
-
-    std::string ModelInfo::toString() const
-    {
-        return "Model: " + displayName + " (" + name + ")\n" +
-               "Desc: " + description + "\n" +
-               "Tokens: In=" + std::to_string(inputTokenLimit) + ", Out=" + std::to_string(outputTokenLimit) + "\n" +
-               "Methods: " + GenerationMethodHelper::bitmaskToString(supportedGenerationMethods);
-    }
-
     ContentEmbedding ContentEmbedding::fromJson(const nlohmann::json& j)
     {
         ContentEmbedding ce;
@@ -748,7 +931,7 @@ namespace GeminiCPP
         if(j.contains("createTime")) c.createTime = j.value("createTime", "");
         if(j.contains("updateTime")) c.updateTime = j.value("updateTime", "");
         if(j.contains("expireTime")) c.expireTime = j.value("expireTime", "");
-        if(j.contains("ttl")) c.ttl = j.value("ttl", "");
+        if(j.contains("ttl")) c.ttl = Duration::fromJson(j["ttl"]);
         if(j.contains("usageMetadata")) c.usage.tokenCount = j["usageMetadata"].value("totalTokenCount", 0);
         
         return c;
@@ -758,9 +941,16 @@ namespace GeminiCPP
     {
         nlohmann::json j;
         j["model"] = model;
-        if(!displayName.empty()) j["displayName"] = displayName;
-        if(!ttl.empty()) j["ttl"] = ttl; // Ex.: "300s"
-            
+        if(!displayName.empty())
+        {
+            j["displayName"] = displayName;
+        }
+        
+        if(!ttl.has_value())
+        {
+            j["ttl"] = ttl->toJson();
+        }
+        
         if(systemInstruction.has_value())
         {
             j["systemInstruction"] = { {"parts", {{ {"text", systemInstruction.value()} }}} };

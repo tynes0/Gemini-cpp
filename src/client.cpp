@@ -105,7 +105,7 @@ namespace GeminiCPP
 
     GenerationResult Client::generateContent(const std::string& prompt, Model model)
     {
-        return generateContent(prompt, modelStringRepresentation(model));
+        return generateContent(prompt, ModelHelper::stringRepresentation(model));
     }
 
     GenerationResult Client::streamGenerateContent(const std::string& prompt, const StreamCallback& callback, std::string_view model_id)
@@ -122,7 +122,7 @@ namespace GeminiCPP
 
     GenerationResult Client::streamGenerateContent(const std::string& prompt, const StreamCallback& callback, Model model)
     {
-        return streamGenerateContent(prompt, callback, modelStringRepresentation(model));
+        return streamGenerateContent(prompt, callback, ModelHelper::stringRepresentation(model));
     }
 
     Result<File> Client::uploadFile(const std::string& path, std::string displayName)
@@ -258,7 +258,7 @@ namespace GeminiCPP
 
     Result<ModelInfo> Client::getModelInfo(Model model)
     {
-        return getModelInfo(modelStringRepresentation(model));
+        return getModelInfo(ModelHelper::stringRepresentation(model));
     }
 
     Result<ModelInfo> Client::getModelInfo(std::string_view model_id)
@@ -403,7 +403,7 @@ namespace GeminiCPP
 
     Result<EmbedContentResponse> Client::embedContent(Model model, const std::string& text, const EmbedConfig& config)
     {
-        return embedContent(std::string(modelStringRepresentation(model)), text, config);
+        return embedContent(std::string(ModelHelper::stringRepresentation(model)), text, config);
     }
 
     Result<BatchEmbedContentsResponse> Client::batchEmbedContents(std::string_view model,
@@ -420,7 +420,7 @@ namespace GeminiCPP
     Result<BatchEmbedContentsResponse> Client::batchEmbedContents(Model model,
         const std::vector<std::string>& texts, const EmbedConfig& config)
     {
-        return batchEmbedContents(std::string(modelStringRepresentation(model)), texts, config);
+        return batchEmbedContents(std::string(ModelHelper::stringRepresentation(model)), texts, config);
     }
 
     Result<TokenCountResponse> Client::countTokens(std::string_view model, const std::vector<Content>& contents,
@@ -443,7 +443,7 @@ namespace GeminiCPP
     Result<TokenCountResponse> Client::countTokens(Model model, const std::vector<Content>& contents,
         const std::string& systemInstruction, const std::vector<Tool>& tools)
     {
-        return countTokens(modelStringRepresentation(model), contents, systemInstruction, tools);
+        return countTokens(ModelHelper::stringRepresentation(model), contents, systemInstruction, tools);
     }
 
     Result<TokenCountResponse> Client::countTokens(std::string_view model, const std::string& text)
@@ -1018,7 +1018,7 @@ namespace GeminiCPP
             toolConfig
         );
 
-        Url url(ResourceName::Model(modelStringRepresentation(model)), GM_GENERATE_CONTENT);
+        Url url(ResourceName::Model(ModelHelper::stringRepresentation(model)), GM_GENERATE_CONTENT);
 
         return submitRequest(url, payload);
     }
@@ -1040,7 +1040,7 @@ namespace GeminiCPP
             toolConfig
         );
 
-        Url url(ResourceName::Model(modelStringRepresentation(model)), GM_STREAM_GENERATE_CONTENT);
+        Url url(ResourceName::Model(ModelHelper::stringRepresentation(model)), GM_STREAM_GENERATE_CONTENT);
         url.addQuery("alt", "sse");
         
         return submitStreamRequest(url, payload, callback);

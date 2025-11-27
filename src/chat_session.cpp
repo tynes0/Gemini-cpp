@@ -10,7 +10,7 @@
 namespace GeminiCPP
 {
     ChatSession::ChatSession(Client* client, Model model, std::string sessionName, std::string systemInstruction, std::string sessionId)
-        : client_(client), model_(modelStringRepresentation(model)), sessionName_(std::move(sessionName)), systemInstruction_(std::move(systemInstruction))
+        : client_(client), model_(ModelHelper::stringRepresentation(model)), sessionName_(std::move(sessionName)), systemInstruction_(std::move(systemInstruction))
     {
         sessionId_ = sessionId.empty() ? Uuid::generate() : std::move(sessionId);
     }
@@ -79,12 +79,18 @@ namespace GeminiCPP
                     
                     if (jsonResult.has_value())
                     {
-                        functionResponseContent.functionResponse(call->name, jsonResult.value());
+                        FunctionResponse response;
+                        response.name = call->name;
+                        response.responseContent = jsonResult.value();
+                        functionResponseContent.functionResponse(response);
                     }
                     else
                     {
                         GEMINI_ERROR("Function invocation failed: {}", call->name);
-                        functionResponseContent.functionResponse(call->name, {{"error", "Function execution failed or not found"}});
+                        FunctionResponse response;
+                        response.name = call->name;
+                        response.responseContent = {{"error", "Function execution failed or not found"}};
+                        functionResponseContent.functionResponse(response);
                     }
                 }
             }
@@ -154,7 +160,7 @@ namespace GeminiCPP
     void ChatSession::setModel(Model model)
     {
         std::lock_guard<std::mutex> lock(mutex_);
-        model_ = modelStringRepresentation(model);
+        model_ = ModelHelper::stringRepresentation(model);
     }
 
     void ChatSession::setModel(std::string_view model)

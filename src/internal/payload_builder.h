@@ -15,7 +15,7 @@ namespace GeminiCPP::Internal
             const std::string& cachedContent = "",
             const GenerationConfig& config = {},
             const std::vector<SafetySetting>& safetySettings = {},
-            const std::vector<Tool>& tools = {}
+            const std::vector<Tool>& tools = {},
             const std::optional<ToolConfig>& toolConfig = {}
         ) {
             nlohmann::json contentsJson = nlohmann::json::array();

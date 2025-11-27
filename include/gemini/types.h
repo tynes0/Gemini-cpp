@@ -12,44 +12,69 @@
 #include <nlohmann/json.hpp>
 
 #include "http_status.h"
+#include "duration.h"
 
 namespace GeminiCPP
 {
+    FrenumClassInNamespace(GeminiCPP, FunctionCallingMode, uint8_t,
+        MODE_UNSPECIFIED, // Unspecified function calling mode. This value should not be used.
+        AUTO, // Default model behavior, model decides to predict either a function call or a natural language response.
+        ANY, // Model is constrained to always predicting a function call only. If "allowedFunctionNames" are set, the predicted function call will be limited to any one of "allowedFunctionNames", else the predicted function call will be any one of the provided "functionDeclarations".
+        NONE, // Model will not predict any function call. Model behavior is same as when not passing any function declarations.
+        VALIDATED // Model decides to predict either a function call or a natural language response, but will validate function calls with constrained decoding. If "allowedFunctionNames" are set, the predicted function call will be limited to any one of "allowedFunctionNames", else the predicted function call will be any one of the provided "functionDeclarations".
+    )
+
+    struct FunctionCallingConfig
+    {
+        std::optional<FunctionCallingMode> mode;
+        std::optional<std::vector<std::string>> allowedFunctionNames;
+
+        [[nodiscard]] static FunctionCallingConfig fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const;
+        
+    };
+    
     struct LatLng
     {
         double latitude;
         double longitude;
 
+        [[nodiscard]] static LatLng fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const;
     };
 
     struct RetrievalConfig
     {
         std::optional<LatLng> latLng;
+        std::optional<std::string> languageCode;
 
+        [[nodiscard]] static RetrievalConfig fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const;
     };
 
     struct ToolConfig
     {
+        std::optional<FunctionCallingConfig> functionCallingConfig;
         std::optional<RetrievalConfig> retrievalConfig;
 
-        // FunctionCallingConfig can also be added here in the future.
-        
+        [[nodiscard]] static ToolConfig fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const;
     };
-    
+
+    // TODO: Update all the tools
     struct FunctionDeclaration
     {
         std::string name;
         std::string description;
         nlohmann::json parameters;
 
+        [[nodiscard]] static FunctionDeclaration fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const;
     };
 
     struct GoogleSearch
     {
+        [[nodiscard]] static GoogleSearch fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const;
     };
 
@@ -57,36 +82,13 @@ namespace GeminiCPP
     {
         bool enableWidget = false;
         
+        [[nodiscard]] static GoogleMaps fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const;
     };
-
-    FrenumClassInNamespace(GeminiCPP, CodeExecutionOutcome, uint8_t,
-        OUTCOME_OK,  // Code execution completed successfully. 
-        OUTCOME_FAILED, // Code execution finished but with a failure. stderr should contain the reason.
-        OUTCOME_DEADLINE_EXCEEDED // Code execution ran for too long, and was cancelled. There may or may not be a partial output present.
-    )
     
     struct CodeExecution
     {
-        [[nodiscard]] nlohmann::json toJson() const;
-    };
-
-    struct ExecutableCode
-    {
-        std::string language; // for now only PYTHON
-        std::string code;
-
-        [[nodiscard]] static ExecutableCode fromJson(const nlohmann::json& j);
-        [[nodiscard]] nlohmann::json toJson() const;
-    };
-
-    struct CodeExecutionResult
-    {
-        CodeExecutionOutcome outcome;
-        std::string output;  // Console output
-        std::optional<CodeExecution> codeExecution;
-
-        [[nodiscard]] static CodeExecutionResult fromJson(const nlohmann::json& j);
+        [[nodiscard]] static CodeExecution fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const;
     };
 
@@ -97,81 +99,179 @@ namespace GeminiCPP
         std::optional<CodeExecution> codeExecution;
         std::optional<GoogleMaps> googleMaps;
 
+        [[nodiscard]] static Tool fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const;
     };
 
-    struct FunctionCall
+    struct FunctionResponseBlob
     {
-        std::string name;
-        nlohmann::json args;
+        std::string mimeType;
+        std::string data; // Base64
 
+        [[nodiscard]] static FunctionResponseBlob fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const;
     };
 
-    struct FunctionResponse
+    struct FunctionResponsePart
     {
-        std::string name;
-        nlohmann::json response;
+        using DataType = std::variant<
+            std::monostate,
+            FunctionResponseBlob
+        >;
 
+        DataType data;
+        
+        [[nodiscard]] static FunctionResponsePart fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const;
     };
 
     struct TextData
     {
         std::string text;
+
+        [[nodiscard]] static TextData fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const;
     };
     
-    struct BlobData
+    struct Blob
     {
         std::string mimeType;
-        std::string data;
+        std::string data; // Base64
+
+        
+        [[nodiscard]] static Blob createFromPath(const std::string& filepath, const std::string& customMimeType = "");
+        [[nodiscard]] static Blob fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const;
+    };
+
+    struct FunctionCall
+    {
+        std::optional<std::string> id;
+        std::string name;
+        nlohmann::json args;
+
+        [[nodiscard]] static FunctionCall fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const;
+    };
+    
+    FrenumClassInNamespace(GeminiCPP, Scheduling, uint8_t,
+        SCHEDULING_UNSPECIFIED, // This value is unused.
+        SILENT,                 // Only add the result to the conversation context, do not interrupt or trigger generation.
+        WHEN_IDLE,              // Add the result to the conversation context, and prompt to generate output without interrupting ongoing generation.
+        INTERRUPT               // Add the result to the conversation context, interrupt ongoing generation and prompt to generate output.
+    )
+
+    struct FunctionResponse
+    {
+        std::optional<std::string> id;
+        std::string name;
+        nlohmann::json responseContent;
+        std::optional<std::vector<FunctionResponsePart>> parts;
+        std::optional<bool> willContinue;
+        std::optional<Scheduling> scheduling;
+        
+        [[nodiscard]] static FunctionResponse fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const;
     };
 
     struct FileData
     {
-        std::string mimeType; 
+        std::optional<std::string> mimeType;
         std::string fileUri;
+
+        [[nodiscard]] static FileData fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const;
+    };
+
+    FrenumClassInNamespace(GeminiCPP, Language, uint8_t,
+        LANGUAGE_UNSPECIFIED,   // Unspecified language. This value should not be used.
+        PYTHON                  // Python >= 3.10, numpy and simpy are available. The default language is Python.
+    )
+
+    struct ExecutableCode
+    {
+        Language language = Language::PYTHON;
+        std::string code;
+
+        [[nodiscard]] static ExecutableCode fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const;
+    };
+
+    FrenumClassInNamespace(GeminiCPP, Outcome, uint8_t,
+        OUTCOME_UNSPECIFIED,        // Status not specified. This value should not be used.
+        OUTCOME_OK,                 // Code execution completed successfully. 
+        OUTCOME_FAILED,             // Code execution finished but with a failure. stderr should contain the reason.
+        OUTCOME_DEADLINE_EXCEEDED   // Code execution ran for too long, and was cancelled. There may or may not be a partial output present.
+    )
+    
+    struct CodeExecutionResult
+    {
+        Outcome outcome;
+        std::optional<std::string> output;  // Console output
+
+        [[nodiscard]] static CodeExecutionResult fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const;
+    };
+
+    struct VideoMetadata
+    {
+        std::optional<Duration> startOffset;
+        std::optional<Duration> endOffset;
+        std::optional<float> fps;
+
+        [[nodiscard]] static VideoMetadata fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const;
     };
 
     struct Part
     {
-        using VariantType = std::variant<
+        using DataType = std::variant<
             std::monostate, 
             TextData, 
-            BlobData, 
-            FileData, 
+            Blob, // inlineData
             FunctionCall, 
             FunctionResponse,
+            FileData, 
             ExecutableCode,
             CodeExecutionResult 
         >;
+
+        using MetadataType = std::variant<
+            std::monostate,
+            VideoMetadata
+            >;
         
-        VariantType content;
+        DataType data;
+        std::optional<bool> thought;
+        std::optional<std::string> thoughtSignature; // Base64
+        nlohmann::json partMetadata;
+        MetadataType metadata;
 
         [[nodiscard]] bool isText() const;
         [[nodiscard]] bool isBlob() const; // Inline Base64
-        [[nodiscard]] bool isFileData() const; // URI Reference
         [[nodiscard]] bool isFunctionCall() const;
         [[nodiscard]] bool isFunctionResponse() const;
+        [[nodiscard]] bool isFileData() const; // URI Reference
         [[nodiscard]] bool isExecutableCode() const;
         [[nodiscard]] bool isCodeExecutionResult() const;
 
-        [[nodiscard]] const std::string* getText() const;
-        [[nodiscard]] const BlobData* getBlob() const;
-        [[nodiscard]] const FileData* getFileData() const;
+        [[nodiscard]] const TextData* getText() const;
+        [[nodiscard]] const Blob* getBlob() const;
         [[nodiscard]] const FunctionCall* getFunctionCall() const;
         [[nodiscard]] const FunctionResponse* getFunctionResponse() const;
+        [[nodiscard]] const FileData* getFileData() const;
         [[nodiscard]] const ExecutableCode* getExecutableCode() const;
         [[nodiscard]] const CodeExecutionResult* getCodeExecutionResult() const;
 
-        [[nodiscard]] static Part Text(std::string t);
-        [[nodiscard]] static Part Media(const std::string& filepath, const std::string& customMimeType = "");
-        [[nodiscard]] static Part Uri(std::string fileUri, std::string mimeType);
+        [[nodiscard]] static Part Text(TextData t);
+        [[nodiscard]] static Part Media(Blob blobData);
+        [[nodiscard]] static Part Uri(FileData fileData);
         [[nodiscard]] static Part Call(FunctionCall call);
         [[nodiscard]] static Part Response(FunctionResponse resp);
         [[nodiscard]] static Part Code(ExecutableCode code);
         [[nodiscard]] static Part ExecutionResult(CodeExecutionResult result);
-
+        
+        [[nodiscard]] static Part fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const;
     };
 
@@ -179,12 +279,12 @@ namespace GeminiCPP
     FrenumClassInNamespace(GeminiCPP, Role, uint8_t,
         USER,
         MODEL,
-        FUNCTION
+        FUNCTION // I am not sure about this. Is it work?
     )
 
     struct Content
     {
-        Role role = Role::USER;
+        Role role = Role::USER; // Normally, this is optional, but we act like it's always there. I don't know why. I wanted to do it this way.
         std::vector<Part> parts;
 
         [[nodiscard]] static Content User();
@@ -196,7 +296,7 @@ namespace GeminiCPP
         Content& file(const std::string& filepath);
         Content& fileUri(const std::string& uri, const std::string& mimeType);
         Content& media(const std::string& filepath, const std::string& mimeType = "");
-        Content& functionResponse(std::string name, nlohmann::json responseContent);
+        Content& functionResponse(FunctionResponse response);
 
         [[nodiscard]] nlohmann::json toJson() const;
         [[nodiscard]] static Content fromJson(const nlohmann::json& j);
@@ -216,6 +316,7 @@ namespace GeminiCPP
         [[nodiscard]] nlohmann::json toJson() const;
     };
 
+    // TODO: Update all the configs
     struct GenerationConfig
     {
         // Optional fields to allow API defaults when not set
@@ -257,15 +358,31 @@ namespace GeminiCPP
         [[nodiscard]] nlohmann::json toJson() const;
     };
 
+    FrenumClassInNamespace(GeminiCPP, ContentPartModality, uint8_t,
+        MODALITY_UNSPECIFIED,
+        TEXT,
+        IMAGE,
+        VIDEO,
+        AUDIO,
+        DOCUMENT
+    )
+
     FrenumClassInNamespace(GeminiCPP, HarmCategory, uint8_t,
         HARM_CATEGORY_UNSPECIFIED, // Default, not used.
 
         // Text Categories
-        HARM_CATEGORY_HATE_SPEECH, // Content that promotes violence or hatred.
-        HARM_CATEGORY_DANGEROUS_CONTENT, // Content that promotes dangerous activities.
         HARM_CATEGORY_HARASSMENT, // Content that contains harassment, threats or bullying.
+        HARM_CATEGORY_HATE_SPEECH, // Content that promotes violence or hatred.
         HARM_CATEGORY_SEXUALLY_EXPLICIT, // Sexual content.
-        HARM_CATEGORY_CIVIC_INTEGRITY, // (Deprecated) Election security etc.
+        HARM_CATEGORY_DANGEROUS_CONTENT, // Content that promotes dangerous activities.
+
+        // PaLM
+        HARM_CATEGORY_DEROGATORY, // Negative or harmful comments targeting identity and/or protected attribute.
+        HARM_CATEGORY_TOXICITY, // Content that is rude, disrespectful, or profane.
+        HARM_CATEGORY_VIOLENCE, // Describes scenarios depicting violence against an individual or group, or general descriptions of gore.
+        HARM_CATEGORY_SEXUAL, // Contains references to sexual acts or other lewd content.
+        HARM_CATEGORY_MEDICAL, // Promotes unchecked medical advice.
+        HARM_CATEGORY_DANGEROUS, // Dangerous content that promotes, facilitates, or encourages harmful acts.
 
         // Image Categories
         HARM_CATEGORY_IMAGE_HATE,
@@ -278,12 +395,20 @@ namespace GeminiCPP
     )
     
     FrenumClassInNamespace(GeminiCPP, HarmBlockThreshold, uint8_t,
-        UNSPECIFIED,             // Unspecified.
+        HARM_BLOCK_THRESHOLD_UNSPECIFIED, // Unspecified.
         BLOCK_LOW_AND_ABOVE,     // Block low risk and above (Very Strict).
         BLOCK_MEDIUM_AND_ABOVE,  // Block medium risk and above (Default).
         BLOCK_ONLY_HIGH,         // Only block high risk.
         BLOCK_NONE,              // Don't block anything (Risky).
         OFF                      // Turn off the filter completely.
+    )
+
+    FrenumClassInNamespace(GeminiCPP, HarmProbability, uint8_t,
+        HARM_PROBABILITY_UNSPECIFIED,   // Probability is unspecified.
+        NEGLIGIBLE,                     // Content has a negligible chance of being unsafe.
+        LOW,                            // Content has a low chance of being unsafe.
+        MEDIUM,                         // Content has a medium chance of being unsafe.
+        HIGH                            // Content has a high chance of being unsafe.
     )
 
     struct SafetySetting
@@ -339,18 +464,35 @@ namespace GeminiCPP
         [[nodiscard]] static ListFilesResponse fromJson(const nlohmann::json& j);
     };
 
+    FrenumClassInNamespace(GeminiCPP, BlockReason, uint8_t,
+        BLOCK_REASON_UNSPECIFIED,// Default value. This value is not used.
+        SAFETY,                 // The request was blocked for security reasons. Examine the safetyRatings icon to understand which security category is blocking it.
+        OTHER,                  // The request was blocked for unknown reasons.
+        BLOCKLIST,              // The request was blocked due to terms included in the terminology blocklist.
+        PROHIBITED_CONTENT,     // The request was blocked due to prohibited content.
+        IMAGE_SAFETY            // Candidates were blocked due to unsafe image creation content.
+    )
+
     FrenumClassInNamespace(GeminiCPP, FinishReason, uint8_t,
         FINISH_REASON_UNSPECIFIED,// Default.
         STOP,                   // Natural ending or stopping sequence.
         MAX_TOKENS,             // The maximum token limit has been reached.
         SAFETY,                 // Stopped due to security breach.
         RECITATION,             // Potential for copyright/quotation infringement.
+        LANGUAGE,               // Answer candidate content was flagged for using unsupported language.
         OTHER,                  // Other reasons.
         BLOCKLIST,              // It stopped because it contained banned words.
         PROHIBITED_CONTENT,     // Potential for prohibited content.
         SPII,                   // It stopped because it contained Sensitive Personal Data (SPII).
         MALFORMED_FUNCTION_CALL,// The function call generated by the model is invalid.
-        MODEL_ARMOR,            // The model is blocked by the Armor layer.
+        IMAGE_SAFETY,           // The token creation process was stopped because there were security breaches in the images produced.
+        IMAGE_PROHIBITED_CONTENT,// Image creation was stopped because the created images contained other prohibited content.
+        IMAGE_OTHER,            // Image generation has been halted due to various other issues.
+        NO_IMAGE,               // The model was expected to generate an image, but no image was generated.
+        IMAGE_RECITATION,       // Image production was stopped due to reading.
+        UNEXPECTED_TOOL_CALL,   // The model generated a tool call, but no tools were activated in the request.
+        TOO_MANY_TOOL_CALLS,    // The system exited execution because the model called too many tools in succession.
+        MISSING_THOUGHT_SIGNATURE,// The request is missing at least one thought signature.
 
         // The special case I added (it does not come from the API, it is generated by the Client)
         PROMPT_BLOCKED
@@ -360,68 +502,6 @@ namespace GeminiCPP
     {
         [[nodiscard]] static FinishReason fromString(const std::string& reason);
         [[nodiscard]] static std::string toString(FinishReason reason);
-    };
-
-    FrenumInNamespace(GeminiCPP, GenerationMethod, uint32_t,
-        GM_NONE                         = 0,
-        GM_UNSPECIFIED                  = (1 <<  0),
-        GM_ASYNC_BATCH_EMBED_CONTENT    = (1 <<  1), // Queues a group of EmbedContent requests for batch processing.
-        GM_BATCH_EMBED_CONTENTS         = (1 <<  2), // Embed Content Creates multiple embed vectors from the Content input, which consists of a series of strings represented as Request objects.
-        GM_BATCH_EMBED_TEXT             = (1 <<  3), // In a synchronous call, creates multiple placed elements from the input text given to the model.
-        GM_BATCH_GENERATE_CONTENT       = (1 <<  4), // Queues a group of GenerateContent requests for batch processing.
-        GM_COUNT_MESSAGE_TOKENS         = (1 <<  5), // Runs the model's tokenizer on a string and returns the number of tokens.
-        GM_COUNT_TEXT_TOKENS            = (1 <<  6), // Runs the model's tokenizer on a text and returns the number of tokens.
-        GM_COUNT_TOKENS                 = (1 <<  7), // Runs a model's tokenizer on the input Content and returns the number of tokens.
-        GM_EMBED_CONTENT                = (1 <<  8), // Creates a Content text placement vector from the input using the specified Gemini placement model.
-        GM_EMBED_TEXT                   = (1 <<  9), // Creates a positioned element from the model when given an input message.
-        GM_GENERATE_CONTENT             = (1 << 10), // Given input, the model generates the response GenerateContentRequest.
-        GM_GENERATE_MESSAGE             = (1 << 11), // Generates a response from the model when the input MessagePrompt is given. 
-        GM_GENERATE_TEXT                = (1 << 12), // When given an input message, it generates a response from the model.
-        GM_GET                          = (1 << 13), // Retrieves information about a given Model, such as version number, token limits, parameters, and other metadata.
-        GM_LIST                         = (1 << 14), // Models available through the Gemini API are listed.
-        GM_PREDICT                      = (1 << 15), // Requests a prediction.
-        GM_PREDICT_LONG_RUNNING         = (1 << 16), // Same as prediction but returns LRO.
-        GM_STREAM_GENERATE_CONTENT      = (1 << 17) // Generates a response published from the model using the GenerateContentRequest input.
-    )
-
-    inline GenerationMethod operator|(GenerationMethod a, GenerationMethod b)
-    {
-        return static_cast<GenerationMethod>(static_cast<uint32_t>(a) | static_cast<uint32_t>(b));
-    }
-    
-    inline GenerationMethod& operator|=(GenerationMethod& a, GenerationMethod b)
-    {
-        a = a | b;
-        return a;
-    }
-
-    struct GenerationMethodHelper
-    {
-        [[nodiscard]] static GenerationMethod fromString(const std::string& method);
-        [[nodiscard]] static std::string toString(GenerationMethod method);
-        [[nodiscard]] static std::string bitmaskToString(uint32_t flags);
-    };
-
-    struct ModelInfo
-    {
-        std::string name;
-        std::string version;
-        std::string displayName;
-        std::string description;
-        int inputTokenLimit = 0;
-        int outputTokenLimit = 0;
-        double temperature = 0.0;
-        double topP = 0.0;
-        int topK = 0;
-        uint32_t supportedGenerationMethods = GM_NONE;
-
-        [[nodiscard]] bool supports(GenerationMethod method) const
-        {
-            return (supportedGenerationMethods & method) != 0;
-        }
-        
-        [[nodiscard]] static ModelInfo fromJson(const nlohmann::json& j);
-        [[nodiscard]] std::string toString() const;
     };
 
     struct ContentEmbedding
@@ -477,7 +557,7 @@ namespace GeminiCPP
         std::string createTime;
         std::string updateTime;
         std::string expireTime;
-        std::string ttl; // Duration (e.g. "3600s")
+        std::optional<Duration> ttl;
 
         CachedContentUsage usage;
 
@@ -496,6 +576,17 @@ namespace GeminiCPP
         std::string nextPageToken;
 
         [[nodiscard]] static ListCachedContentsResponse fromJson(const nlohmann::json& j);
+    };
+
+    struct RequestConfig
+    {
+        std::vector<Content> contents;
+        std::optional<std::vector<Tool>> tools;
+        std::optional<ToolConfig> config;
+        std::optional<std::vector<SafetySetting>> safetySettings;
+        std::optional<Content> systemInstruction;
+        std::optional<GenerationConfig> generationConfig;
+        std::optional<std::string> cachedContent;
     };
 } // namespace GeminiCPP
 #endif // GEMINI_TYPES_H
