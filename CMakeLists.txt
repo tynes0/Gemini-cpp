@@ -11,9 +11,11 @@ endif()
 
 option(GEMINI_BUILD_EXAMPLES "Build example applications" ON)
 
-file(GLOB_RECURSE GEMINI_SOURCES CONFIGURE_DEPENDS "src/*.cpp")
+file(GLOB_RECURSE GEMINI_SOURCES CONFIGURE_DEPENDS
+    "src/*.h"
+    "src/*.cpp"
+)
 file(GLOB_RECURSE GEMINI_HEADERS CONFIGURE_DEPENDS 
-    "include/*.hpp" 
     "include/*.h"
 )
 

@@ -46,7 +46,7 @@ namespace GeminiCPP
             }
         }
 
-        int calculateWaitTime(const RetryConfig& config, int attempt, const cpr::Response& r)
+        int calculateWaitTime(const Support::RetryConfig& config, int attempt, const cpr::Response& r)
         {
             if (r.header.contains("Retry-After"))
             {
@@ -331,7 +331,7 @@ namespace GeminiCPP
         }
     }
 
-    ApiValidationResult Client::verifyApiKey()
+    Support::ApiValidationResult Client::verifyApiKey()
     {
         // Lightest endpoint: List models
         Url url(std::string_view("models"));
@@ -344,7 +344,7 @@ namespace GeminiCPP
             cpr::VerifySsl(false)
         );
 
-        ApiValidationResult result;
+        Support::ApiValidationResult result;
         result.statusCode = static_cast<HttpStatusCode>(r.status_code);
         if (HttpStatusHelper::isSuccess(r.status_code))
         {
@@ -387,7 +387,7 @@ namespace GeminiCPP
     }
 
     Result<EmbedContentResponse> Client::embedContent(std::string_view model, const std::string& text,
-        const EmbedConfig& config)
+        const EmbedRequestBody& config)
     {
         ResourceName modelName = ResourceName::Model(model);
         Url url(modelName, GM_EMBED_CONTENT);
@@ -401,13 +401,13 @@ namespace GeminiCPP
         return ResponseHelper<EmbedContentResponse>(url, api_key_, payload);
     }
 
-    Result<EmbedContentResponse> Client::embedContent(Model model, const std::string& text, const EmbedConfig& config)
+    Result<EmbedContentResponse> Client::embedContent(Model model, const std::string& text, const EmbedRequestBody& config)
     {
         return embedContent(std::string(ModelHelper::stringRepresentation(model)), text, config);
     }
 
     Result<BatchEmbedContentsResponse> Client::batchEmbedContents(std::string_view model,
-        const std::vector<std::string>& texts, const EmbedConfig& config)
+        const std::vector<std::string>& texts, const EmbedRequestBody& config)
     {
         ResourceName modelName = ResourceName::Model(model);
         Url url(modelName, GM_BATCH_EMBED_CONTENTS);
@@ -418,12 +418,12 @@ namespace GeminiCPP
     }
 
     Result<BatchEmbedContentsResponse> Client::batchEmbedContents(Model model,
-        const std::vector<std::string>& texts, const EmbedConfig& config)
+        const std::vector<std::string>& texts, const EmbedRequestBody& config)
     {
         return batchEmbedContents(std::string(ModelHelper::stringRepresentation(model)), texts, config);
     }
 
-    Result<TokenCountResponse> Client::countTokens(std::string_view model, const std::vector<Content>& contents,
+    Result<CountTokensResponseBody> Client::countTokens(std::string_view model, const std::vector<Content>& contents,
         const std::string& systemInstruction, const std::vector<Tool>& tools)
     {
         Url url(ResourceName::Model(model), GM_COUNT_TOKENS);
@@ -437,21 +437,21 @@ namespace GeminiCPP
             tools
         );
 
-        return ResponseHelper<TokenCountResponse>(url, api_key_, payload);
+        return ResponseHelper<CountTokensResponseBody>(url, api_key_, payload);
     }
 
-    Result<TokenCountResponse> Client::countTokens(Model model, const std::vector<Content>& contents,
+    Result<CountTokensResponseBody> Client::countTokens(Model model, const std::vector<Content>& contents,
         const std::string& systemInstruction, const std::vector<Tool>& tools)
     {
         return countTokens(ModelHelper::stringRepresentation(model), contents, systemInstruction, tools);
     }
 
-    Result<TokenCountResponse> Client::countTokens(std::string_view model, const std::string& text)
+    Result<CountTokensResponseBody> Client::countTokens(std::string_view model, const std::string& text)
     {
         return countTokens(model, {Content::User().text(text)});
     }
 
-    Result<TokenCountResponse> Client::countTokens(Model model, const std::string& text)
+    Result<CountTokensResponseBody> Client::countTokens(Model model, const std::string& text)
     {
         return countTokens(model, {Content::User().text(text)});
     }
@@ -677,14 +677,14 @@ namespace GeminiCPP
         });
     }
 
-    std::future<ApiValidationResult> Client::verifyApiKeyAsync()
+    std::future<Support::ApiValidationResult> Client::verifyApiKeyAsync()
     {
         return std::async(std::launch::async, [this]() {
             return verifyApiKey();
         });
     }
 
-    std::future<Result<EmbedContentResponse>> Client::embedContentAsync(std::string_view model, std::string text, EmbedConfig config)
+    std::future<Result<EmbedContentResponse>> Client::embedContentAsync(std::string_view model, std::string text, EmbedRequestBody config)
     {
         std::string modelIdStr(model);
         return std::async(std::launch::async, [this, modelIdStr = std::move(modelIdStr), text = std::move(text), config = std::move(config)]() {
@@ -692,14 +692,14 @@ namespace GeminiCPP
         });
     }
 
-    std::future<Result<EmbedContentResponse>> Client::embedContentAsync(Model model, std::string text, EmbedConfig config)
+    std::future<Result<EmbedContentResponse>> Client::embedContentAsync(Model model, std::string text, EmbedRequestBody config)
     {
         return std::async(std::launch::async, [this, model, text = std::move(text), config = std::move(config)]() {
             return embedContent(model, text, config);
         });
     }
 
-    std::future<Result<BatchEmbedContentsResponse>> Client::batchEmbedContentsAsync(std::string_view model, std::vector<std::string> texts, EmbedConfig config)
+    std::future<Result<BatchEmbedContentsResponse>> Client::batchEmbedContentsAsync(std::string_view model, std::vector<std::string> texts, EmbedRequestBody config)
     {
         std::string modelIdStr(model);
         return std::async(std::launch::async, [this, modelIdStr = std::move(modelIdStr), texts = std::move(texts), config = std::move(config)]() {
@@ -707,14 +707,14 @@ namespace GeminiCPP
         });
     }
 
-    std::future<Result<BatchEmbedContentsResponse>> Client::batchEmbedContentsAsync(Model model, std::vector<std::string> texts, EmbedConfig config)
+    std::future<Result<BatchEmbedContentsResponse>> Client::batchEmbedContentsAsync(Model model, std::vector<std::string> texts, EmbedRequestBody config)
     {
         return std::async(std::launch::async, [this, model, texts = std::move(texts), config = std::move(config)]() {
             return batchEmbedContents(model, texts, config);
         });
     }
 
-    std::future<Result<TokenCountResponse>> Client::countTokensAsync(std::string_view model, std::vector<Content> contents, std::string systemInstruction, std::vector<Tool> tools)
+    std::future<Result<CountTokensResponseBody>> Client::countTokensAsync(std::string_view model, std::vector<Content> contents, std::string systemInstruction, std::vector<Tool> tools)
     {
         std::string modelIdStr(model);
         return std::async(std::launch::async, [this, modelIdStr = std::move(modelIdStr), contents = std::move(contents), systemInstruction = std::move(systemInstruction), tools = std::move(tools)]() {
@@ -722,14 +722,14 @@ namespace GeminiCPP
         });
     }
 
-    std::future<Result<TokenCountResponse>> Client::countTokensAsync(Model model, std::vector<Content> contents, std::string systemInstruction, std::vector<Tool> tools)
+    std::future<Result<CountTokensResponseBody>> Client::countTokensAsync(Model model, std::vector<Content> contents, std::string systemInstruction, std::vector<Tool> tools)
     {
         return std::async(std::launch::async, [this, model, contents = std::move(contents), systemInstruction = std::move(systemInstruction), tools = std::move(tools)]() {
             return countTokens(model, contents, systemInstruction, tools);
         });
     }
 
-    std::future<Result<TokenCountResponse>> Client::countTokensAsync(std::string_view model, std::string text)
+    std::future<Result<CountTokensResponseBody>> Client::countTokensAsync(std::string_view model, std::string text)
     {
         std::string modelIdStr(model);
         return std::async(std::launch::async, [this, modelIdStr = std::move(modelIdStr), text = std::move(text)]() {
@@ -737,7 +737,7 @@ namespace GeminiCPP
         });
     }
 
-    std::future<Result<TokenCountResponse>> Client::countTokensAsync(Model model, std::string text)
+    std::future<Result<CountTokensResponseBody>> Client::countTokensAsync(Model model, std::string text)
     {
         return std::async(std::launch::async, [this, model, text = std::move(text)]() {
             return countTokens(model, text);
@@ -761,12 +761,12 @@ namespace GeminiCPP
         return std::async(std::launch::async, [this, name]() { return deleteCachedContent(name); });
     }
 
-    void Client::setRetryConfig(const RetryConfig& config)
+    void Client::setRetryConfig(const Support::RetryConfig& config)
     {
         retryConfig_ = config;
     }
 
-    const RetryConfig& Client::getRetryConfig() const
+    const Support::RetryConfig& Client::getRetryConfig() const
     {
         return retryConfig_;
     }
@@ -815,8 +815,7 @@ namespace GeminiCPP
                     FinishReason reason = FinishReason::FINISH_REASON_UNSPECIFIED;
                     if (candidate.contains("finishReason"))
                     {
-                        std::string reasonStr = candidate["finishReason"].get<std::string>();
-                        reason = FinishReasonHelper::fromString(reasonStr);
+                        reason = frenum::cast<FinishReason>(candidate["finishReason"].get<std::string>()).value_or(FinishReason::FINISH_REASON_UNSPECIFIED);
                     }
         
                     if (reason == FinishReason::SAFETY && !candidate.contains("content"))

@@ -10,9 +10,9 @@
 #include <tuple>
 #include <nlohmann/json.hpp>
 
-#include "types.h"
 #include "internal/function_utils.h"
 #include "logger.h"
+#include "types/generating_content_api_types.h"
 
 namespace GeminiCPP
 {

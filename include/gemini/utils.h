@@ -5,9 +5,7 @@
 
 #include <string>
 #include <vector>
-#include <fstream>
 #include <filesystem>
-#include "logger.h"
 
 namespace GeminiCPP
 {

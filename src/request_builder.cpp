@@ -131,7 +131,7 @@ namespace GeminiCPP
 
     RequestBuilder& RequestBuilder::responseSchema(const nlohmann::json& schema)
     {
-        config_.responseSchema = schema;
+        config_.responseJsonSchema = schema;
         if (!config_.responseMimeType.has_value())
         {
             config_.responseMimeType = "application/json";
@@ -182,7 +182,10 @@ namespace GeminiCPP
 
     RequestBuilder& RequestBuilder::safety(HarmCategory category, HarmBlockThreshold threshold)
     {
-        safetySettings_.emplace_back(category, threshold);
+        SafetySetting setting;
+        setting.category = category;
+        setting.threshold = threshold;
+        safetySettings_.push_back(setting);
         return *this;
     }
 

@@ -12,6 +12,13 @@
 #include "request_builder.h"
 #include "response.h"
 #include "url.h"
+#include "support.h"
+
+#include "types/caching_api_types.h"
+#include "types/embeddings_api_types.h"
+#include "types/generating_content_api_types.h"
+#include "types/files_api_types.h"
+#include "types/tokens_api_types.h"
 
 namespace GeminiCPP
 {
@@ -97,53 +104,53 @@ namespace GeminiCPP
         [[nodiscard]] Result<std::vector<ModelInfo>> listModels(
         );
 
-        [[nodiscard]] ApiValidationResult verifyApiKey(
+        [[nodiscard]] Support::ApiValidationResult verifyApiKey(
         );
 
         [[nodiscard]] Result<EmbedContentResponse> embedContent(
             std::string_view model,
             const std::string& text,
-            const EmbedConfig& config = {}
+            const EmbedRequestBody& config = {}
         );
         
         [[nodiscard]] Result<EmbedContentResponse> embedContent(
             Model model,
             const std::string& text,
-            const EmbedConfig& config = {}
+            const EmbedRequestBody& config = {}
         );
 
         [[nodiscard]] Result<BatchEmbedContentsResponse> batchEmbedContents(
             std::string_view model,
             const std::vector<std::string>& texts,
-            const EmbedConfig& config = {}
+            const EmbedRequestBody& config = {}
         );
         
         [[nodiscard]] Result<BatchEmbedContentsResponse> batchEmbedContents(
             Model model,
             const std::vector<std::string>& texts,
-            const EmbedConfig& config = {}
+            const EmbedRequestBody& config = {}
         );
 
-        [[nodiscard]] Result<TokenCountResponse> countTokens(
+        [[nodiscard]] Result<CountTokensResponseBody> countTokens(
             std::string_view model, 
             const std::vector<Content>& contents,
             const std::string& systemInstruction = "",
             const std::vector<Tool>& tools = {}
         );
         
-        [[nodiscard]] Result<TokenCountResponse> countTokens(
+        [[nodiscard]] Result<CountTokensResponseBody> countTokens(
             Model model, 
             const std::vector<Content>& contents,
             const std::string& systemInstruction = "",
             const std::vector<Tool>& tools = {}
         );
 
-        [[nodiscard]] Result<TokenCountResponse> countTokens(
+        [[nodiscard]] Result<CountTokensResponseBody> countTokens(
             std::string_view model,
             const std::string& text
         );
         
-        [[nodiscard]] Result<TokenCountResponse> countTokens(
+        [[nodiscard]] Result<CountTokensResponseBody> countTokens(
             Model model,
             const std::string& text
         );
@@ -224,54 +231,54 @@ namespace GeminiCPP
         [[nodiscard]] std::future<Result<std::vector<ModelInfo>>> listModelsAsync(
         );
 
-        [[nodiscard]] std::future<ApiValidationResult> verifyApiKeyAsync(
+        [[nodiscard]] std::future<Support::ApiValidationResult> verifyApiKeyAsync(
         );
 
         // --- EMBEDDINGS & TOKENS ASYNC ---
         [[nodiscard]] std::future<Result<EmbedContentResponse>> embedContentAsync(
             std::string_view model,
             std::string text,
-            EmbedConfig config = {}
+            EmbedRequestBody config = {}
         );
         
         [[nodiscard]] std::future<Result<EmbedContentResponse>> embedContentAsync(
             Model model,
             std::string text,
-            EmbedConfig config = {}
+            EmbedRequestBody config = {}
         );
 
         [[nodiscard]] std::future<Result<BatchEmbedContentsResponse>> batchEmbedContentsAsync(
             std::string_view model,
             std::vector<std::string> texts,
-            EmbedConfig config = {}
+            EmbedRequestBody config = {}
         );
         
         [[nodiscard]] std::future<Result<BatchEmbedContentsResponse>> batchEmbedContentsAsync(
             Model model,
             std::vector<std::string> texts,
-            EmbedConfig config = {}
+            EmbedRequestBody config = {}
         );
 
-        [[nodiscard]] std::future<Result<TokenCountResponse>> countTokensAsync(
+        [[nodiscard]] std::future<Result<CountTokensResponseBody>> countTokensAsync(
             std::string_view model, 
             std::vector<Content> contents,
             std::string systemInstruction = "",
             std::vector<Tool> tools = {}
         );
         
-        [[nodiscard]] std::future<Result<TokenCountResponse>> countTokensAsync(
+        [[nodiscard]] std::future<Result<CountTokensResponseBody>> countTokensAsync(
             Model model, 
             std::vector<Content> contents,
             std::string systemInstruction = "",
             std::vector<Tool> tools = {}
         );
 
-        [[nodiscard]] std::future<Result<TokenCountResponse>> countTokensAsync(
+        [[nodiscard]] std::future<Result<CountTokensResponseBody>> countTokensAsync(
             std::string_view model,
             std::string text
         );
         
-        [[nodiscard]] std::future<Result<TokenCountResponse>> countTokensAsync(
+        [[nodiscard]] std::future<Result<CountTokensResponseBody>> countTokensAsync(
             Model model,
             std::string text
         );
@@ -294,10 +301,10 @@ namespace GeminiCPP
         );
 
         void setRetryConfig(
-            const RetryConfig& config
+            const Support::RetryConfig& config
         );
         
-        [[nodiscard]] const RetryConfig& getRetryConfig(
+        [[nodiscard]] const Support::RetryConfig& getRetryConfig(
         ) const;
         
         friend class ChatSession;
@@ -364,7 +371,7 @@ namespace GeminiCPP
         );
         
         std::string api_key_;
-        RetryConfig retryConfig_;
+        Support::RetryConfig retryConfig_;
     };
 
 }

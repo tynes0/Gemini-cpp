@@ -249,7 +249,10 @@ namespace GeminiCPP
     void ChatSession::addSafetySetting(HarmCategory category, HarmBlockThreshold threshold)
     {
         std::lock_guard<std::mutex> lock(mutex_);
-        safetySettings_.emplace_back(category, threshold);
+        SafetySetting setting;
+        setting.category = category;
+        setting.threshold = threshold;
+        safetySettings_.push_back(setting);
     }
 
     void ChatSession::clearSafetySettings()

@@ -6,9 +6,11 @@
 #include <future>
 #include <string>
 #include <vector>
-#include "types.h"
+
 #include "model.h"
 #include "response.h"
+#include "support.h"
+#include "types/generating_content_api_types.h"
 
 namespace GeminiCPP
 {

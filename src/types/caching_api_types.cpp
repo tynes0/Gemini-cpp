@@ -1,222 +1,14 @@
-﻿#include "gemini/types.h"
+﻿#include "gemini/types/caching_api_types.h"
 
+#include "gemini/types/generating_content_api_types.h"
 #include "gemini/base.h"
 #include "gemini/utils.h"
 
+#include "nlohmann/json.hpp"
+
+
 namespace GeminiCPP
 {
-    FunctionCallingConfig FunctionCallingConfig::fromJson(const nlohmann::json& j)
-    {
-        FunctionCallingConfig result{};
-
-        if (j.contains("mode"))
-            result.mode = frenum::cast<FunctionCallingMode>(j["mode"]);
-
-        if (j.contains("allowedFunctionNames"))
-        {
-            result.allowedFunctionNames = std::vector<std::string>{};
-            result.allowedFunctionNames->reserve(j["allowedFunctionNames"].size());
-            for (const auto& name : j["allowedFunctionNames"])
-                result.allowedFunctionNames->push_back(name);
-        }
-
-        return result;
-    }
-
-    nlohmann::json FunctionCallingConfig::toJson() const
-    {
-        nlohmann::json j = nlohmann::json::object();
-
-        if (mode.has_value())
-            j["mode"] = frenum::to_string(mode.value());
-
-        if (allowedFunctionNames.has_value())
-        {
-            j["allowedFunctionNames"] = nlohmann::json::array();
-            for (const auto& name : *allowedFunctionNames)
-                j["allowedFunctionNames"].push_back(name);
-        }
-        return j;
-    }
-
-    LatLng LatLng::fromJson(const nlohmann::json& j)
-    {
-        LatLng result;
-        result.latitude = j.value("latitude", 0);
-        result.longitude = j.value("longitude", 0);
-        return result;
-    }
-    
-    nlohmann::json LatLng::toJson() const
-    {
-        return {
-            {"latitude", latitude},
-            {"longitude", longitude}
-        };
-    }
-
-    RetrievalConfig RetrievalConfig::fromJson(const nlohmann::json& j)
-    {
-        RetrievalConfig result{};
-
-        if (j.contains("latLng"))
-            result.latLng = LatLng::fromJson(j["latLng"]);
-
-        if (j.contains("languageCode"))
-            result.languageCode = j["languageCode"];
-        
-        return result;
-    }
-    
-    nlohmann::json RetrievalConfig::toJson() const
-    {
-        nlohmann::json j = nlohmann::json::object();
-        if (latLng.has_value())
-            j["latLng"] = latLng->toJson();
-        
-        if (languageCode.has_value())
-            j["languageCode"] = *languageCode;
-        return j;
-    }
-
-    ToolConfig ToolConfig::fromJson(const nlohmann::json& j)
-    {
-        ToolConfig result{};
-
-        if (j.contains("functionCallingConfig"))
-            result.functionCallingConfig = FunctionCallingConfig::fromJson(j["functionCallingConfig"]);
-
-        if (j.contains("retrievalConfig"))
-            result.retrievalConfig = RetrievalConfig::fromJson(j["retrievalConfig"]);
-
-        return result;
-    }
-    
-    nlohmann::json ToolConfig::toJson() const
-    {
-        nlohmann::json j = nlohmann::json::object();
-
-        if (functionCallingConfig.has_value())
-            j["functionCallingConfig"] = functionCallingConfig->toJson();
-        
-        if (retrievalConfig.has_value())
-            j["retrievalConfig"] = retrievalConfig->toJson();
-        
-        return j;
-    }
-
-    FunctionDeclaration FunctionDeclaration::fromJson(const nlohmann::json& j)
-    {
-        FunctionDeclaration result{};
-
-        result.name = j.value("name", "");
-        result.description = j.value("description", "");
-
-        if (j.contains("parameters"))
-            result.parameters = j["parameters"];
-
-        return result;
-    }
-
-    nlohmann::json FunctionDeclaration::toJson() const
-    {
-        return {
-            {"name", name},
-            {"description", description},
-            {"parameters", parameters}
-        };
-    }
-
-    GoogleSearch GoogleSearch::fromJson(const nlohmann::json& j)
-    {
-        GEMINI_UNUSED(j);
-        return GoogleSearch{};
-    }
-
-    nlohmann::json GoogleSearch::toJson() const
-    {
-        return nlohmann::json::object();
-    }
-
-    GoogleMaps GoogleMaps::fromJson(const nlohmann::json& j)
-    {
-        GEMINI_UNUSED(j);
-        return GoogleMaps{};
-    }
-
-    nlohmann::json GoogleMaps::toJson() const
-    {
-        if (enableWidget)
-            return { {"enableWidget", true} };
-        return nlohmann::json::object();
-    }
-
-    CodeExecution CodeExecution::fromJson(const nlohmann::json& j)
-    {
-        GEMINI_UNUSED(j);
-        return CodeExecution{};
-    }
-
-    nlohmann::json CodeExecution::toJson() const
-    {
-        return nlohmann::json::object();
-    }
-
-    Tool Tool::fromJson(const nlohmann::json& j)
-    {
-        Tool result{};
-        
-        if (j.contains("FunctionDeclarations"))
-        {
-            result.functionDeclarations.reserve(j["FunctionDeclarations"].size());
-            
-            for (const auto& functionDeclaration : j["FunctionDeclarations"])
-                result.functionDeclarations.push_back(FunctionDeclaration::fromJson(functionDeclaration));
-        }
-
-        if (j.contains("codeExecution"))
-            result.codeExecution = CodeExecution::fromJson(j["codeExecution"]);
-
-        if (j.contains("googleSearch"))
-            result.googleSearch = GoogleSearch::fromJson(j["googleSearch"]);
-
-        if (j.contains("googleMaps"))
-            result.googleMaps = GoogleMaps::fromJson(j["googleMaps"]);
-
-        return result;
-    }
-
-    nlohmann::json Tool::toJson() const
-    {
-        nlohmann::json j = nlohmann::json::object();
-            
-        if (!functionDeclarations.empty())
-        {
-            nlohmann::json funcs = nlohmann::json::array();
-            for(const auto& f : functionDeclarations)
-                funcs.push_back(f.toJson());
-            
-            j["functionDeclarations"] = funcs;
-        }
-            
-        if (googleSearch.has_value())
-        {
-            j["googleSearch"] = googleSearch->toJson();
-        }
-
-        if (codeExecution.has_value())
-        {
-            j["codeExecution"] = codeExecution->toJson();
-        }
-
-        if (googleMaps.has_value())
-        {
-            j["googleMaps"] = googleMaps->toJson();
-        }
-            
-        return j;
-    }
-
     FunctionResponseBlob FunctionResponseBlob::fromJson(const nlohmann::json& j)
     {
         FunctionResponseBlob result;
@@ -742,186 +534,218 @@ namespace GeminiCPP
         return c;
     }
 
-    nlohmann::json ThinkingConfig::toJson() const
+    FunctionCallingConfig FunctionCallingConfig::fromJson(const nlohmann::json& j)
     {
-        nlohmann::json j;
-        
-        j["includeThoughts"] = includeThoughts;
+        FunctionCallingConfig result{};
 
-        if (thinkingBudget.has_value())
+        if (j.contains("mode"))
+            result.mode = frenum::cast<FunctionCallingMode>(j["mode"]);
+
+        if (j.contains("allowedFunctionNames"))
         {
-            j["thinkingBudget"] = thinkingBudget.value();
+            result.allowedFunctionNames = std::vector<std::string>{};
+            result.allowedFunctionNames->reserve(j["allowedFunctionNames"].size());
+            for (const auto& name : j["allowedFunctionNames"])
+                result.allowedFunctionNames->push_back(name);
         }
 
-        if (thinkingLevel.has_value())
-        {
-            switch (thinkingLevel.value())
-            {
-            case ThinkingLevel::LOW:  j["thinkingLevel"] = "low"; break;
-            case ThinkingLevel::HIGH: j["thinkingLevel"] = "high"; break;
-            }
-        }
+        return result;
+    }
 
+    nlohmann::json FunctionCallingConfig::toJson() const
+    {
+        nlohmann::json j = nlohmann::json::object();
+
+        if (mode.has_value())
+            j["mode"] = frenum::to_string(mode.value());
+
+        if (allowedFunctionNames.has_value())
+        {
+            j["allowedFunctionNames"] = nlohmann::json::array();
+            for (const auto& name : *allowedFunctionNames)
+                j["allowedFunctionNames"].push_back(name);
+        }
         return j;
     }
 
-    nlohmann::json GenerationConfig::toJson() const
+    LatLng LatLng::fromJson(const nlohmann::json& j)
     {
-        nlohmann::json j;
-            
-        if (responseMimeType.has_value()) j["responseMimeType"] = responseMimeType.value();
-        if (stopSequences.has_value())    j["stopSequences"] = stopSequences.value();
-        if (temperature.has_value())      j["temperature"] = temperature.value();
-        if (topP.has_value())             j["topP"] = topP.value();
-        if (topK.has_value())             j["topK"] = topK.value();
-        if (candidateCount.has_value())   j["candidateCount"] = candidateCount.value();
-        if (maxOutputTokens.has_value())  j["maxOutputTokens"] = maxOutputTokens.value();
-        if (responseLogprobs.has_value()) j["responseLogprobs"] = responseLogprobs.value();
-        if (logprobs.has_value())         j["logprobs"] = logprobs.value();
-        if (presencePenalty.has_value())  j["presencePenalty"] = presencePenalty.value();
-        if (frequencyPenalty.has_value()) j["frequencyPenalty"] = frequencyPenalty.value();
-        if (seed.has_value())             j["seed"] = seed.value();
-        if (responseSchema.has_value())   j["responseSchema"] = responseSchema.value();
-        if (thinkingConfig.has_value())   j["thinkingConfig"] = thinkingConfig->toJson();
-
-        return j;
+        LatLng result;
+        result.latitude = j.value("latitude", 0);
+        result.longitude = j.value("longitude", 0);
+        return result;
     }
-
-    nlohmann::json EmbedConfig::toJson() const
-    {
-        nlohmann::json j;
-        
-        if (taskType.has_value()) 
-        {
-            j["taskType"] = frenum::to_string(taskType.value());
-        }
-        
-        if (!title.empty())
-            j["title"] = title;
-        
-        if (outputDimensionality.has_value())
-            j["outputDimensionality"] = outputDimensionality.value();
-        
-        return j;
-    }
-
-    std::string SafetySetting::categoryToString(HarmCategory cat)
-    {
-        return frenum::to_string(cat);
-    }
-
-    std::string SafetySetting::thresholdToString(HarmBlockThreshold thr)
-    {
-        return frenum::to_string(thr);
-    }
-
-    nlohmann::json SafetySetting::toJson() const
+    
+    nlohmann::json LatLng::toJson() const
     {
         return {
-            {"category", categoryToString(category)},
-            {"threshold", thresholdToString(threshold)}
+            {"latitude", latitude},
+            {"longitude", longitude}
         };
     }
 
-    File File::fromJson(const nlohmann::json& j)
+    RetrievalConfig RetrievalConfig::fromJson(const nlohmann::json& j)
     {
-        File f{};
+        RetrievalConfig result{};
+
+        if (j.contains("latLng"))
+            result.latLng = LatLng::fromJson(j["latLng"]);
+
+        if (j.contains("languageCode"))
+            result.languageCode = j["languageCode"];
         
-        if(j.contains("name")) f.name = j.value("name", "");
-        if(j.contains("displayName")) f.displayName = j.value("displayName", "");
-        if(j.contains("mimeType")) f.mimeType = j.value("mimeType", "");
-        if(j.contains("sizeBytes")) f.sizeBytes = j.value("sizeBytes", "0");
-        if(j.contains("createTime")) f.createTime = j.value("createTime", "");
-        if(j.contains("updateTime")) f.updateTime = j.value("updateTime", "");
-        if(j.contains("expirationTime")) f.expirationTime = j.value("expirationTime", "");
-        if(j.contains("sha256Hash")) f.sha256Hash = j.value("sha256Hash", "");
-        if(j.contains("uri")) f.uri = j.value("uri", "");
-            
-        if(j.contains("state"))
-        {
-            auto s = frenum::cast<FileState>(j.value("state", ""));
-            if(s.has_value()) f.state = s.value();
-        }
-        
-        if(j.contains("error") && j["error"].contains("message"))
-        {
-            f.errorMsg = j["error"]["message"].get<std::string>();
-        }
-
-        return f;
+        return result;
     }
-
-    std::string File::toString() const
-    {
-        return "File: " + displayName + " (" + name + ")\n" +
-               "URI: " + uri + "\n" +
-               "State: " + frenum::to_string(state) + "\n" +
-               "MIME: " + mimeType + " (" + sizeBytes + " bytes)";
-    }
-
-    ListFilesResponse ListFilesResponse::fromJson(const nlohmann::json& j)
     
+    nlohmann::json RetrievalConfig::toJson() const
     {
-        ListFilesResponse r;
-        if(j.contains("files") && j["files"].is_array())
+        nlohmann::json j = nlohmann::json::object();
+        if (latLng.has_value())
+            j["latLng"] = latLng->toJson();
+        
+        if (languageCode.has_value())
+            j["languageCode"] = *languageCode;
+        return j;
+    }
+
+    ToolConfig ToolConfig::fromJson(const nlohmann::json& j)
+    {
+        ToolConfig result{};
+
+        if (j.contains("functionCallingConfig"))
+            result.functionCallingConfig = FunctionCallingConfig::fromJson(j["functionCallingConfig"]);
+
+        if (j.contains("retrievalConfig"))
+            result.retrievalConfig = RetrievalConfig::fromJson(j["retrievalConfig"]);
+
+        return result;
+    }
+    
+    nlohmann::json ToolConfig::toJson() const
+    {
+        nlohmann::json j = nlohmann::json::object();
+
+        if (functionCallingConfig.has_value())
+            j["functionCallingConfig"] = functionCallingConfig->toJson();
+        
+        if (retrievalConfig.has_value())
+            j["retrievalConfig"] = retrievalConfig->toJson();
+        
+        return j;
+    }
+
+    FunctionDeclaration FunctionDeclaration::fromJson(const nlohmann::json& j)
+    {
+        FunctionDeclaration result{};
+
+        result.name = j.value("name", "");
+        result.description = j.value("description", "");
+
+        if (j.contains("parameters"))
+            result.parameters = j["parameters"];
+
+        return result;
+    }
+
+    nlohmann::json FunctionDeclaration::toJson() const
+    {
+        return {
+                {"name", name},
+                {"description", description},
+                {"parameters", parameters}
+        };
+    }
+
+    GoogleSearch GoogleSearch::fromJson(const nlohmann::json& j)
+    {
+        GEMINI_UNUSED(j);
+        return GoogleSearch{};
+    }
+
+    nlohmann::json GoogleSearch::toJson() const
+    {
+        return nlohmann::json::object();
+    }
+
+    GoogleMaps GoogleMaps::fromJson(const nlohmann::json& j)
+    {
+        GEMINI_UNUSED(j);
+        return GoogleMaps{};
+    }
+
+    nlohmann::json GoogleMaps::toJson() const
+    {
+        if (enableWidget)
+            return { {"enableWidget", true} };
+        return nlohmann::json::object();
+    }
+
+    CodeExecution CodeExecution::fromJson(const nlohmann::json& j)
+    {
+        GEMINI_UNUSED(j);
+        return CodeExecution{};
+    }
+
+    nlohmann::json CodeExecution::toJson() const
+    {
+        return nlohmann::json::object();
+    }
+
+    Tool Tool::fromJson(const nlohmann::json& j)
+    {
+        Tool result{};
+        
+        if (j.contains("FunctionDeclarations"))
         {
-            for(const auto& item : j["files"])
-            {
-                r.files.push_back(File::fromJson(item));
-            }
+            result.functionDeclarations.reserve(j["FunctionDeclarations"].size());
+            
+            for (const auto& functionDeclaration : j["FunctionDeclarations"])
+                result.functionDeclarations.push_back(FunctionDeclaration::fromJson(functionDeclaration));
         }
-        if(j.contains("nextPageToken")) r.nextPageToken = j.value("nextPageToken", "");
-        return r;
+
+        if (j.contains("codeExecution"))
+            result.codeExecution = CodeExecution::fromJson(j["codeExecution"]);
+
+        if (j.contains("googleSearch"))
+            result.googleSearch = GoogleSearch::fromJson(j["googleSearch"]);
+
+        if (j.contains("googleMaps"))
+            result.googleMaps = GoogleMaps::fromJson(j["googleMaps"]);
+
+        return result;
     }
 
-    FinishReason FinishReasonHelper::fromString(const std::string& reason)
+    nlohmann::json Tool::toJson() const
     {
-        auto result = frenum::cast<FinishReason>(reason);
-        return result.has_value() ? result.value() : FinishReason::FINISH_REASON_UNSPECIFIED;
-    }
-
-    std::string FinishReasonHelper::toString(FinishReason reason)
-    {
-        return frenum::to_string(reason);
-    }
-
-    ContentEmbedding ContentEmbedding::fromJson(const nlohmann::json& j)
-    {
-        ContentEmbedding ce;
-        if(j.contains("values") && j["values"].is_array())
+        nlohmann::json j = nlohmann::json::object();
+            
+        if (!functionDeclarations.empty())
         {
-            for(const auto& v : j["values"])
-                ce.values.push_back(v.get<float>());
+            nlohmann::json funcs = nlohmann::json::array();
+            for(const auto& f : functionDeclarations)
+                funcs.push_back(f.toJson());
+            
+            j["functionDeclarations"] = funcs;
         }
-        return ce;
-    }
-
-    EmbedContentResponse EmbedContentResponse::fromJson(const nlohmann::json& j)
-    {
-        EmbedContentResponse r;
-        if(j.contains("embedding"))
-            r.embedding = ContentEmbedding::fromJson(j["embedding"]);
-        return r;
-    }
-
-    BatchEmbedContentsResponse BatchEmbedContentsResponse::fromJson(const nlohmann::json& j)
-    {
-        BatchEmbedContentsResponse r;
-        if(j.contains("embeddings") && j["embeddings"].is_array())
+            
+        if (googleSearch.has_value())
         {
-            for(const auto& item : j["embeddings"])
-            {
-                r.embeddings.push_back(ContentEmbedding::fromJson(item));
-            }
+            j["googleSearch"] = googleSearch->toJson();
         }
-        return r;
-    }
 
-    TokenCountResponse TokenCountResponse::fromJson(const nlohmann::json& j)
-    {
-        return { j.value("totalTokens", 0) };
-    }
+        if (codeExecution.has_value())
+        {
+            j["codeExecution"] = codeExecution->toJson();
+        }
 
+        if (googleMaps.has_value())
+        {
+            j["googleMaps"] = googleMaps->toJson();
+        }
+            
+        return j;
+    }
+    
     CachedContent CachedContent::fromJson(const nlohmann::json& j)
     {
         CachedContent c{};

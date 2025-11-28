@@ -6,7 +6,6 @@
 #include <string>
 #include <vector>
 #include <filesystem>
-#include <optional>
 
 #include "chat_session.h"
 

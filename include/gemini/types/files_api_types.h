@@ -1,0 +1,49 @@
+﻿#pragma once
+
+#ifndef GEMINI_FILES_API_TYPES_H
+#define GEMINI_FILES_API_TYPES_H
+
+#include <string>
+#include <vector>
+
+#include "../types_base.h"
+#include "frenum.h"
+
+namespace GeminiCPP
+{
+    FrenumClassInNamespace(GeminiCPP, FileState, uint8_t,
+        STATE_UNSPECIFIED,
+        PROCESSING, // Processing file (Not immediately available)
+        ACTIVE,     // Ready to use
+        FAILED      // Processing error
+    )
+    
+    struct File
+    {
+        std::string name;          // ID in "files/..." format
+        std::string displayName;   // User-given name
+        std::string mimeType;      // "image/jpeg", "video/mp4" etc.
+        std::string sizeBytes;     // String income (API standard)
+        std::string createTime;
+        std::string updateTime;
+        std::string expirationTime;
+        std::string sha256Hash;
+        std::string uri;           // "https://..." (This is used in content)
+        FileState state = FileState::STATE_UNSPECIFIED;
+        
+        std::string errorMsg; 
+
+        [[nodiscard]] static File fromJson(const nlohmann::json& j);
+        [[nodiscard]] std::string toString() const;
+    };
+
+    struct ListFilesResponse
+    {
+        std::vector<File> files;
+        std::string nextPageToken;
+
+        [[nodiscard]] static ListFilesResponse fromJson(const nlohmann::json& j);
+    };
+}
+
+#endif // GEMINI_FILES_API_TYPES_H

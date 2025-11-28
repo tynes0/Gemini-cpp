@@ -2,6 +2,8 @@
 
 #include <nlohmann/json.hpp>
 
+#include "gemini/logger.h"
+
 namespace GeminiCPP
 {
     std::string Utils::fileToBase64(const std::string& filepath)

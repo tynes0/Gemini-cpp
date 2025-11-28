@@ -6,7 +6,6 @@
 #include <string>
 #include <string_view>
 #include "model.h"
-#include "types.h"
 
 namespace GeminiCPP
 {
@@ -31,6 +30,13 @@ namespace GeminiCPP
     class ResourceName
     {
     public:
+        ResourceName() = default;
+        ResourceName(const ResourceName&) = default;
+        ResourceName& operator=(const ResourceName&) = default;
+        ResourceName(const ResourceName&&) = delete;
+        ResourceName& operator=(const ResourceName&&) = delete;
+        ~ResourceName() = default;
+        
         ResourceName(std::string name, ResourceType type = ResourceType::MODEL);
         ResourceName(std::string_view name, ResourceType type = ResourceType::MODEL);
         ResourceName(const char* name, ResourceType type = ResourceType::MODEL);

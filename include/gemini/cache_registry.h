@@ -8,7 +8,7 @@
 #include <optional>
 #include <filesystem>
 #include <nlohmann/json.hpp>
-#include "types.h"
+#include "types/caching_api_types.h"
 
 namespace GeminiCPP
 {

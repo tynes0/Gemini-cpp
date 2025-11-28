@@ -8,10 +8,10 @@
 #include <string>
 #include <mutex>
 
-#include "types.h"
 #include "model.h"
 #include "response.h"
 #include "function_registry.h"
+#include "support.h"
 
 namespace GeminiCPP
 {

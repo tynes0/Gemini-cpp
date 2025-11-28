@@ -1,6 +1,8 @@
 ﻿#include "gemini/response.h"
 #include "gemini/utils.h"
 
+#include <fstream>
+
 namespace GeminiCPP
 {
     GroundingMetadata GroundingMetadata::fromJson(const nlohmann::json& j)

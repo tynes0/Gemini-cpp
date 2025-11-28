@@ -2,7 +2,9 @@
 #include <nlohmann/json.hpp>
 #include <vector>
 #include <string>
-#include "gemini/types.h"
+
+#include "gemini/types/generating_content_api_types.h"
+#include "gemini/types/embeddings_api_types.h"
 
 namespace GeminiCPP::Internal
 {
@@ -73,7 +75,7 @@ namespace GeminiCPP::Internal
         static nlohmann::json buildEmbedContent(
             const Content& content,
             const std::string& modelStr,
-            const EmbedConfig& config
+            const EmbedRequestBody& config
         )
         {
             nlohmann::json payload = config.toJson();
@@ -85,7 +87,7 @@ namespace GeminiCPP::Internal
         static nlohmann::json buildBatchEmbedContent(
             const std::vector<std::string>& texts,
             const std::string& modelStr,
-            const EmbedConfig& config
+            const EmbedRequestBody& config
         )
         {
             nlohmann::json requests = nlohmann::json::array();
