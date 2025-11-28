@@ -2,6 +2,67 @@
 
 namespace GeminiCPP
 {
+    PredictRequestBody PredictRequestBody::fromJson(const nlohmann::json& j)
+    {
+        PredictRequestBody result{};
+
+        if (j.contains("instances")) result.instances = j["instances"].get<std::vector<nlohmann::json>>();
+        if (j.contains("parameters")) result.parameters = j["parameters"];
+
+        return result;
+    }
+
+    nlohmann::json PredictRequestBody::toJson() const
+    {
+        nlohmann::json j = nlohmann::json::object();
+
+        j["instances"] = instances;
+        if (parameters.has_value())
+            j["parameters"] = parameters.value();
+
+        return j;
+    }
+
+    PredictResponseBody PredictResponseBody::fromJson(const nlohmann::json& j)
+    {
+        PredictResponseBody result{};
+
+        if (j.contains("predictions"))
+            result.predictions = j["predictions"];
+        
+        return result;
+    }
+
+    PredictLongRunningRequestBody PredictLongRunningRequestBody::fromJson(const nlohmann::json& j)
+    {
+        PredictLongRunningRequestBody result{};
+
+        if (j.contains("instances")) result.instances = j["instances"].get<std::vector<nlohmann::json>>();
+        if (j.contains("parameters")) result.parameters = j["parameters"];
+
+        return result;
+    }
+
+    nlohmann::json PredictLongRunningRequestBody::toJson() const
+    {
+        nlohmann::json j = nlohmann::json::object();
+
+        j["instances"] = instances;
+        if (parameters.has_value())
+            j["parameters"] = parameters.value();
+
+        return j;
+    }
+
+    nlohmann::json PredictResponseBody::toJson() const
+    {
+        nlohmann::json j = nlohmann::json::object();
+
+        j["predictions"] = predictions;
+        
+        return j;
+    }
+
     bool ModelInfo::supports(GenerationMethod method) const
     {
         return (supportedGenerationMethods & method) != 0;
@@ -34,7 +95,7 @@ namespace GeminiCPP
 
     nlohmann::json ModelInfo::toJson() const
     {
-        nlohmann::json j;
+        nlohmann::json j = nlohmann::json::object();
 
         j["name"] = name.str();
         j["baseModelId"] = baseModelId.str();
@@ -50,6 +111,55 @@ namespace GeminiCPP
         j["topK"] = topK;
         j["supportedGenerationMethods"] = GenerationMethodHelper::bitmaskToStringArray(supportedGenerationMethods);
         
+        return j;
+    }
+
+    ModelListResponseBody ModelListResponseBody::fromJson(const nlohmann::json& j)
+    {
+        ModelListResponseBody result{};
+
+        if (j.contains("models"))
+        {
+            result.models.reserve(j["models"].size());
+            for (const auto& model : j["models"])
+                result.models.push_back(ModelInfo::fromJson(model));
+        }
+
+        result.nextPageToken = j.value("nextPageToken", "");
+
+        return result;
+    }
+
+    nlohmann::json ModelListResponseBody::toJson() const
+    {
+        nlohmann::json j = nlohmann::json::object();
+
+        j["models"] = nlohmann::json::array();
+        for (const auto& model : models)
+            j["models"].push_back(model.toJson());
+
+        j["nextPageToken"] = nextPageToken;
+        
+        return j;
+    }
+
+    ModelListQueryParameters ModelListQueryParameters::fromJson(const nlohmann::json& j)
+    {
+        ModelListQueryParameters result{};
+
+        result.pageSize = j.value("pageSize", 0);
+        result.pageToken = j.value("pageToken", "");
+
+        return result;
+    }
+
+    nlohmann::json ModelListQueryParameters::toJson() const
+    {
+        nlohmann::json j = nlohmann::json::object();
+
+        j["pageSize"] = pageSize;
+        j["pageToken"] = pageToken;
+
         return j;
     }
 }
