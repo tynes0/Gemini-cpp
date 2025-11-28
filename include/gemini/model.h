@@ -6,6 +6,8 @@
 #include <cstdint>
 #include <string_view>
 #include "frenum.h"
+#include "types_base.h"
+#include "url.h"
 #include "nlohmann/json.hpp"
 
 namespace GeminiCPP
@@ -40,6 +42,7 @@ namespace GeminiCPP
         [[nodiscard]] static GenerationMethod fromString(const std::string& method);
         [[nodiscard]] static std::string toString(GenerationMethod method);
         [[nodiscard]] static std::string bitmaskToString(uint32_t flags);
+        [[nodiscard]] static std::vector<std::string> bitmaskToStringArray(uint32_t flags);
     };
     
     FrenumClassInNamespace(GeminiCPP, Model,  uint8_t,
@@ -62,25 +65,6 @@ namespace GeminiCPP
     {
         [[nodiscard]] static std::string_view stringRepresentation(Model model);
         [[nodiscard]] static Model fromStringRepresentation(const std::string& str);
-    };
-    
-    struct ModelInfo
-    {
-        std::string name;
-        std::string version;
-        std::string displayName;
-        std::string description;
-        int inputTokenLimit = 0;
-        int outputTokenLimit = 0;
-        double temperature = 0.0;
-        double topP = 0.0;
-        int topK = 0;
-        uint32_t supportedGenerationMethods = GM_NONE;
-
-        [[nodiscard]] bool supports(GenerationMethod method) const;
-        
-        [[nodiscard]] static ModelInfo fromJson(const nlohmann::json& j);
-        [[nodiscard]] std::string toString() const;
     };
 }
 

@@ -2,7 +2,7 @@
 
 namespace GeminiCPP
 {
-        GenerationMethod operator|(GenerationMethod a, GenerationMethod b)
+    GenerationMethod operator|(GenerationMethod a, GenerationMethod b)
     {
         return static_cast<GenerationMethod>(static_cast<uint32_t>(a) | static_cast<uint32_t>(b));
     }
@@ -89,7 +89,31 @@ namespace GeminiCPP
         
         return "[" + s + "]";
     }
-    
+
+    std::vector<std::string> GenerationMethodHelper::bitmaskToStringArray(uint32_t flags)
+    {
+        std::vector<std::string> result;
+        if (flags & GM_ASYNC_BATCH_EMBED_CONTENT)   result.emplace_back("asyncBatchEmbedContents");
+        if (flags & GM_BATCH_EMBED_CONTENTS)        result.emplace_back("batchEmbedContents");
+        if (flags & GM_BATCH_EMBED_TEXT)            result.emplace_back("batchEmbedText");
+        if (flags & GM_BATCH_GENERATE_CONTENT)      result.emplace_back("batchGenerateContent");
+        if (flags & GM_COUNT_MESSAGE_TOKENS)        result.emplace_back("countMessageTokens");
+        if (flags & GM_COUNT_TEXT_TOKENS)           result.emplace_back("countTextTokens");
+        if (flags & GM_COUNT_TOKENS)                result.emplace_back("countTokens");
+        if (flags & GM_EMBED_CONTENT)               result.emplace_back("embedContent");
+        if (flags & GM_EMBED_TEXT)                  result.emplace_back("embedText");
+        if (flags & GM_GENERATE_CONTENT)            result.emplace_back("generateContent");
+        if (flags & GM_GENERATE_MESSAGE)            result.emplace_back("generateMessage");
+        if (flags & GM_GENERATE_TEXT)               result.emplace_back("generateText");
+        if (flags & GM_GET)                         result.emplace_back("get");
+        if (flags & GM_LIST)                        result.emplace_back("list");
+        if (flags & GM_PREDICT)                     result.emplace_back("predict");
+        if (flags & GM_PREDICT_LONG_RUNNING)        result.emplace_back("predictLongRunning");
+        if (flags & GM_STREAM_GENERATE_CONTENT)     result.emplace_back("streamGenerateContent");
+
+        return result;
+    }
+
     std::string_view ModelHelper::stringRepresentation(Model model)
     {
         switch (model)
@@ -126,45 +150,5 @@ namespace GeminiCPP
         if (str == "gemini-pro-latest") return Model::GEMINI_PRO_LATEST;
 
         return Model::GEMINI_2_5_FLASH;
-    }
-
-    bool ModelInfo::supports(GenerationMethod method) const
-    {
-        return (supportedGenerationMethods & method) != 0;
-    }
-    
-    ModelInfo ModelInfo::fromJson(const nlohmann::json& j)
-    {
-        ModelInfo info;
-        if(j.contains("name"))
-            info.name = j.value("name", "");
-        if(j.contains("version"))
-            info.version = j.value("version", "");
-        if(j.contains("displayName"))
-            info.displayName = j.value("displayName", "");
-        if(j.contains("description"))
-            info.description = j.value("description", "");
-            
-        info.inputTokenLimit = j.value("inputTokenLimit", 0);
-        info.outputTokenLimit = j.value("outputTokenLimit", 0);
-        info.temperature = j.value("temperature", 0.0);
-        info.topP = j.value("topP", 0.0);
-        info.topK = j.value("topK", 0);
-
-        info.supportedGenerationMethods = GM_NONE;
-        if(j.contains("supportedGenerationMethods"))
-        {
-            for(const auto& methodJson : j["supportedGenerationMethods"])
-                info.supportedGenerationMethods |= GenerationMethodHelper::fromString(methodJson.get<std::string>());
-        }
-        return info;
-    }
-
-    std::string ModelInfo::toString() const
-    {
-        return "Model: " + displayName + " (" + name + ")\n" +
-               "Desc: " + description + "\n" +
-               "Tokens: In=" + std::to_string(inputTokenLimit) + ", Out=" + std::to_string(outputTokenLimit) + "\n" +
-               "Methods: " + GenerationMethodHelper::bitmaskToString(supportedGenerationMethods);
     }
 }
