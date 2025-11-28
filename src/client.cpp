@@ -345,13 +345,13 @@ namespace GeminiCPP
         );
 
         Support::ApiValidationResult result;
-        result.statusCode = static_cast<HttpStatusCode>(r.status_code);
+        result.statusCode = static_cast<HttpMappedStatusCode>(r.status_code);
         if (HttpStatusHelper::isSuccess(r.status_code))
         {
             result.isValid = true;
             result.message = "API Key is valid. Connection successful.";
             result.reason = "OK";
-            result.statusCode = HttpStatusCode::OK;
+            result.statusCode = HttpMappedStatusCode::OK;
             return result;
         }
 
@@ -800,14 +800,14 @@ namespace GeminiCPP
                             std::string reason = feedback["blockReason"].get<std::string>();
                             if (reason == "SAFETY")
                             {
-                                return GenerationResult::Failure("Prompt blocked by Safety Filter", frenum::value(HttpStatusCode::OK), FinishReason::PROMPT_BLOCKED);
+                                return GenerationResult::Failure("Prompt blocked by Safety Filter", frenum::value(HttpMappedStatusCode::OK), FinishReason::PROMPT_BLOCKED);
                             }
                         }
                     }
                     
                     if (!json_response.contains("candidates") || json_response["candidates"].empty())
                     {
-                        return GenerationResult::Failure("No candidates returned", frenum::value(HttpStatusCode::OK));
+                        return GenerationResult::Failure("No candidates returned", frenum::value(HttpMappedStatusCode::OK));
                     }
             
                     auto candidate = json_response["candidates"][0];
@@ -820,7 +820,7 @@ namespace GeminiCPP
         
                     if (reason == FinishReason::SAFETY && !candidate.contains("content"))
                     {
-                        return GenerationResult::Failure("Response blocked by Safety Filter", frenum::value(HttpStatusCode::OK), FinishReason::SAFETY);
+                        return GenerationResult::Failure("Response blocked by Safety Filter", frenum::value(HttpMappedStatusCode::OK), FinishReason::SAFETY);
                     }
                     
                     if (candidate.contains("content"))
@@ -846,7 +846,7 @@ namespace GeminiCPP
                         return GenerationResult::Success(content, r.status_code, inTok, outTok, reason, grounding);
                     }
                     
-                    return GenerationResult::Failure("Candidate has no content", frenum::value(HttpStatusCode::OK), reason);
+                    return GenerationResult::Failure("Candidate has no content", frenum::value(HttpMappedStatusCode::OK), reason);
                 }
                 catch (const std::exception& e)
                 {

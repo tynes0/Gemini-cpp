@@ -30,7 +30,7 @@ namespace GeminiCPP::Support
         bool isValid = false;
         std::string message;
         std::string reason;
-        HttpStatusCode statusCode = HttpStatusCode::UNKNOWN;
+        HttpMappedStatusCode statusCode = HttpMappedStatusCode::STATUS_CODE_UNSPECIFIED;
 
         [[nodiscard]] explicit operator bool() const { return isValid; }
     };

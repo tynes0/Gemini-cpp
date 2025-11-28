@@ -18,23 +18,23 @@ namespace GeminiCPP
         bool success = false;
         std::optional<T> value;
         std::string errorMessage;
-        HttpStatusCode statusCode = HttpStatusCode::UNKNOWN;
+        HttpMappedStatusCode statusCode = HttpMappedStatusCode::STATUS_CODE_UNSPECIFIED;
 
-        static Result<T> Success(T val, int code = frenum::value(HttpStatusCode::OK))
+        static Result<T> Success(T val, int code = frenum::value(HttpMappedStatusCode::OK))
         {
             Result<T> r;
             r.success = true;
             r.value = std::move(val);
-            r.statusCode = static_cast<HttpStatusCode>(code);
+            r.statusCode = static_cast<HttpMappedStatusCode>(code);
             return r;
         }
 
-        static Result<T> Failure(std::string err, int code = frenum::value(HttpStatusCode::UNKNOWN))
+        static Result<T> Failure(std::string err, int code = frenum::value(HttpMappedStatusCode::STATUS_CODE_UNSPECIFIED))
         {
             Result<T> r;
             r.success = false;
             r.errorMessage = std::move(err);
-            r.statusCode = static_cast<HttpStatusCode>(code);
+            r.statusCode = static_cast<HttpMappedStatusCode>(code);
             return r;
         }
 
@@ -52,7 +52,7 @@ namespace GeminiCPP
         bool success = false;
         Content content;
         std::string errorMessage;
-        HttpStatusCode statusCode = HttpStatusCode::UNKNOWN;
+        HttpMappedStatusCode statusCode = HttpMappedStatusCode::STATUS_CODE_UNSPECIFIED;
         FinishReason finishReason = FinishReason::FINISH_REASON_UNSPECIFIED;
         
         int inputTokens = 0;
@@ -68,7 +68,7 @@ namespace GeminiCPP
 
         [[nodiscard]] static GenerationResult Success(
             Content c,
-            int code = frenum::value(HttpStatusCode::OK),
+            int code = frenum::value(HttpMappedStatusCode::OK),
             int inTok = 0,
             int outTok = 0,
             FinishReason reason = FinishReason::STOP,
@@ -76,7 +76,7 @@ namespace GeminiCPP
         );
         
         [[nodiscard]] static GenerationResult Failure(std::string err,
-            int code = frenum::value(HttpStatusCode::UNKNOWN), FinishReason reason = FinishReason::OTHER);
+            int code = frenum::value(HttpMappedStatusCode::STATUS_CODE_UNSPECIFIED), FinishReason reason = FinishReason::OTHER);
 
         [[nodiscard]] explicit operator bool() const { return success; }
         

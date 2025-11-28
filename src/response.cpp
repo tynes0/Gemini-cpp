@@ -87,7 +87,7 @@ namespace GeminiCPP
         GenerationResult r;
         r.success = true;
         r.content = std::move(c);
-        r.statusCode = static_cast<HttpStatusCode>(code);
+        r.statusCode = static_cast<HttpMappedStatusCode>(code);
         r.inputTokens = inTok;
         r.outputTokens = outTok;
         r.totalTokens = inTok + outTok;
@@ -101,7 +101,7 @@ namespace GeminiCPP
         GenerationResult r;
         r.success = false;
         r.errorMessage = std::move(err);
-        r.statusCode = static_cast<HttpStatusCode>(code);
+        r.statusCode = static_cast<HttpMappedStatusCode>(code);
         r.finishReason = reason;
         return r;
     }

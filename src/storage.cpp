@@ -44,7 +44,7 @@ namespace GeminiCPP
         {
             std::filesystem::path path = std::filesystem::path(rootPath_) / (sessionId + ".json");
             if (!std::filesystem::exists(path))
-                return Result<ChatSession>::Failure("Session file not found: " + path.string(), frenum::value(HttpStatusCode::OK));
+                return Result<ChatSession>::Failure("Session file not found: " + path.string(), frenum::value(HttpMappedStatusCode::OK));
 
             std::ifstream file(path);
             nlohmann::json j;
