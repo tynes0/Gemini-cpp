@@ -3,19 +3,20 @@
 namespace GeminiCPP
 {
     ResourceName::ResourceName(std::string name, ResourceType type)
-    : value_(std::move(name)), type_(type)
+        : value_(std::move(name)), type_(type)
     {
+        if (type_ == ResourceType::NONE)
+        {
+            type_ = detectTypeFromPrefix(value_);
+        }
         ensurePrefix();
     }
-    ResourceName::ResourceName(std::string_view name, ResourceType type)
-        : value_(name), type_(type)
+
+    ResourceName& ResourceName::operator=(const std::string& name)
     {
-        ensurePrefix();
-    }
-    ResourceName::ResourceName(const char* name, ResourceType type)
-        : value_(name), type_(type)
-    {
-        ensurePrefix();
+        value_ = name;
+        type_ = detectTypeFromPrefix(value_);
+        return *this;
     }
     
     ResourceName::ResourceName(GeminiCPP::Model model)
@@ -24,44 +25,42 @@ namespace GeminiCPP
         ensurePrefix();
     }
 
-    ResourceName ResourceName::File(std::string_view name)
+    ResourceName ResourceName::File(std::string name)
     {
-        return {name, ResourceType::FILE};
+        return {std::move(name), ResourceType::FILE};
     }
-    ResourceName ResourceName::Model(std::string_view name)
+    ResourceName ResourceName::Model(std::string name)
     {
-        return {name, ResourceType::MODEL};
+        return {std::move(name), ResourceType::MODEL};
     }
-    ResourceName ResourceName::TunedModel(std::string_view name)
+    ResourceName ResourceName::TunedModel(std::string name)
     {
-        return {name, ResourceType::TUNED_MODEL};
-    }
-
-    ResourceName ResourceName::Corpus(std::string_view name)
-    {
-        return { name, ResourceType::CORPUS };
+        return {std::move(name), ResourceType::TUNED_MODEL};
     }
 
-    ResourceName ResourceName::Operation(std::string_view name)
+    ResourceName ResourceName::Corpus(std::string name)
     {
-        return { name, ResourceType::OPERATION };
+        return { std::move(name), ResourceType::CORPUS };
     }
 
-    ResourceName ResourceName::CachedContent(std::string_view name)
+    ResourceName ResourceName::Operation(std::string name)
     {
-        return {name, ResourceType::CACHED_CONTENT};
+        return { std::move(name), ResourceType::OPERATION };
     }
 
-    ResourceName ResourceName::Raw(std::string_view name)
+    ResourceName ResourceName::CachedContent(std::string name)
     {
-        return {name, ResourceType::NONE};
+        return {std::move(name), ResourceType::CACHED_CONTENT};
     }
 
-    ResourceName& ResourceName::operator=(const std::string& name)
+    ResourceName ResourceName::FileSearchStores(std::string name)
     {
-        value_ = name;
-        ensurePrefix();
-        return *this;
+        return  { std::move(name), ResourceType::FILE_SEARCH_STORES };
+    }
+
+    ResourceName ResourceName::Raw(std::string name)
+    {
+        return {std::move(name), ResourceType::NONE};
     }
 
     std::string ResourceName::str() const
@@ -84,6 +83,7 @@ namespace GeminiCPP
         case ResourceType::CORPUS:          prefix = "corpora/"; break;
         case ResourceType::OPERATION:       prefix = "operations/"; break;
         case ResourceType::CACHED_CONTENT:  prefix = "cachedContents/"; break;
+        case ResourceType::FILE_SEARCH_STORES:  prefix = "fileSearchStores/"; break;
         case ResourceType::NONE:        return; 
         }
 
@@ -91,6 +91,18 @@ namespace GeminiCPP
         {
             value_.insert(0, prefix);
         }
+    }
+
+    ResourceType ResourceName::detectTypeFromPrefix(std::string_view s)
+    {
+        if (s.starts_with("models/"))           return ResourceType::MODEL;
+        if (s.starts_with("files/"))            return ResourceType::FILE;
+        if (s.starts_with("tunedModels/"))      return ResourceType::TUNED_MODEL;
+        if (s.starts_with("corpora/"))          return ResourceType::CORPUS;
+        if (s.starts_with("operations/"))       return ResourceType::OPERATION;
+        if (s.starts_with("cachedContents/"))   return ResourceType::CACHED_CONTENT;
+        if (s.starts_with("fileSearchStores/")) return ResourceType::FILE_SEARCH_STORES;
+        return ResourceType::NONE;
     }
 
     Url::Url(const ResourceName& resource, std::string_view action)

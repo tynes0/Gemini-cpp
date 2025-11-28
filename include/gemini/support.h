@@ -100,6 +100,34 @@ namespace GeminiCPP::Support
         
         std::string value = Default;
     };
+    
+    struct Base64String
+    {
+        Base64String() = default;
+        Base64String(const Base64String& other) = default;
+        Base64String& operator=(const Base64String& other) = default;
+        Base64String(Base64String&& other) = default;
+        Base64String& operator=(Base64String&& other) = default;
+        ~Base64String() = default;
+        
+        [[nodiscard]] static Base64String fromBase64(const std::string& b64);
+
+        // Raw string → Base64
+        Base64String(const std::string& raw);
+        Base64String& operator=(const std::string& raw);
+
+        std::string str() const;
+        operator std::string() const;
+        // Raw data decode (binary)
+        [[nodiscard]] std::vector<unsigned char> decode() const;
+        // Raw string decode (text)
+        [[nodiscard]] std::string decodeToString() const;
+
+    private:
+        void setFromRaw(const std::string& raw);
+        
+        std::string value;
+    };
 
 }
 

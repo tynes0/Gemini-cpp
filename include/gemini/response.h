@@ -47,15 +47,6 @@ namespace GeminiCPP
         const T& operator*() const { return value.value(); }
     };
     
-    struct GroundingMetadata
-    {
-        std::string searchEntryPoint;
-        std::vector<std::string> webSearchQueries;
-        nlohmann::json raw;
-
-        static GroundingMetadata fromJson(const nlohmann::json& j);
-    };
-    
     struct GenerationResult
     {
         bool success = false;

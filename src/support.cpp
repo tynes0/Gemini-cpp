@@ -4,6 +4,8 @@
 #include <sstream>
 #include <unordered_set>
 
+#include "gemini/utils.h"
+
 namespace GeminiCPP::Support
 {
     namespace 
@@ -247,5 +249,50 @@ namespace GeminiCPP::Support
         }
 
         value = Default;
+    }
+    
+    Base64String Base64String::fromBase64(const std::string& b64)
+    {
+        Base64String out;
+        out.value = b64;
+        return out;
+    }
+    
+    Base64String::Base64String(const std::string& raw)
+    {
+        setFromRaw(raw);
+    }
+
+    Base64String& Base64String::operator=(const std::string& raw)
+    {
+        setFromRaw(raw);
+        return *this;
+    }
+
+    std::string Base64String::str() const
+    {
+        return value;
+    }
+
+    Base64String::operator std::string() const
+    {
+        return value;
+    }
+
+    std::vector<unsigned char> Base64String::decode() const
+    {
+        return Utils::base64Decode(value);
+    }
+
+    std::string Base64String::decodeToString() const
+    {
+        auto bytes = Utils::base64Decode(value);
+        return std::string{bytes.begin(), bytes.end()};
+    }
+
+    void Base64String::setFromRaw(const std::string& raw)
+    {
+        std::vector<unsigned char> bytes(raw.begin(), raw.end());
+        value = Utils::base64Encode(bytes);
     }
 }

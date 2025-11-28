@@ -16,6 +16,7 @@ namespace GeminiCPP
         CORPUS,         // corpora/
         OPERATION,      // operations/
         CACHED_CONTENT, // cachedContents/
+        FILE_SEARCH_STORES, // fileSearchStores/
         NONE            // No Prefix (Raw string)
     )
     
@@ -33,36 +34,35 @@ namespace GeminiCPP
         ResourceName() = default;
         ResourceName(const ResourceName&) = default;
         ResourceName& operator=(const ResourceName&) = default;
-        ResourceName(const ResourceName&&) = delete;
-        ResourceName& operator=(const ResourceName&&) = delete;
+        ResourceName(ResourceName&& other) noexcept = default;
+        ResourceName& operator=(ResourceName&& other) noexcept = default;
         ~ResourceName() = default;
         
         ResourceName(std::string name, ResourceType type = ResourceType::MODEL);
-        ResourceName(std::string_view name, ResourceType type = ResourceType::MODEL);
-        ResourceName(const char* name, ResourceType type = ResourceType::MODEL);
+        ResourceName& operator=(const std::string& name);
         
-        ResourceName(GeminiCPP::Model model);
+        ResourceName(Model model);
 
         // -- Static Factory Methods --
         // Ex: ResourceName::File("video123")
-        static ResourceName File(std::string_view name);
-        static ResourceName Model(std::string_view name);
-        static ResourceName TunedModel(std::string_view name);
-        static ResourceName Corpus(std::string_view name);
-        static ResourceName Operation(std::string_view name);
-        static ResourceName CachedContent(std::string_view name);
-        static ResourceName Raw(std::string_view name); // No Prefix
-
-        ResourceName& operator=(const std::string& name);
+        static ResourceName File(std::string name);
+        static ResourceName Model(std::string name);
+        static ResourceName TunedModel(std::string name);
+        static ResourceName Corpus(std::string name);
+        static ResourceName Operation(std::string name);
+        static ResourceName CachedContent(std::string name);
+        static ResourceName FileSearchStores(std::string name);
+        static ResourceName Raw(std::string name); // No Prefix
         
         [[nodiscard]] std::string str() const;
         operator std::string() const;
 
     private:
         std::string value_;
-        ResourceType type_;
-        
+        ResourceType type_ = ResourceType::NONE;
+
         void ensurePrefix();
+        static ResourceType detectTypeFromPrefix(std::string_view s);
     };
 
     // --- URL BUILDER ---

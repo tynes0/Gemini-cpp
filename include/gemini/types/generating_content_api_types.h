@@ -11,18 +11,18 @@
 #include "caching_api_types.h"
 #include "../types_base.h"
 #include "gemini/support.h"
+#include "gemini/url.h"
 
 namespace GeminiCPP
 {
-    FrenumClassInNamespace(GeminiCPP, HarmBlockThreshold, uint8_t,
-        HARM_BLOCK_THRESHOLD_UNSPECIFIED, // Unspecified.
-        BLOCK_LOW_AND_ABOVE, // Block low risk and above (Very Strict).
-        BLOCK_MEDIUM_AND_ABOVE, // Block medium risk and above (Default).
-        BLOCK_ONLY_HIGH, // Only block high risk.
-        BLOCK_NONE, // Don't block anything (Risky).
-        OFF // Turn off the filter completely.
+FrenumClassInNamespace(GeminiCPP, HarmBlockThreshold, uint8_t,
+                           HARM_BLOCK_THRESHOLD_UNSPECIFIED, // Unspecified.
+                           BLOCK_LOW_AND_ABOVE, // Block low risk and above (Very Strict).
+                           BLOCK_MEDIUM_AND_ABOVE, // Block medium risk and above (Default).
+                           BLOCK_ONLY_HIGH, // Only block high risk.
+                           BLOCK_NONE, // Don't block anything (Risky).
+                           OFF // Turn off the filter completely.
     )
-    
     FrenumClassInNamespace(GeminiCPP, HarmProbability, uint8_t,
         HARM_PROBABILITY_UNSPECIFIED,   // Probability is unspecified.
         NEGLIGIBLE,                     // Content has a negligible chance of being unsafe.
@@ -121,6 +121,7 @@ namespace GeminiCPP
         IMAGE_SAFETY            // Candidates were blocked due to unsafe image creation content.
     )
 
+    // Safety setting, affecting the safety-blocking behavior.
     struct SafetySetting : IJsonSerializable<SafetySetting>
     {
         // Required. The category for this setting.
@@ -131,7 +132,8 @@ namespace GeminiCPP
         [[nodiscard]] static SafetySetting fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const override;
     };
-        
+
+    // Safety rating for a piece of content.
     struct SafetyRating : IJsonSerializable<SafetyRating>
     {
         // Required. The category for this rating.
@@ -144,7 +146,8 @@ namespace GeminiCPP
         [[nodiscard]] static SafetyRating fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const override;
     };
-    
+
+    // Represents token counting info for a single modality.
     struct ModalityTokenCount : IJsonSerializable<ModalityTokenCount>
     {
         // The modality associated with this token count.
@@ -156,6 +159,7 @@ namespace GeminiCPP
         [[nodiscard]] nlohmann::json toJson() const override;
     };
 
+    // Config for image generation features.
     struct ImageConfig : IJsonSerializable<ImageConfig>
     {
         // Optional. The aspect ratio of the image to generate.
@@ -167,7 +171,8 @@ namespace GeminiCPP
         [[nodiscard]] static ImageConfig fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const override;
     };
-    
+
+    // Config for thinking features.
     struct ThinkingConfig : IJsonSerializable<ThinkingConfig>
     {
         // Indicates whether to include thoughts in the response. If true, thoughts are returned only when available.
@@ -184,6 +189,7 @@ namespace GeminiCPP
         [[nodiscard]] nlohmann::json toJson() const override;
     };
 
+    // The configuration for the prebuilt speaker to use.
     struct PrebuiltVoiceConfig : IJsonSerializable<PrebuiltVoiceConfig>
     {
         // The name of the preset voice to use.
@@ -193,6 +199,7 @@ namespace GeminiCPP
         [[nodiscard]] nlohmann::json toJson() const override;
     };
 
+    // The configuration for the voice to use.
     struct VoiceConfig : IJsonSerializable<VoiceConfig>
     {
         using VoiceConfigDataType = std::variant<
@@ -207,6 +214,7 @@ namespace GeminiCPP
         [[nodiscard]] nlohmann::json toJson() const override;
     };
 
+    // The configuration for a single speaker in a multi speaker setup.
     struct SpeakerVoiceConfig : IJsonSerializable<SpeakerVoiceConfig>
     {
         // Required. The name of the speaker to use. Should be the same as in the prompt.
@@ -218,6 +226,7 @@ namespace GeminiCPP
         [[nodiscard]] nlohmann::json toJson() const override;
     };
 
+    // The configuration for the multi-speaker setup.
     struct MultiSpeakerVoiceConfig : IJsonSerializable<MultiSpeakerVoiceConfig>
     {
         // Required. All the enabled speaker voices.
@@ -227,6 +236,7 @@ namespace GeminiCPP
         [[nodiscard]] nlohmann::json toJson() const override;
     };
 
+    // The speech generation config.
     struct SpeechConfig : IJsonSerializable<SpeechConfig>
     {
         // The configuration in case of single-voice output.
@@ -240,6 +250,7 @@ namespace GeminiCPP
         [[nodiscard]] nlohmann::json toJson() const override;
     };
 
+    // Configuration options for model generation and outputs. Not all parameters are configurable for every model.
     struct GenerationConfig : IJsonSerializable<GenerationConfig>
     {
         // Optional. The set of character sequences (up to 5) that will stop output generation.
@@ -315,27 +326,427 @@ namespace GeminiCPP
         [[nodiscard]] static GenerationConfig fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const override;
     };
-    
-    struct GenerateContentRequestBody
-    {
-        std::vector<Content> contents;
-        std::optional<std::vector<Tool>> tools;
-        std::optional<ToolConfig> config;
-        std::optional<std::vector<SafetySetting>> safetySettings;
-        std::optional<Content> systemInstruction;
-        std::optional<GenerationConfig> generationConfig;
-        std::optional<std::string> cachedContent;
-    };
 
-    struct ResponseCandidate : IJsonSerializable<ResponseCandidate>
+    struct CitationSource : IJsonSerializable<CitationSource>
     {
-        [[nodiscard]] static GenerationConfig fromJson(const nlohmann::json& j);
+        // Optional. Start of segment of the response that is attributed to this source.
+        // Index indicates the start of the segment, measured in bytes.
+        std::optional<int> startIndex;
+        // Optional. End of the attributed segment, exclusive.
+        std::optional<int> endIndex;
+        // Optional. URI that is attributed as a source for a portion of the text.
+        std::optional<std::string> uri;
+        // Optional. License for the GitHub project that is attributed as a source for segment.
+        // License info is required for code citations.
+        std::optional<std::string> license;
+        
+        [[nodiscard]] static CitationSource fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const override;
     };
 
-    struct GenerateContentResponseBody : IJsonSerializable<GenerateContentResponseBody>
+    // A citation to a source for a portion of a specific response.
+    struct CitationMetadata : IJsonSerializable<CitationMetadata>
     {
-        [[nodiscard]] static GenerationConfig fromJson(const nlohmann::json& j);
+        // Citations to sources for a specific response.
+        std::vector<CitationSource> citationSources;
+        
+        [[nodiscard]] static CitationMetadata fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    // Context of a single url retrieval.
+    struct UrlMetadata : IJsonSerializable<UrlMetadata>
+    {
+        // Retrieved url by the tool.
+        std::string retrievedUrl;
+        // Status of the url retrieval.
+        UrlRetrievalStatus urlRetrievalStatus = UrlRetrievalStatus::URL_RETRIEVAL_STATUS_UNSPECIFIED;
+        
+        [[nodiscard]] static UrlMetadata fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    // Metadata related to url context retrieval tool.
+    struct UrlContextMetadata : IJsonSerializable<UrlContextMetadata>
+    {
+        // List of url context.
+        std::vector<UrlMetadata> urlMetadata;
+        
+        [[nodiscard]] static UrlContextMetadata fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    // Candidate for the logprobs token and score.
+    struct LogprobsCandidate : IJsonSerializable<LogprobsCandidate>
+    {
+        // The candidate’s token string value.
+        std::string token;
+        // The candidate’s token id value.
+        int tokenId = 0;
+        // The candidate's log probability.
+        float logProbability = 0.0f;
+        
+        [[nodiscard]] static LogprobsCandidate fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    // Candidates with top log probabilities at each decoding step.
+    struct TopLogprobsCandidates : IJsonSerializable<TopLogprobsCandidates>
+    {
+        // Sorted by log probability in descending order.
+        std::vector<LogprobsCandidate> candidates;
+
+        [[nodiscard]] static TopLogprobsCandidates fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    struct LogprobsResult : IJsonSerializable<LogprobsResult>
+    {
+        // Length = total number of decoding steps.
+        std::vector<TopLogprobsCandidates> topCandidates;
+        // Length = total number of decoding steps. The chosen candidates may or may not be in topCandidates.
+        std::vector<LogprobsCandidate> chosenCandidates;
+        // Sum of log probabilities for all tokens.
+        float logProbabilitySum = 0.0f;
+        
+        [[nodiscard]] static LogprobsResult fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    // Metadata related to retrieval in the grounding flow.
+    struct RetrievalMetadata : IJsonSerializable<RetrievalMetadata>
+    {
+        // Optional. Score indicating how likely information from Google search could help answer the prompt.
+        // The score is in the range [0, 1], where 0 is the least likely and 1 is the most likely. This score
+        // is only populated when google search grounding and dynamic retrieval is enabled. It will be compared
+        // to the threshold to determine whether to trigger google search.
+        std::optional<float> googleSearchDynamicRetrievalScore;
+        
+        [[nodiscard]] static RetrievalMetadata fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    // Segment of the content.
+    struct Segment : IJsonSerializable<Segment>
+    {
+        // Output only. The index of a Part object within its parent Content object.
+        int partIndex = 0;
+        // Output only. Start index in the given Part, measured in bytes. Offset from the start of the Part, inclusive, starting at zero.
+        int startIndex = 0;
+        // Output only. End index in the given Part, measured in bytes. Offset from the start of the Part, exclusive, starting at zero.
+        int endIndex = 0;
+        // Output only. The text corresponding to the segment from the response.
+        std::string text;
+
+        [[nodiscard]] static Segment fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+    
+    struct GroundingSupport : IJsonSerializable<GroundingSupport>
+    {
+        // A list of indices (into 'grounding_chunk') specifying the citations associated with the claim.
+        // For instance [1,3,4] means that grounding_chunk[1], grounding_chunk[3], grounding_chunk[4] are the retrieved content attributed to the claim.
+        std::vector<int> groundingChunkIndices;
+        // Confidence score of the support references. Ranges from 0 to 1. 1 is the most confident. This list must have the same size as the groundingChunkIndices.
+        std::vector<float> confidenceScores;
+        // Segment of the content this support belongs to.
+        Segment segment;
+        
+        [[nodiscard]] static GroundingSupport fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    // Encapsulates a snippet of a user review that answers a question about the features of a specific place in Google Maps.
+    struct ReviewSnippet : IJsonSerializable<ReviewSnippet>
+    {
+        // The ID of the review snippet.
+        std::string reviewId;
+        // A link that corresponds to the user review on Google Maps.
+        std::string googleMapsUri;
+        // Title of the review.
+        std::string title;
+        
+        [[nodiscard]] static ReviewSnippet fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    // Collection of sources that provide answers about the features of a given place in Google Maps.
+    // Each PlaceAnswerSources message corresponds to a specific place in Google Maps. The Google Maps tool used
+    // these sources in order to answer questions about features of the place (e.g: "does Bar Foo have WI-FI" or
+    // "is Foo Bar wheelchair accessible?"). Currently, we only support review snippets as sources.
+    struct PlaceAnswerSources : IJsonSerializable<PlaceAnswerSources>
+    {
+        // Snippets of reviews that are used to generate answers about the features of a given place in Google Maps.
+        std::vector<ReviewSnippet> reviewSnippets;
+        
+        [[nodiscard]] static PlaceAnswerSources fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    // A grounding chunk from Google Maps. A Maps chunk corresponds to a single place.
+    struct Maps : IJsonSerializable<Maps>
+    {
+        // URI reference of the place.
+        std::string uri;
+        // Title of the place.
+        std::string title;
+        // Text description of the place answer.
+        std::string text;
+        // This ID of the place, in places/{placeId} format. A user can use this ID to look up that place.
+        std::string placeId;
+        // Sources that provide answers about the features of a given place in Google Maps.
+        PlaceAnswerSources placeAnswerSources;
+
+        [[nodiscard]] static Maps fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    // Chunk from context retrieved by the file search tool.
+    struct RetrievedContext : IJsonSerializable<RetrievedContext>
+    {
+        // Optional. URI reference of the semantic retrieval document.
+        std::optional<std::string> uri;
+        // Optional. Title of the document.
+        std::optional<std::string> title;
+        // Optional. Text of the chunk.
+        std::optional<std::string> text;
+        // Optional. Name of the FileSearchStore containing the document. Example: fileSearchStores/123
+        std::optional<ResourceName> fileSearchStore;
+
+        [[nodiscard]] static RetrievedContext fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    // Chunk from the web.
+    struct Web : IJsonSerializable<Web>
+    {
+        // URI reference of the chunk.
+        std::string uri;
+        // Title of the chunk.
+        std::string title;
+        
+        [[nodiscard]] static Web fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    struct GroundingChunk : IJsonSerializable<GroundingChunk>
+    {
+        using ChunkType = std::variant<
+            std::monostate,
+            Web, // Grounding chunk from the web.
+            RetrievedContext, // Optional. Grounding chunk from context retrieved by the file search tool.
+            Maps // Optional. Grounding chunk from Google Maps.
+        >;
+
+        ChunkType chunk;
+
+        [[nodiscard]] static GroundingChunk fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    // Google search entry point.
+    struct SearchEntryPoint : IJsonSerializable<SearchEntryPoint>
+    {
+        // Optional. Web content snippet that can be embedded in a web page or an app webview.
+        std::optional<std::string> renderedContent;
+        // Optional. Base64 encoded JSON representing array of <search term, search url> tuple. A base64-encoded string.
+        std::optional<Support::Base64String> sdkBlob;
+        
+        [[nodiscard]] static SearchEntryPoint fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    // Metadata returned to client when grounding is enabled.
+    struct GroundingMetadata : IJsonSerializable<GroundingMetadata>
+    {
+        // List of supporting references retrieved from specified grounding source.
+        std::vector<GroundingChunk> groundingChunks;
+        // List of grounding support.v
+        std::vector<GroundingSupport> groundSupports;
+        // Web search queries for the following-up web search.
+        std::vector<std::string> webSearchQueries;
+        // Optional. Google search entry for the following-up web searches.
+        std::optional<SearchEntryPoint> searchEntryPoint;
+        // Metadata related to retrieval in the grounding flow.
+        RetrievalMetadata retrievalMetadata;
+        // Optional. Resource name of the Google Maps widget context token that can be used with the PlacesContextElement
+        // widget in order to render contextual data. Only populated in the case that grounding with Google Maps is enabled.
+        std::optional<std::string> googleMapsWidgetContextToken;
+        
+        [[nodiscard]] static GroundingMetadata fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    // Identifier for a Chunk retrieved via Semantic Retriever specified in the GenerateAnswerRequest using SemanticRetrieverConfig.
+    struct SemanticRetrieverChunk : IJsonSerializable<SemanticRetrieverChunk>
+    {
+        // Output only. Name of the source matching the request's SemanticRetrieverConfig.source. Example: corpora/123 or corpora/123/documents/abc
+        ResourceName source;
+        // Output only. Name of the Chunk containing the attributed text. Example: corpora/123/documents/abc/chunks/xyz
+        ResourceName chunk;
+
+        [[nodiscard]] static SemanticRetrieverChunk fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    // Identifier for a part within a GroundingPassage.
+    struct GroundingPassageId : IJsonSerializable<GroundingPassageId>
+    {
+        // Output only. ID of the passage matching the GenerateAnswerRequest's GroundingPassage.id.
+        std::string passageId;
+        // Output only. Index of the part within the GenerateAnswerRequest's GroundingPassage.content.
+        int partIndex = 0;
+
+        [[nodiscard]] static GroundingPassageId fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    // Identifier for the source contributing to this attribution.
+    struct AttributionSourceId : IJsonSerializable<AttributionSourceId>
+    {
+        using SourceType = std::variant<
+            std::monostate,
+            GroundingPassageId, // Identifier for an inline passage.
+            SemanticRetrieverChunk // Identifier for a Chunk fetched via Semantic Retriever.
+        >;
+
+        SourceType source;
+
+        [[nodiscard]] static AttributionSourceId fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    // Attribution for a source that contributed to an answer.
+    struct GroundingAttribution : IJsonSerializable<GroundingAttribution>
+    {
+        // Output only. Identifier for the source contributing to this attribution.
+        AttributionSourceId sourceId;
+        // Grounding source content that makes up this attribution.
+        Content content;
+
+        [[nodiscard]] static GroundingAttribution fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    // A response candidate generated from the model.
+    struct ResponseCandidate : IJsonSerializable<ResponseCandidate>
+    {
+        // Output only. Generated content returned from the model.
+        Content content;
+        // Optional. Output only. The reason why the model stopped generating tokens.
+        // If empty, the model has not stopped generating tokens.
+        std::optional<FinishReason> finishReason;
+        // List of ratings for the safety of a response candidate. There is at most one rating per category.
+        std::vector<SafetyRating> safetyRatings;
+        // Output only. Citation information for model-generated candidate. This field may be populated with recitation information
+        // for any text included in the content. These are passages that are "recited" from copyrighted material in the foundational LLM's training data.
+        CitationMetadata citationMetadata;
+        // Output only. Token count for this candidate.
+        int tokenCount = 0;
+        // Output only. Attribution information for sources that contributed to a grounded answer. This field is populated for GenerateAnswer calls.
+        std::vector<GroundingAttribution> groundingAttributions;
+        // Output only. Grounding metadata for the candidate. This field is populated for GenerateContent calls.
+        GroundingMetadata groundingMetadata;
+        // Output only. Average log probability score of the candidate.
+        float avgLogprobs = 0.0f;
+        // Output only. Log-likelihood scores for the response tokens and top tokens
+        LogprobsResult logprobsResult;
+        // Output only. Metadata related to url context retrieval tool.
+        UrlContextMetadata urlContextMetadata;
+        // Output only. Index of the candidate in the list of response candidates.
+        int index = 0;
+        // Optional. Output only. Details the reason why the model stopped generating tokens. This is populated only when finishReason is set.
+        std::optional<std::string> finishMessage;
+
+        [[nodiscard]] static ResponseCandidate fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    // Metadata on the generation request's token usage.
+    struct UsageMetadata : IJsonSerializable<UsageMetadata>
+    {
+        // Number of tokens in the prompt. When cachedContent is set, this is still the total
+        // effective prompt size meaning this includes the number of tokens in the cached content.
+        int promptTokenCount = 0;
+        // Number of tokens in the cached part of the prompt (the cached content)
+        int cachedContentTokenCount = 0;
+        // Total number of tokens across all the generated response candidates.
+        int candidatesTokenCount = 0;
+        // Output only. Number of tokens present in tool-use prompt(s).
+        int toolUsePromptTokenCount = 0;
+        // Output only. Number of tokens of thoughts for thinking models.
+        int thoughtsTokenCount = 0;
+        // Total token count for the generation request (prompt + response candidates).
+        int totalTokenCount = 0;
+        // Output only. List of modalities that were processed in the request input.
+        std::vector<ModalityTokenCount> promptTokensDetails;
+        // Output only. List of modalities of the cached content in the request input.
+        std::vector<ModalityTokenCount> cacheTokensDetails;
+        // Output only. List of modalities that were returned in the response.
+        std::vector<ModalityTokenCount> candidatesTokensDetails;
+        // Output only. List of modalities that were processed for tool-use request inputs.
+        std::vector<ModalityTokenCount> toolUsePromptTokensDetails;
+
+        [[nodiscard]] static UsageMetadata fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    // A set of the feedback metadata the prompt specified in GenerateContentRequest.content.
+    struct PromptFeedback : IJsonSerializable<PromptFeedback>
+    {
+        // Optional. If set, the prompt was blocked and no candidates are returned. Rephrase the prompt.
+        std::optional<BlockReason> blockReason;
+        // Ratings for safety of the prompt. There is at most one rating per category.
+        std::vector<SafetyRating> safetyRatings;
+        
+        [[nodiscard]] static PromptFeedback fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    // Response from the model supporting multiple candidate responses. Safety ratings and content filtering are reported for
+    // both prompt in GenerateContentResponse.promptFeedback and for each candidate in finishReason and in safetyRatings.
+    // The API: - Returns either all requested candidates or none of them - Returns no candidates at all only if there was
+    // something wrong with the prompt (check promptFeedback) - Reports feedback on each candidate in finishReason and safetyRatings.
+    struct GenerateContentResponse : IJsonSerializable<GenerateContentResponse>
+    {
+        // Candidate responses from the model.
+        std::vector<ResponseCandidate> candidates;
+        // Returns the prompt's feedback related to the content filters.
+        PromptFeedback promptFeedback;
+        // Output only. Metadata on the generation requests' token usage.
+        UsageMetadata usageMetadata;
+        // Output only. The model version used to generate the response.
+        std::string modelVersion;
+        // Output only. responseId is used to identify each response.
+        std::string responseId;
+        
+        [[nodiscard]] static GenerateContentResponse fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+    
+    struct GenerateContentRequestBody : IJsonSerializable<GenerateContentRequestBody>
+    {
+        // Required. The content of the current conversation with the model. For single-turn queries, this is a single
+        // instance. For multi-turn queries like chat, this is a repeated field that contains the conversation history and the latest request.
+        std::vector<Content> contents;
+        // Optional. A list of Tools the Model may use to generate the next response. A Tool is a piece of code that enables the
+        // system to interact with external systems to perform an action, or set of actions, outside of knowledge and scope of the Model.
+        std::optional<std::vector<Tool>> tools;
+        // Optional. Tool configuration for any Tool specified in the request.
+        std::optional<ToolConfig> toolConfig;
+        // Optional. A list of unique SafetySetting instances for blocking unsafe content. This will be enforced on the GenerateContentRequest.contents
+        // and GenerateContentResponse.candidates. There should not be more than one setting for each SafetyCategory type. The API will block any contents
+        // and responses that fail to meet the thresholds set by these settings. This list overrides the default settings for each SafetyCategory specified
+        // in the safetySettings. If there is no SafetySetting for a given SafetyCategory provided in the list, the API will use the default safety setting for that category.
+        std::optional<std::vector<SafetySetting>> safetySettings;
+        // Optional. Developer set system instruction(s). Currently, text only.
+        std::optional<Content> systemInstruction;
+        // Optional. Configuration options for model generation and outputs.
+        std::optional<GenerationConfig> generationConfig;
+        // Optional. The name of the content cached to use as context to serve the prediction. Format: cachedContents/{cachedContent}
+        std::optional<ResourceName> cachedContent;
+
+        [[nodiscard]] static GenerateContentRequestBody fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const override;
     };
 }

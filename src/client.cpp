@@ -98,7 +98,7 @@ namespace GeminiCPP
             { Content::User().text(prompt) }
         );
         
-        Url url(ResourceName::Model(model_id), GM_GENERATE_CONTENT);
+        Url url(ResourceName::Model(std::string(model_id)), GM_GENERATE_CONTENT);
 
         return submitRequest(url, payload);
     }
@@ -114,7 +114,7 @@ namespace GeminiCPP
             { Content::User().text(prompt) }
         );
         
-        Url url(ResourceName::Model(model_id), GM_STREAM_GENERATE_CONTENT);
+        Url url(ResourceName::Model(std::string(model_id)), GM_STREAM_GENERATE_CONTENT);
         url.addQuery("alt", "sse");
         
         return submitStreamRequest(url, payload, callback);
@@ -263,7 +263,7 @@ namespace GeminiCPP
 
     Result<ModelInfo> Client::getModelInfo(std::string_view model_id)
     {
-        Url url{ ResourceName::Model(model_id) };
+        Url url{ ResourceName::Model(std::string(model_id)) };
         
         cpr::Response r = cpr::Get(
             cpr::Url{url},
@@ -389,7 +389,7 @@ namespace GeminiCPP
     Result<EmbedContentResponse> Client::embedContent(std::string_view model, const std::string& text,
         const EmbedRequestBody& config)
     {
-        ResourceName modelName = ResourceName::Model(model);
+        ResourceName modelName = ResourceName::Model(std::string(model));
         Url url(modelName, GM_EMBED_CONTENT);
 
         nlohmann::json payload = Internal::PayloadBuilder::buildEmbedContent(
@@ -409,7 +409,7 @@ namespace GeminiCPP
     Result<BatchEmbedContentsResponse> Client::batchEmbedContents(std::string_view model,
         const std::vector<std::string>& texts, const EmbedRequestBody& config)
     {
-        ResourceName modelName = ResourceName::Model(model);
+        ResourceName modelName = ResourceName::Model(std::string(model));
         Url url(modelName, GM_BATCH_EMBED_CONTENTS);
         
         nlohmann::json payload = Internal::PayloadBuilder::buildBatchEmbedContent(texts, modelName, config);
@@ -426,7 +426,7 @@ namespace GeminiCPP
     Result<CountTokensResponseBody> Client::countTokens(std::string_view model, const std::vector<Content>& contents,
         const std::string& systemInstruction, const std::vector<Tool>& tools)
     {
-        Url url(ResourceName::Model(model), GM_COUNT_TOKENS);
+        Url url(ResourceName::Model(std::string(model)), GM_COUNT_TOKENS);
 
         nlohmann::json payload = Internal::PayloadBuilder::build(
             contents, 
@@ -1017,7 +1017,7 @@ namespace GeminiCPP
             toolConfig
         );
 
-        Url url(ResourceName::Model(ModelHelper::stringRepresentation(model)), GM_GENERATE_CONTENT);
+        Url url(ResourceName::Model(std::string(ModelHelper::stringRepresentation(model))), GM_GENERATE_CONTENT);
 
         return submitRequest(url, payload);
     }
@@ -1039,7 +1039,7 @@ namespace GeminiCPP
             toolConfig
         );
 
-        Url url(ResourceName::Model(ModelHelper::stringRepresentation(model)), GM_STREAM_GENERATE_CONTENT);
+        Url url(ResourceName::Model(std::string(ModelHelper::stringRepresentation(model))), GM_STREAM_GENERATE_CONTENT);
         url.addQuery("alt", "sse");
         
         return submitStreamRequest(url, payload, callback);
