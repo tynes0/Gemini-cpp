@@ -1009,46 +1009,6 @@ namespace GeminiCPP
         return j;
     }
 
-    GenerateContentResponse GenerateContentResponse::fromJson(const nlohmann::json& j)
-    {
-        GenerateContentResponse result{};
-
-        if (j.contains("promptFeedback"))
-            result.promptFeedback = PromptFeedback::fromJson(j["promptFeedback"]);
-
-        if (j.contains("usageMetadata"))
-            result.usageMetadata = UsageMetadata::fromJson(j["usageMetadata"]);
-
-        result.modelVersion = j.value("modelVersion", "");
-        result.responseId = j.value("responseId", "");
-
-        if (j.contains("candidates"))
-        {
-            result.candidates.reserve(j["candidates"].size());
-            for (const auto& candidate : j["candidates"])
-                result.candidates.push_back(ResponseCandidate::fromJson(candidate));
-        }
-
-        return result;
-    }
-
-    nlohmann::json GenerateContentResponse::toJson() const
-    {
-        nlohmann::json j = nlohmann::json::object();
-
-        j["promptFeedback"] = promptFeedback.toJson();
-        j["usageMetadata"] = usageMetadata.toJson();
-        j["modelVersion"] = modelVersion;
-        j["responseId"] = responseId;
-
-        j["candidates"] = nlohmann::json::array();
-
-        for (const auto& candidate : candidates)
-            j["candidates"].push_back(candidate.toJson());
-        
-        return j;
-    }
-
     GenerateContentRequestBody GenerateContentRequestBody::fromJson(const nlohmann::json& j)
     {
         GenerateContentRequestBody result{};
@@ -1218,6 +1178,46 @@ namespace GeminiCPP
             j["cachedContent"] = cachedContent->str();
         }
 
+        return j;
+    }
+
+    GenerateContentResponse GenerateContentResponse::fromJson(const nlohmann::json& j)
+    {
+        GenerateContentResponse result{};
+
+        if (j.contains("promptFeedback"))
+            result.promptFeedback = PromptFeedback::fromJson(j["promptFeedback"]);
+
+        if (j.contains("usageMetadata"))
+            result.usageMetadata = UsageMetadata::fromJson(j["usageMetadata"]);
+
+        result.modelVersion = j.value("modelVersion", "");
+        result.responseId = j.value("responseId", "");
+
+        if (j.contains("candidates"))
+        {
+            result.candidates.reserve(j["candidates"].size());
+            for (const auto& candidate : j["candidates"])
+                result.candidates.push_back(ResponseCandidate::fromJson(candidate));
+        }
+
+        return result;
+    }
+
+    nlohmann::json GenerateContentResponse::toJson() const
+    {
+        nlohmann::json j = nlohmann::json::object();
+
+        j["promptFeedback"] = promptFeedback.toJson();
+        j["usageMetadata"] = usageMetadata.toJson();
+        j["modelVersion"] = modelVersion;
+        j["responseId"] = responseId;
+
+        j["candidates"] = nlohmann::json::array();
+
+        for (const auto& candidate : candidates)
+            j["candidates"].push_back(candidate.toJson());
+        
         return j;
     }
 }

@@ -11,14 +11,14 @@
 
 namespace GeminiCPP
 {
-    struct PredictLongRunningRequestBody : IJsonSerializable<PredictLongRunningRequestBody>
+    struct PredictRequestBody : IJsonSerializable<PredictRequestBody>
     {
         // Required. The instances that are the input to the prediction call.
         std::vector<nlohmann::json> instances;
         // Optional. The parameters that govern the prediction call.
         std::optional<nlohmann::json> parameters;
 
-        [[nodiscard]] static PredictLongRunningRequestBody fromJson(const nlohmann::json& j);
+        [[nodiscard]] static PredictRequestBody fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const override;
     };
     
@@ -30,15 +30,15 @@ namespace GeminiCPP
         [[nodiscard]] static PredictResponseBody fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const override;
     };
-    
-    struct PredictRequestBody : IJsonSerializable<PredictRequestBody>
+
+    struct PredictLongRunningRequestBody : IJsonSerializable<PredictLongRunningRequestBody>
     {
         // Required. The instances that are the input to the prediction call.
         std::vector<nlohmann::json> instances;
         // Optional. The parameters that govern the prediction call.
         std::optional<nlohmann::json> parameters;
 
-        [[nodiscard]] static PredictRequestBody fromJson(const nlohmann::json& j);
+        [[nodiscard]] static PredictLongRunningRequestBody fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const override;
     };
 

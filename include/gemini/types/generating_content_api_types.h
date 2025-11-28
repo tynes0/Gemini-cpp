@@ -702,27 +702,6 @@ namespace GeminiCPP
         [[nodiscard]] static PromptFeedback fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const override;
     };
-
-    // Response from the model supporting multiple candidate responses. Safety ratings and content filtering are reported for
-    // both prompt in GenerateContentResponse.promptFeedback and for each candidate in finishReason and in safetyRatings.
-    // The API: - Returns either all requested candidates or none of them - Returns no candidates at all only if there was
-    // something wrong with the prompt (check promptFeedback) - Reports feedback on each candidate in finishReason and safetyRatings.
-    struct GenerateContentResponse : IJsonSerializable<GenerateContentResponse>
-    {
-        // Candidate responses from the model.
-        std::vector<ResponseCandidate> candidates;
-        // Returns the prompt's feedback related to the content filters.
-        PromptFeedback promptFeedback;
-        // Output only. Metadata on the generation requests' token usage.
-        UsageMetadata usageMetadata;
-        // Output only. The model version used to generate the response.
-        std::string modelVersion;
-        // Output only. responseId is used to identify each response.
-        std::string responseId;
-        
-        [[nodiscard]] static GenerateContentResponse fromJson(const nlohmann::json& j);
-        [[nodiscard]] nlohmann::json toJson() const override;
-    };
     
     struct GenerateContentRequestBody : IJsonSerializable<GenerateContentRequestBody>
     {
@@ -773,6 +752,27 @@ namespace GeminiCPP
         std::optional<ResourceName> cachedContent;
 
         [[nodiscard]] static StreamGenerateContentRequestBody fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    // Response from the model supporting multiple candidate responses. Safety ratings and content filtering are reported for
+    // both prompt in GenerateContentResponse.promptFeedback and for each candidate in finishReason and in safetyRatings.
+    // The API: - Returns either all requested candidates or none of them - Returns no candidates at all only if there was
+    // something wrong with the prompt (check promptFeedback) - Reports feedback on each candidate in finishReason and safetyRatings.
+    struct GenerateContentResponse : IJsonSerializable<GenerateContentResponse>
+    {
+        // Candidate responses from the model.
+        std::vector<ResponseCandidate> candidates;
+        // Returns the prompt's feedback related to the content filters.
+        PromptFeedback promptFeedback;
+        // Output only. Metadata on the generation requests' token usage.
+        UsageMetadata usageMetadata;
+        // Output only. The model version used to generate the response.
+        std::string modelVersion;
+        // Output only. responseId is used to identify each response.
+        std::string responseId;
+        
+        [[nodiscard]] static GenerateContentResponse fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const override;
     };
 }
