@@ -84,7 +84,7 @@ namespace GeminiCPP
     public:
         [[nodiscard]] static constexpr bool isSuccess(int code)
         {
-            return code >= 200 && code < 300;
+            return code == 200;
         }
         
         [[nodiscard]] static constexpr bool isSuccess(HttpMappedStatusCode code)
