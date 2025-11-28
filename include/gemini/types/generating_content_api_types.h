@@ -15,13 +15,13 @@
 
 namespace GeminiCPP
 {
-FrenumClassInNamespace(GeminiCPP, HarmBlockThreshold, uint8_t,
-                           HARM_BLOCK_THRESHOLD_UNSPECIFIED, // Unspecified.
-                           BLOCK_LOW_AND_ABOVE, // Block low risk and above (Very Strict).
-                           BLOCK_MEDIUM_AND_ABOVE, // Block medium risk and above (Default).
-                           BLOCK_ONLY_HIGH, // Only block high risk.
-                           BLOCK_NONE, // Don't block anything (Risky).
-                           OFF // Turn off the filter completely.
+    FrenumClassInNamespace(GeminiCPP, HarmBlockThreshold, uint8_t,
+         HARM_BLOCK_THRESHOLD_UNSPECIFIED, // Unspecified.
+         BLOCK_LOW_AND_ABOVE, // Block low risk and above (Very Strict).
+         BLOCK_MEDIUM_AND_ABOVE, // Block medium risk and above (Default).
+         BLOCK_ONLY_HIGH, // Only block high risk.
+         BLOCK_NONE, // Don't block anything (Risky).
+         OFF // Turn off the filter completely.
     )
     FrenumClassInNamespace(GeminiCPP, HarmProbability, uint8_t,
         HARM_PROBABILITY_UNSPECIFIED,   // Probability is unspecified.
