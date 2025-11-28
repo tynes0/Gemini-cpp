@@ -134,7 +134,7 @@ namespace GeminiCPP
                 cpr::VerifySsl(false)
             );
 
-            if (HttpStatusHelper::isSuccess(r.status_code)) {
+            if (HttpMappedStatusCodeHelper::isSuccess(r.status_code)) {
                 return true;
             }
 
@@ -181,7 +181,7 @@ namespace GeminiCPP
             cpr::VerifySsl(false)
         );
 
-        if (HttpStatusHelper::isSuccess(r.status_code))
+        if (HttpMappedStatusCodeHelper::isSuccess(r.status_code))
             return true;
             
         GEMINI_ERROR("RemoteStorage Save Error [{}]: {}", r.status_code, Utils::parseErrorMessage(r.text));
@@ -202,7 +202,7 @@ namespace GeminiCPP
             cpr::VerifySsl(false)
         );
 
-        if (HttpStatusHelper::isSuccess(r.status_code))
+        if (HttpMappedStatusCodeHelper::isSuccess(r.status_code))
         {
             try
             {
@@ -236,7 +236,7 @@ namespace GeminiCPP
         );
 
         std::vector<std::string> sessions;
-        if (HttpStatusHelper::isSuccess(r.status_code))
+        if (HttpMappedStatusCodeHelper::isSuccess(r.status_code))
         {
             try
             {

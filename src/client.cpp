@@ -29,7 +29,7 @@ namespace GeminiCPP
             cpr::VerifySsl(false)
         );
 
-            if (!HttpStatusHelper::isSuccess(r.status_code))
+            if (!HttpMappedStatusCodeHelper::isSuccess(r.status_code))
             {
                 std::string errorMsg = Utils::parseErrorMessage(r.text);
                 GEMINI_ERROR("Response Error [{}]: {}", r.status_code, errorMsg);
@@ -161,7 +161,7 @@ namespace GeminiCPP
             cpr::VerifySsl(false)
         );
 
-        if (!HttpStatusHelper::isSuccess(r.status_code))
+        if (!HttpMappedStatusCodeHelper::isSuccess(r.status_code))
         {
             std::string err = Utils::parseErrorMessage(r.text);
             GEMINI_ERROR("Upload Failed [{}]: {}", r.status_code, err);
@@ -192,7 +192,7 @@ namespace GeminiCPP
             cpr::VerifySsl(false)
         );
 
-        if (!HttpStatusHelper::isSuccess(r.status_code))
+        if (!HttpMappedStatusCodeHelper::isSuccess(r.status_code))
         {
             return Result<File>::Failure(Utils::parseErrorMessage(r.text), r.status_code);
         }
@@ -217,7 +217,7 @@ namespace GeminiCPP
             cpr::VerifySsl(false)
         );
 
-        if (HttpStatusHelper::isSuccess(r.status_code))
+        if (HttpMappedStatusCodeHelper::isSuccess(r.status_code))
         {
             return Result<bool>::Success(true);
         }
@@ -241,7 +241,7 @@ namespace GeminiCPP
             cpr::VerifySsl(false)
         );
 
-        if (!HttpStatusHelper::isSuccess(r.status_code))
+        if (!HttpMappedStatusCodeHelper::isSuccess(r.status_code))
         {
             return Result<ListFilesResponse>::Failure(Utils::parseErrorMessage(r.text), r.status_code);
         }
@@ -273,7 +273,7 @@ namespace GeminiCPP
             cpr::VerifySsl(false)
         );
 
-        if (!HttpStatusHelper::isSuccess(r.status_code))
+        if (!HttpMappedStatusCodeHelper::isSuccess(r.status_code))
         {
             std::string errorMsg = Utils::parseErrorMessage(r.text);
             GEMINI_ERROR("Model Info Error [{}]: {}", r.status_code, errorMsg);
@@ -303,7 +303,7 @@ namespace GeminiCPP
             cpr::VerifySsl(false)
         );
 
-        if (!HttpStatusHelper::isSuccess(r.status_code))
+        if (!HttpMappedStatusCodeHelper::isSuccess(r.status_code))
         {
             std::string errorMsg = Utils::parseErrorMessage(r.text);
             GEMINI_ERROR("ListModels Error [{}]: {}", r.status_code, errorMsg);
@@ -346,7 +346,7 @@ namespace GeminiCPP
 
         Support::ApiValidationResult result;
         result.statusCode = static_cast<HttpMappedStatusCode>(r.status_code);
-        if (HttpStatusHelper::isSuccess(r.status_code))
+        if (HttpMappedStatusCodeHelper::isSuccess(r.status_code))
         {
             result.isValid = true;
             result.message = "API Key is valid. Connection successful.";
@@ -469,7 +469,7 @@ namespace GeminiCPP
             cpr::VerifySsl(false)
         );
 
-        if (!HttpStatusHelper::isSuccess(r.status_code))
+        if (!HttpMappedStatusCodeHelper::isSuccess(r.status_code))
         {
             std::string err = Utils::parseErrorMessage(r.text);
             GEMINI_ERROR("CreateCache Error [{}]: {}", r.status_code, err);
@@ -496,7 +496,7 @@ namespace GeminiCPP
             cpr::VerifySsl(false)
         );
 
-        if (!HttpStatusHelper::isSuccess(r.status_code))
+        if (!HttpMappedStatusCodeHelper::isSuccess(r.status_code))
         {
             return Result<CachedContent>::Failure(Utils::parseErrorMessage(r.text), r.status_code);
         }
@@ -525,7 +525,7 @@ namespace GeminiCPP
             cpr::VerifySsl(false)
         );
 
-        if (!HttpStatusHelper::isSuccess(r.status_code))
+        if (!HttpMappedStatusCodeHelper::isSuccess(r.status_code))
         {
             return Result<ListCachedContentsResponse>::Failure(Utils::parseErrorMessage(r.text), r.status_code);
         }
@@ -548,7 +548,7 @@ namespace GeminiCPP
             cpr::VerifySsl(false)
         );
 
-        if (HttpStatusHelper::isSuccess(r.status_code))
+        if (HttpMappedStatusCodeHelper::isSuccess(r.status_code))
             return Result<bool>::Success(true);
         
         return Result<bool>::Failure(Utils::parseErrorMessage(r.text), r.status_code);
@@ -569,7 +569,7 @@ namespace GeminiCPP
             cpr::VerifySsl(false)
         );
 
-        if (!HttpStatusHelper::isSuccess(r.status_code))
+        if (!HttpMappedStatusCodeHelper::isSuccess(r.status_code))
         {
             return Result<CachedContent>::Failure(Utils::parseErrorMessage(r.text), r.status_code);
         }
@@ -786,7 +786,7 @@ namespace GeminiCPP
                 cpr::Body{payload.dump()}
             );
 
-            if (HttpStatusHelper::isSuccess(r.status_code))
+            if (HttpMappedStatusCodeHelper::isSuccess(r.status_code))
             {
                 try
                 {
@@ -855,7 +855,7 @@ namespace GeminiCPP
                 }
             }
             
-            if (HttpStatusHelper::isRetryable(r.status_code) && attempt < retryConfig_.maxRetries)
+            if (HttpMappedStatusCodeHelper::isRetryable(r.status_code) && attempt < retryConfig_.maxRetries)
             {
                 int waitMs = calculateWaitTime(retryConfig_, attempt, r);
                 
@@ -978,13 +978,13 @@ namespace GeminiCPP
                 cpr::VerifySsl(false)
             );
 
-            if (HttpStatusHelper::isSuccess(r.status_code))
+            if (HttpMappedStatusCodeHelper::isSuccess(r.status_code))
             {
                 Content finalContent = Content::Model().text(fullTextAccumulator);
                 return GenerationResult::Success(finalContent, r.status_code, inputTokens, outputTokens);
             }
 
-            if (HttpStatusHelper::isRetryable(r.status_code) && attempt < retryConfig_.maxRetries && !dataReceived)
+            if (HttpMappedStatusCodeHelper::isRetryable(r.status_code) && attempt < retryConfig_.maxRetries && !dataReceived)
             {
                 int waitMs = calculateWaitTime(retryConfig_, attempt, r);
                 GEMINI_WARN("Stream API Error [{}]. Retrying... ({}/{})", r.status_code, attempt + 1, retryConfig_.maxRetries);

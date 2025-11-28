@@ -79,7 +79,7 @@ namespace GeminiCPP
         DATA_LOSS = 500
     );
 
-    class HttpStatusHelper
+    class HttpMappedStatusCodeHelper
     {
     public:
         [[nodiscard]] static constexpr bool isSuccess(int code)
