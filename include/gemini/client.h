@@ -18,6 +18,7 @@
 #include "types/embeddings_api_types.h"
 #include "types/generating_content_api_types.h"
 #include "types/files_api_types.h"
+#include "types/models_api_types.h"
 #include "types/tokens_api_types.h"
 
 namespace GeminiCPP

@@ -6,8 +6,6 @@
 #include <cstdint>
 #include <string_view>
 #include "frenum.h"
-#include "types_base.h"
-#include "url.h"
 #include "nlohmann/json.hpp"
 
 namespace GeminiCPP
