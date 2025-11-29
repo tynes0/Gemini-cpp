@@ -40,8 +40,9 @@ namespace GeminiCPP::Support
     };
     
     // Supported aspect ratios: 1:1, 2:3, 3:2, 3:4, 4:3, 9:16, 16:9, 21:9.
-    struct AspectRatio
+    class AspectRatio
     {
+    public:
         AspectRatio() = default;
         AspectRatio(int w_, int h_);
         AspectRatio(const std::string& s);
@@ -59,8 +60,9 @@ namespace GeminiCPP::Support
     };
 
     // Supported values are 1K, 2K, 4K. If not specified, default value 1K.
-    struct ImageSize
+    class ImageSize
     {
+    public:
         enum class Value : uint8_t
         {
             K1 = 1,
@@ -89,8 +91,9 @@ namespace GeminiCPP::Support
      * es-ES, fr-CA, id-ID, it-IT, ja-JP, tr-TR, vi-VN, bn-IN, gu-IN, kn-IN,
      * ml-IN, mr-IN, ta-IN, te-IN, nl-NL, ko-KR, cmn-CN, pl-PL, ru-RU, th-TH.
      */
-    struct LanguageCode
+    class LanguageCode
     {
+    public:
         static constexpr const char* Default = "en-US";
 
         LanguageCode() = default;
@@ -105,8 +108,9 @@ namespace GeminiCPP::Support
         std::string value = Default;
     };
     
-    struct Base64String
+    class Base64String
     {
+    public:
         Base64String() = default;
         Base64String(const Base64String& other) = default;
         Base64String& operator=(const Base64String& other) = default;
@@ -136,8 +140,9 @@ namespace GeminiCPP::Support
     // Uses RFC 3339, where generated output will always be Z-normalized and use 0, 3, 6 or 9 fractional digits.
     // Offsets other than "Z" are also accepted.
     // Examples: "2014-10-02T15:01:23Z", "2014-10-02T15:01:23.045123456Z" or "2014-10-02T15:01:23+05:30".
-    struct Timestamp
+    class Timestamp
     {
+    public:
         Timestamp() = default;
         explicit Timestamp(const std::string& s);
         Timestamp& operator=(const std::string& s);
