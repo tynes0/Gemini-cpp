@@ -7,7 +7,7 @@
 #include <filesystem>
 
 #include <nlohmann/json.hpp>
-#include "http_status.h"
+#include "http_mapped_status_code.h"
 #include "types/generating_content_api_types.h"
 
 namespace GeminiCPP

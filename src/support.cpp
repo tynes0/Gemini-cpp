@@ -302,6 +302,11 @@ namespace GeminiCPP::Support
         *this = fromString(s);
     }
 
+    Timestamp& Timestamp::operator=(const std::string& s)
+    {
+        return *this = fromString(s);
+    }
+
     Timestamp Timestamp::now(int digits_for_output)
     {
         using namespace std::chrono;

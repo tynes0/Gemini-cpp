@@ -5,6 +5,11 @@
 
 namespace GeminiCPP
 {
+    Duration& Duration::operator=(const std::string& str)
+    {
+        return *this = fromString(str);
+    }
+
     Duration Duration::fromSeconds(int64_t s)
     {
         return {
@@ -94,10 +99,10 @@ namespace GeminiCPP
 
     nlohmann::json Duration::toJson() const
     {
-        return toString();
+        return str();
     }
     
-    std::string Duration::toString() const
+    std::string Duration::str() const
     {
         std::ostringstream oss;
         oss << seconds;

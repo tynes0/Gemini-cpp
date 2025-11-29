@@ -7,7 +7,7 @@
 
 #include "gemini/logger.h"
 #include "gemini/model.h"
-#include "gemini/http_status.h"
+#include "gemini/http_mapped_status_code.h"
 #include "gemini/utils.h"
 #include "internal/payload_builder.h"
 

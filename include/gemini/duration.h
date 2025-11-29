@@ -15,6 +15,8 @@ namespace GeminiCPP
         int64_t seconds = 0;
         int32_t nanos = 0; // -999,999,999 i +999,999,999
 
+        Duration& operator=(const std::string& str);
+
         [[nodiscard]] static Duration fromSeconds(int64_t s);
         [[nodiscard]] static Duration fromMillis(int64_t ms);
         [[nodiscard]] static Duration fromMinutes(int64_t m);
@@ -23,7 +25,7 @@ namespace GeminiCPP
         [[nodiscard]] static Duration fromJson(const nlohmann::json& j);
         
         [[nodiscard]] nlohmann::json toJson() const;
-        [[nodiscard]] std::string toString() const;
+        [[nodiscard]] std::string str() const;
     };
 }
 

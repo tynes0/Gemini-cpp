@@ -11,7 +11,7 @@
 #include <optional>
 #include <array>
 
-#include "http_status.h"
+#include "http_mapped_status_code.h"
 
 namespace GeminiCPP
 {
@@ -140,6 +140,7 @@ namespace GeminiCPP::Support
     {
         Timestamp() = default;
         explicit Timestamp(const std::string& s);
+        Timestamp& operator=(const std::string& s);
     
         [[nodiscard]] static Timestamp now(int digits_for_output = 3);
         [[nodiscard]] static Timestamp fromString(const std::string& s);

@@ -36,7 +36,7 @@ namespace GeminiCPP
     struct Status : IJsonSerializable<Status>
     {
         // The status code, which should be an enum value of google.rpc.Code.
-        int code = 0;
+        HttpMappedStatusCode code = HttpMappedStatusCode::STATUS_CODE_UNSPECIFIED;
         // A developer-facing error message, which should be in English. Any user-facing error message should be
         // localized and sent in the Status.details field, or localized by the client.
         std::string message;

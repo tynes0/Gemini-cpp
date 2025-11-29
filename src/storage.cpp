@@ -3,7 +3,7 @@
 #include <fstream>
 #include <cpr/cpr.h>
 #include "gemini/logger.h"
-#include "gemini/http_status.h"
+#include "gemini/http_mapped_status_code.h"
 #include "gemini/utils.h"
 
 using namespace std::string_literals;
