@@ -133,6 +133,9 @@ namespace GeminiCPP::Support
         std::string value;
     };
 
+    // Uses RFC 3339, where generated output will always be Z-normalized and use 0, 3, 6 or 9 fractional digits.
+    // Offsets other than "Z" are also accepted.
+    // Examples: "2014-10-02T15:01:23Z", "2014-10-02T15:01:23.045123456Z" or "2014-10-02T15:01:23+05:30".
     struct Timestamp
     {
         Timestamp() = default;
