@@ -180,6 +180,40 @@ namespace GeminiCPP::Support
         // inverse of days_from_civil: produce {year, month, day}
         static std::array<int,3> civil_from_days(int64_t z) noexcept;
     };
+
+    class FieldMask
+    {
+    public:
+        FieldMask() = default;
+
+        // Construct from JSON-style mask string: "user.displayName,photo"
+        explicit FieldMask(const std::string& jsonMaskString);
+        // Construct from list of paths
+        explicit FieldMask(const std::vector<std::string>& paths);
+
+        // Convert to JSON string format
+        [[nodiscard]] std::string toJsonString() const;
+        // Parse JSON string
+        void fromJsonString(const std::string& json);
+        // explicit → implicit cast to string
+        operator std::string() const;
+        // Add a single path
+        void addPath(const std::string& path);
+        // Replace all paths
+        void setPaths(const std::vector<std::string>& paths);
+        // Access underlying paths
+        [[nodiscard]] const std::vector<std::string>& paths() const;
+
+    private:
+        std::vector<std::string> paths_;
+        
+        // Trim whitespace
+        static std::string trim(const std::string& s);
+        // snake_case → lowerCamelCase
+        static std::string toLowerCamelCase(const std::string& field);
+        // Normalize and validate a single path
+        void addProcessedPath(const std::string& raw);
+    };
 }
 
 #endif // GEMINI_SUPPORT_H

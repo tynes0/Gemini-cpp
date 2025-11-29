@@ -538,4 +538,128 @@ namespace GeminiCPP::Support
         const int y = year + (month <= 2);
         return {y, static_cast<int>(month), static_cast<int>(day)};
     }
+
+    FieldMask::FieldMask(const std::string& jsonMaskString)
+    {
+        fromJsonString(jsonMaskString);
+    }
+
+    FieldMask::FieldMask(const std::vector<std::string>& paths)
+    {
+        setPaths(paths);
+    }
+
+    std::string FieldMask::toJsonString() const
+    {
+        std::ostringstream oss;
+        for (size_t i = 0; i < paths_.size(); ++i)
+        {
+            oss << paths_[i];
+            if (i + 1 < paths_.size())
+                oss << ",";
+        }
+        return oss.str();
+    }
+
+    void FieldMask::fromJsonString(const std::string& json)
+    {
+        paths_.clear();
+
+        std::string token;
+        for (char c : json)
+        {
+            if (c == ',')
+            {
+                addProcessedPath(token);
+                token.clear();
+            }
+            else token.push_back(c);
+        }
+        addProcessedPath(token);
+    }
+
+    FieldMask::operator std::string() const
+    {
+        return toJsonString();
+    }
+
+    void FieldMask::addPath(const std::string& path)
+    {
+        addProcessedPath(path);
+    }
+
+    void FieldMask::setPaths(const std::vector<std::string>& paths)
+    {
+        paths_.clear();
+        for (const auto& p : paths)
+            addProcessedPath(p);
+    }
+
+    const std::vector<std::string>& FieldMask::paths() const
+    {
+        return paths_;
+    }
+
+    std::string FieldMask::trim(const std::string& s)
+    {
+        const auto start = s.find_first_not_of(" \t\n\r");
+        if (start == std::string::npos) return "";
+
+        const auto end = s.find_last_not_of(" \t\n\r");
+        return s.substr(start, end - start + 1);
+    }
+
+    std::string FieldMask::toLowerCamelCase(const std::string& field)
+    {
+        std::string out;
+        out.reserve(field.size());
+
+        bool upperNext = false;
+        for (char c : field)
+        {
+            if (c == '_')
+            {
+                upperNext = true;
+                continue;
+            }
+            if (upperNext)
+            {
+                out.push_back(static_cast<char>(std::toupper(c)));
+                upperNext = false;
+            }
+            else
+            {
+                out.push_back(static_cast<char>(std::tolower(c)));
+            }
+        }
+        return out;
+    }
+
+    void FieldMask::addProcessedPath(const std::string& raw)
+    {
+        auto path = trim(raw);
+        if (path.empty()) return;
+
+        std::string fixed;
+        std::string token;
+
+        for (char c : path)
+        {
+            if (c == '.')
+            {
+                if (token.empty()) return;        // invalid: ".a", "a..b", etc.
+                fixed += toLowerCamelCase(token);
+                fixed.push_back('.');
+                token.clear();
+            }
+            else token.push_back(c);
+        }
+
+        if (token.empty())
+            return;                // invalid: "a."
+        
+        fixed += toLowerCamelCase(token);
+
+        paths_.push_back(fixed);
+    }
 }
