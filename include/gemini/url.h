@@ -16,6 +16,7 @@ namespace GeminiCPP
         CORPUS,         // corpora/
         OPERATION,      // operations/
         CACHED_CONTENT, // cachedContents/
+        BATCH,          // batches/
         FILE_SEARCH_STORES, // fileSearchStores/
         NONE            // No Prefix (Raw string)
     )

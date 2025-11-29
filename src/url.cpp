@@ -83,6 +83,7 @@ namespace GeminiCPP
         case ResourceType::CORPUS:          prefix = "corpora/"; break;
         case ResourceType::OPERATION:       prefix = "operations/"; break;
         case ResourceType::CACHED_CONTENT:  prefix = "cachedContents/"; break;
+        case ResourceType::BATCH:           prefix = "batches/"; break;
         case ResourceType::FILE_SEARCH_STORES:  prefix = "fileSearchStores/"; break;
         case ResourceType::NONE:        return; 
         }
@@ -101,6 +102,7 @@ namespace GeminiCPP
         if (s.starts_with("corpora/"))          return ResourceType::CORPUS;
         if (s.starts_with("operations/"))       return ResourceType::OPERATION;
         if (s.starts_with("cachedContents/"))   return ResourceType::CACHED_CONTENT;
+        if (s.starts_with("batches/"))          return ResourceType::BATCH;
         if (s.starts_with("fileSearchStores/")) return ResourceType::FILE_SEARCH_STORES;
         return ResourceType::NONE;
     }
