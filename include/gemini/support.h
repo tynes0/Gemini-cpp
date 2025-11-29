@@ -3,9 +3,13 @@
 #ifndef GEMINI_SUPPORT_H
 #define GEMINI_SUPPORT_H
 
+#include <cstdint>
+#include <chrono>
 #include <functional>
 #include <string_view>
 #include <string>
+#include <optional>
+#include <array>
 
 #include "http_status.h"
 
@@ -116,8 +120,8 @@ namespace GeminiCPP::Support
         Base64String(const std::string& raw);
         Base64String& operator=(const std::string& raw);
 
-        std::string str() const;
-        operator std::string() const;
+        [[nodiscard]] std::string str() const;
+        [[nodiscard]] operator std::string() const;
         // Raw data decode (binary)
         [[nodiscard]] std::vector<unsigned char> decode() const;
         // Raw string decode (text)
@@ -129,6 +133,44 @@ namespace GeminiCPP::Support
         std::string value;
     };
 
+    struct Timestamp
+    {
+        Timestamp() = default;
+        explicit Timestamp(const std::string& s);
+    
+        [[nodiscard]] static Timestamp now(int digits_for_output = 3);
+        [[nodiscard]] static Timestamp fromString(const std::string& s);
+        [[nodiscard]] static Timestamp fromEpochWithNanos(int64_t epoch_seconds, int nanos, int digits_for_output = 3);
+    
+        [[nodiscard]] bool isValid() const;
+        [[nodiscard]] std::string str() const;
+        [[nodiscard]] operator std::string() const;
+    
+        // Convert to system_clock::time_point (UTC)
+        [[nodiscard]] std::optional<std::chrono::system_clock::time_point> to_time_point() const;
+    
+    private:
+        // Stored as RFC3339 Z-normalized string (or empty if invalid)
+        std::string value;
+        
+        // -------------------------
+        // Date math utilities (Howard Hinnant style)
+        // -------------------------
+        
+        // Returns days since civil 1970-01-01, can be negative. Implementation from Howard Hinnant.
+        static int64_t days_from_civil(int64_t y, unsigned m, unsigned d) noexcept;
+    
+        // Convert a civil date/time to epoch seconds (UTC). Returns nullopt if overflowed.
+        static std::optional<int64_t> civilToEpochSeconds(int year, int month, int day, int hour, int minute, int second) noexcept;
+        // Convert epoch seconds + nanos to RFC3339 Z-normalized with automatic fractional digits selection
+        static std::string formatEpochZ(int64_t epoch_seconds, int nanos);
+        static std::string formatEpochWithDigits(int64_t epoch_seconds, int nanos, int digits);
+        // helper: floor division for negative epoch seconds
+        static int64_t floor_div(int64_t x, int64_t y);
+    
+        // inverse of days_from_civil: produce {year, month, day}
+        static std::array<int,3> civil_from_days(int64_t z) noexcept;
+    };
 }
 
 #endif // GEMINI_SUPPORT_H
