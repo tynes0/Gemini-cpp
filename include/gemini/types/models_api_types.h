@@ -11,34 +11,34 @@
 
 namespace GeminiCPP
 {
-    struct PredictRequestBody : IJsonSerializable<PredictRequestBody>
+    struct ModelsPredictRequestBody : IJsonSerializable<ModelsPredictRequestBody>
     {
         // Required. The instances that are the input to the prediction call.
         std::vector<nlohmann::json> instances;
         // Optional. The parameters that govern the prediction call.
         std::optional<nlohmann::json> parameters;
 
-        [[nodiscard]] static PredictRequestBody fromJson(const nlohmann::json& j);
+        [[nodiscard]] static ModelsPredictRequestBody fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const override;
     };
     
-    struct PredictResponseBody : IJsonSerializable<PredictResponseBody>
+    struct ModelsPredictResponseBody : IJsonSerializable<ModelsPredictResponseBody>
     {
         // The outputs of the prediction call.
         std::vector<nlohmann::json> predictions;
         
-        [[nodiscard]] static PredictResponseBody fromJson(const nlohmann::json& j);
+        [[nodiscard]] static ModelsPredictResponseBody fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const override;
     };
 
-    struct PredictLongRunningRequestBody : IJsonSerializable<PredictLongRunningRequestBody>
+    struct ModelsPredictLongRunningRequestBody : IJsonSerializable<ModelsPredictLongRunningRequestBody>
     {
         // Required. The instances that are the input to the prediction call.
         std::vector<nlohmann::json> instances;
         // Optional. The parameters that govern the prediction call.
         std::optional<nlohmann::json> parameters;
 
-        [[nodiscard]] static PredictLongRunningRequestBody fromJson(const nlohmann::json& j);
+        [[nodiscard]] static ModelsPredictLongRunningRequestBody fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const override;
     };
 
@@ -85,19 +85,13 @@ namespace GeminiCPP
         [[nodiscard]] nlohmann::json toJson() const override;
     };
 
-    // Response from ListModel containing a paginated list of Models.
-    struct ModelListResponseBody : IJsonSerializable<ModelListResponseBody>
+    struct ModelsGetRequestBody : IJsonSerializable<ModelsGetRequestBody>
     {
-        // The returned Models.
-        std::vector<ModelInfo> models;
-        // A token, which can be sent as pageToken to retrieve the next page. If this field is omitted, there are no more pages.
-        std::string nextPageToken;
-        
-        [[nodiscard]] static ModelListResponseBody fromJson(const nlohmann::json& j);
+        [[nodiscard]] static ModelsGetRequestBody fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const override;
     };
 
-    struct ModelListQueryParameters : IJsonSerializable<ModelListQueryParameters>
+    struct ModelsListQueryParameters : IJsonSerializable<ModelsListQueryParameters>
     {
         // The maximum number of Models to return (per page).  If unspecified, 50 models will be returned per page.
         // This method returns at most 1000 models per page, even if you pass a larger pageSize.
@@ -107,7 +101,25 @@ namespace GeminiCPP
         // models.list must match the call that provided the page token.
         std::string pageToken;
 
-        [[nodiscard]] static ModelListQueryParameters fromJson(const nlohmann::json& j);
+        [[nodiscard]] static ModelsListQueryParameters fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    struct ModelsListRequestBody : IJsonSerializable<ModelsListRequestBody>
+    {
+        [[nodiscard]] static ModelsListRequestBody fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    // Response from ListModel containing a paginated list of Models.
+    struct ModelsListResponseBody : IJsonSerializable<ModelsListResponseBody>
+    {
+        // The returned Models.
+        std::vector<ModelInfo> models;
+        // A token, which can be sent as pageToken to retrieve the next page. If this field is omitted, there are no more pages.
+        std::string nextPageToken;
+        
+        [[nodiscard]] static ModelsListResponseBody fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const override;
     };
 }

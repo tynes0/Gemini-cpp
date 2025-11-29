@@ -89,7 +89,7 @@ namespace GeminiCPP
             const std::string& name
         );
 
-        [[nodiscard]] Result<ListFilesResponse> listFiles(
+        [[nodiscard]] Result<FilesListResponseBody> listFiles(
             int pageSize = 10,
             const std::string& pageToken = ""
         );
@@ -215,7 +215,7 @@ namespace GeminiCPP
             std::string name
         );
 
-        [[nodiscard]] std::future<Result<ListFilesResponse>> listFilesAsync(
+        [[nodiscard]] std::future<Result<FilesListResponseBody>> listFilesAsync(
             int pageSize = 10,
             std::string pageToken = ""
         );

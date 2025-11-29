@@ -2,9 +2,9 @@
 
 namespace GeminiCPP
 {
-    PredictRequestBody PredictRequestBody::fromJson(const nlohmann::json& j)
+    ModelsPredictRequestBody ModelsPredictRequestBody::fromJson(const nlohmann::json& j)
     {
-        PredictRequestBody result{};
+        ModelsPredictRequestBody result{};
 
         if (j.contains("instances")) result.instances = j["instances"].get<std::vector<nlohmann::json>>();
         if (j.contains("parameters")) result.parameters = j["parameters"];
@@ -12,7 +12,7 @@ namespace GeminiCPP
         return result;
     }
 
-    nlohmann::json PredictRequestBody::toJson() const
+    nlohmann::json ModelsPredictRequestBody::toJson() const
     {
         nlohmann::json j = nlohmann::json::object();
 
@@ -23,9 +23,9 @@ namespace GeminiCPP
         return j;
     }
 
-    PredictResponseBody PredictResponseBody::fromJson(const nlohmann::json& j)
+    ModelsPredictResponseBody ModelsPredictResponseBody::fromJson(const nlohmann::json& j)
     {
-        PredictResponseBody result{};
+        ModelsPredictResponseBody result{};
 
         if (j.contains("predictions"))
             result.predictions = j["predictions"];
@@ -33,9 +33,9 @@ namespace GeminiCPP
         return result;
     }
 
-    PredictLongRunningRequestBody PredictLongRunningRequestBody::fromJson(const nlohmann::json& j)
+    ModelsPredictLongRunningRequestBody ModelsPredictLongRunningRequestBody::fromJson(const nlohmann::json& j)
     {
-        PredictLongRunningRequestBody result{};
+        ModelsPredictLongRunningRequestBody result{};
 
         if (j.contains("instances")) result.instances = j["instances"].get<std::vector<nlohmann::json>>();
         if (j.contains("parameters")) result.parameters = j["parameters"];
@@ -43,7 +43,7 @@ namespace GeminiCPP
         return result;
     }
 
-    nlohmann::json PredictLongRunningRequestBody::toJson() const
+    nlohmann::json ModelsPredictLongRunningRequestBody::toJson() const
     {
         nlohmann::json j = nlohmann::json::object();
 
@@ -54,7 +54,7 @@ namespace GeminiCPP
         return j;
     }
 
-    nlohmann::json PredictResponseBody::toJson() const
+    nlohmann::json ModelsPredictResponseBody::toJson() const
     {
         nlohmann::json j = nlohmann::json::object();
 
@@ -114,9 +114,49 @@ namespace GeminiCPP
         return j;
     }
 
-    ModelListResponseBody ModelListResponseBody::fromJson(const nlohmann::json& j)
+    ModelsGetRequestBody ModelsGetRequestBody::fromJson(const nlohmann::json& j)
     {
-        ModelListResponseBody result{};
+        return ModelsGetRequestBody{};
+    }
+
+    nlohmann::json ModelsGetRequestBody::toJson() const
+    {
+        return nlohmann::json::object();
+    }
+
+    ModelsListQueryParameters ModelsListQueryParameters::fromJson(const nlohmann::json& j)
+    {
+        ModelsListQueryParameters result{};
+
+        result.pageSize = j.value("pageSize", 0);
+        result.pageToken = j.value("pageToken", "");
+
+        return result;
+    }
+
+    nlohmann::json ModelsListQueryParameters::toJson() const
+    {
+        nlohmann::json j = nlohmann::json::object();
+
+        j["pageSize"] = pageSize;
+        j["pageToken"] = pageToken;
+
+        return j;
+    }
+
+    ModelsListRequestBody ModelsListRequestBody::fromJson(const nlohmann::json& j)
+    {
+        return ModelsListRequestBody{};
+    }
+
+    nlohmann::json ModelsListRequestBody::toJson() const
+    {
+        return nlohmann::json::object();
+    }
+
+    ModelsListResponseBody ModelsListResponseBody::fromJson(const nlohmann::json& j)
+    {
+        ModelsListResponseBody result{};
 
         if (j.contains("models"))
         {
@@ -130,7 +170,7 @@ namespace GeminiCPP
         return result;
     }
 
-    nlohmann::json ModelListResponseBody::toJson() const
+    nlohmann::json ModelsListResponseBody::toJson() const
     {
         nlohmann::json j = nlohmann::json::object();
 
@@ -140,26 +180,6 @@ namespace GeminiCPP
 
         j["nextPageToken"] = nextPageToken;
         
-        return j;
-    }
-
-    ModelListQueryParameters ModelListQueryParameters::fromJson(const nlohmann::json& j)
-    {
-        ModelListQueryParameters result{};
-
-        result.pageSize = j.value("pageSize", 0);
-        result.pageToken = j.value("pageToken", "");
-
-        return result;
-    }
-
-    nlohmann::json ModelListQueryParameters::toJson() const
-    {
-        nlohmann::json j = nlohmann::json::object();
-
-        j["pageSize"] = pageSize;
-        j["pageToken"] = pageToken;
-
         return j;
     }
 }

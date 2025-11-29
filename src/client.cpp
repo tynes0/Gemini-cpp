@@ -225,7 +225,7 @@ namespace GeminiCPP
         return Result<bool>::Failure(Utils::parseErrorMessage(r.text), r.status_code);
     }
     
-    Result<ListFilesResponse> Client::listFiles(int pageSize, const std::string& pageToken)
+    Result<FilesListResponseBody> Client::listFiles(int pageSize, const std::string& pageToken)
     {
         Url url(std::string_view("files"));
         
@@ -243,16 +243,16 @@ namespace GeminiCPP
 
         if (!HttpMappedStatusCodeHelper::isSuccess(r.status_code))
         {
-            return Result<ListFilesResponse>::Failure(Utils::parseErrorMessage(r.text), r.status_code);
+            return Result<FilesListResponseBody>::Failure(Utils::parseErrorMessage(r.text), r.status_code);
         }
 
         try
         {
-            return Result<ListFilesResponse>::Success(ListFilesResponse::fromJson(nlohmann::json::parse(r.text)));
+            return Result<FilesListResponseBody>::Success(FilesListResponseBody::fromJson(nlohmann::json::parse(r.text)));
         }
         catch (const std::exception& e)
         {
-            return Result<ListFilesResponse>::Failure("Parse Error: "s + e.what());
+            return Result<FilesListResponseBody>::Failure("Parse Error: "s + e.what());
         }
     }
 
@@ -648,7 +648,7 @@ namespace GeminiCPP
         });
     }
 
-    std::future<Result<ListFilesResponse>> Client::listFilesAsync(int pageSize, std::string pageToken)
+    std::future<Result<FilesListResponseBody>> Client::listFilesAsync(int pageSize, std::string pageToken)
     {
         return std::async(std::launch::async, [this, pageSize, pageToken = std::move(pageToken)]() {
             return listFiles(pageSize, pageToken);
