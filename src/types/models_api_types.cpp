@@ -2,67 +2,6 @@
 
 namespace GeminiCPP
 {
-    ModelsPredictRequestBody ModelsPredictRequestBody::fromJson(const nlohmann::json& j)
-    {
-        ModelsPredictRequestBody result{};
-
-        if (j.contains("instances")) result.instances = j["instances"].get<std::vector<nlohmann::json>>();
-        if (j.contains("parameters")) result.parameters = j["parameters"];
-
-        return result;
-    }
-
-    nlohmann::json ModelsPredictRequestBody::toJson() const
-    {
-        nlohmann::json j = nlohmann::json::object();
-
-        j["instances"] = instances;
-        if (parameters.has_value())
-            j["parameters"] = parameters.value();
-
-        return j;
-    }
-
-    ModelsPredictResponseBody ModelsPredictResponseBody::fromJson(const nlohmann::json& j)
-    {
-        ModelsPredictResponseBody result{};
-
-        if (j.contains("predictions"))
-            result.predictions = j["predictions"];
-        
-        return result;
-    }
-
-    ModelsPredictLongRunningRequestBody ModelsPredictLongRunningRequestBody::fromJson(const nlohmann::json& j)
-    {
-        ModelsPredictLongRunningRequestBody result{};
-
-        if (j.contains("instances")) result.instances = j["instances"].get<std::vector<nlohmann::json>>();
-        if (j.contains("parameters")) result.parameters = j["parameters"];
-
-        return result;
-    }
-
-    nlohmann::json ModelsPredictLongRunningRequestBody::toJson() const
-    {
-        nlohmann::json j = nlohmann::json::object();
-
-        j["instances"] = instances;
-        if (parameters.has_value())
-            j["parameters"] = parameters.value();
-
-        return j;
-    }
-
-    nlohmann::json ModelsPredictResponseBody::toJson() const
-    {
-        nlohmann::json j = nlohmann::json::object();
-
-        j["predictions"] = predictions;
-        
-        return j;
-    }
-
     bool ModelInfo::supports(GenerationMethod method) const
     {
         return (supportedGenerationMethods & method) != 0;
@@ -124,6 +63,18 @@ namespace GeminiCPP
         return nlohmann::json::object();
     }
 
+    ModelsGetResponseBody ModelsGetResponseBody::fromJson(const nlohmann::json& j)
+    {
+        ModelsGetResponseBody result{};
+        result.response = ModelInfo::fromJson(j);
+        return result;
+    }
+
+    nlohmann::json ModelsGetResponseBody::toJson() const
+    {
+        return response.toJson();
+    }
+
     ModelsListQueryParameters ModelsListQueryParameters::fromJson(const nlohmann::json& j)
     {
         ModelsListQueryParameters result{};
@@ -179,6 +130,79 @@ namespace GeminiCPP
             j["models"].push_back(model.toJson());
 
         j["nextPageToken"] = nextPageToken;
+        
+        return j;
+    }
+
+        ModelsPredictRequestBody ModelsPredictRequestBody::fromJson(const nlohmann::json& j)
+    {
+        ModelsPredictRequestBody result{};
+
+        if (j.contains("instances")) result.instances = j["instances"].get<std::vector<nlohmann::json>>();
+        if (j.contains("parameters")) result.parameters = j["parameters"];
+
+        return result;
+    }
+
+    nlohmann::json ModelsPredictRequestBody::toJson() const
+    {
+        nlohmann::json j = nlohmann::json::object();
+
+        j["instances"] = instances;
+        if (parameters.has_value())
+            j["parameters"] = parameters.value();
+
+        return j;
+    }
+
+    ModelsPredictResponseBody ModelsPredictResponseBody::fromJson(const nlohmann::json& j)
+    {
+        ModelsPredictResponseBody result{};
+
+        if (j.contains("predictions"))
+            result.predictions = j["predictions"];
+        
+        return result;
+    }
+
+    ModelsPredictLongRunningRequestBody ModelsPredictLongRunningRequestBody::fromJson(const nlohmann::json& j)
+    {
+        ModelsPredictLongRunningRequestBody result{};
+
+        if (j.contains("instances")) result.instances = j["instances"].get<std::vector<nlohmann::json>>();
+        if (j.contains("parameters")) result.parameters = j["parameters"];
+
+        return result;
+    }
+
+    nlohmann::json ModelsPredictLongRunningRequestBody::toJson() const
+    {
+        nlohmann::json j = nlohmann::json::object();
+
+        j["instances"] = instances;
+        if (parameters.has_value())
+            j["parameters"] = parameters.value();
+
+        return j;
+    }
+
+    ModelsPredictLongRunningResponseBody ModelsPredictLongRunningResponseBody::fromJson(const nlohmann::json& j)
+    {
+        ModelsPredictLongRunningResponseBody result{};
+        result.response = Operation::fromJson(j);
+        return result;
+    }
+
+    nlohmann::json ModelsPredictLongRunningResponseBody::toJson() const
+    {
+        return response.toJson();
+    }
+
+    nlohmann::json ModelsPredictResponseBody::toJson() const
+    {
+        nlohmann::json j = nlohmann::json::object();
+
+        j["predictions"] = predictions;
         
         return j;
     }

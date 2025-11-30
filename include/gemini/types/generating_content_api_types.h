@@ -8,20 +8,21 @@
 #include <optional>
 
 #include "frenum.h"
-#include "caching_api_types.h"
-#include "../types_base.h"
+
+#include "gemini/types_base.h"
 #include "gemini/support.h"
 #include "gemini/url.h"
+#include "caching_api_types.h"
 
 namespace GeminiCPP
 {
     FrenumClassInNamespace(GeminiCPP, HarmBlockThreshold, uint8_t,
-         HARM_BLOCK_THRESHOLD_UNSPECIFIED, // Unspecified.
-         BLOCK_LOW_AND_ABOVE, // Block low risk and above (Very Strict).
-         BLOCK_MEDIUM_AND_ABOVE, // Block medium risk and above (Default).
-         BLOCK_ONLY_HIGH, // Only block high risk.
-         BLOCK_NONE, // Don't block anything (Risky).
-         OFF // Turn off the filter completely.
+        HARM_BLOCK_THRESHOLD_UNSPECIFIED, // Unspecified.
+        BLOCK_LOW_AND_ABOVE, // Block low risk and above (Very Strict).
+        BLOCK_MEDIUM_AND_ABOVE, // Block medium risk and above (Default).
+        BLOCK_ONLY_HIGH, // Only block high risk.
+        BLOCK_NONE, // Don't block anything (Risky).
+        OFF // Turn off the filter completely.
     )
     FrenumClassInNamespace(GeminiCPP, HarmProbability, uint8_t,
         HARM_PROBABILITY_UNSPECIFIED,   // Probability is unspecified.
@@ -759,7 +760,7 @@ namespace GeminiCPP
     // both prompt in GenerateContentResponse.promptFeedback and for each candidate in finishReason and in safetyRatings.
     // The API: - Returns either all requested candidates or none of them - Returns no candidates at all only if there was
     // something wrong with the prompt (check promptFeedback) - Reports feedback on each candidate in finishReason and safetyRatings.
-    struct GenerateContentResponse : IJsonSerializable<GenerateContentResponse>
+    struct GenerateContentResponseBody : IJsonSerializable<GenerateContentResponseBody>
     {
         // Candidate responses from the model.
         std::vector<ResponseCandidate> candidates;
@@ -772,7 +773,15 @@ namespace GeminiCPP
         // Output only. responseId is used to identify each response.
         std::string responseId;
         
-        [[nodiscard]] static GenerateContentResponse fromJson(const nlohmann::json& j);
+        [[nodiscard]] static GenerateContentResponseBody fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    struct StreamGenerateContentResponseBody : IJsonSerializable<StreamGenerateContentResponseBody>
+    {
+        GenerateContentResponseBody response;
+        
+        [[nodiscard]] static StreamGenerateContentResponseBody fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const override;
     };
 }

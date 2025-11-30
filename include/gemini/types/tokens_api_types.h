@@ -19,7 +19,7 @@ namespace GeminiCPP
         // Optional. The overall input given to the Model. This includes the prompt as well as other model steering information like system instructions,
         // and/or function declarations for function calling. Models/Contents and generateContentRequests are mutually exclusive.
         // You can either send Model + Contents or a generateContentRequest, but never both.
-        std::optional<GenerateContentRequest> generateContentRequest;
+        std::optional<GenerateContentRequestBody> generateContentRequest;
         
         static CountTokensRequestBody fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const override;

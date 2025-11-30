@@ -20,7 +20,7 @@ namespace GeminiCPP
 
         if (j.contains("generateContentRequest"))
         {
-            result.generateContentRequest = GenerateContentRequest::fromJson(j["generateContentRequest"]);
+            result.generateContentRequest = GenerateContentRequestBody::fromJson(j["generateContentRequest"]);
         }
 
         return result;

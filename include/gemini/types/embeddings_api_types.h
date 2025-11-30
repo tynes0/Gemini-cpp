@@ -12,14 +12,15 @@
 namespace GeminiCPP
 {
     FrenumClassInNamespace(GeminiCPP, TaskType, uint8_t,
-        TASK_TYPE_UNSPECIFIED,
-        RETRIEVAL_QUERY,     // Search query (Used when asking a question)
-        RETRIEVAL_DOCUMENT,  // Search document (used when saving to database)
-        SEMANTIC_SIMILARITY, // To measure the similarity between two texts
-        CLASSIFICATION,      // For classification tasks
-        CLUSTERING,          // For clustering operations
-        QUESTION_ANSWERING,  // Answering questions (Sometimes used)
-        FACT_VERIFICATION    // Verification
+        TASK_TYPE_UNSPECIFIED, // Unset value, which will default to one of the other enum values.
+        RETRIEVAL_QUERY,     // Specifies the given text is a query in a search/retrieval setting.
+        RETRIEVAL_DOCUMENT,  // Specifies the given text is a document from the corpus being searched.
+        SEMANTIC_SIMILARITY, // Specifies the given text will be used for STS.
+        CLASSIFICATION,      // Specifies that the given text will be classified.
+        CLUSTERING,          // Specifies that the embeddings will be used for clustering
+        QUESTION_ANSWERING,  // Specifies that the given text will be used for question answering.
+        FACT_VERIFICATION,   // Specifies that the given text will be used for fact verification.
+        CODE_RETRIEVAL_QUERY // Specifies that the given text will be used for code retrieval.
     )
     
     struct EmbedRequestBody

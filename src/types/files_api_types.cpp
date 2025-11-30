@@ -108,6 +108,25 @@ namespace GeminiCPP
         return j;
     }
 
+    MediaUploadResponseBody MediaUploadResponseBody::fromJson(const nlohmann::json& j)
+    {
+        MediaUploadResponseBody result{};
+
+        if (j.contains("file") && j["file"].is_object())
+            result.file = File::fromJson(j["file"]);
+        
+        return result;
+    }
+
+    nlohmann::json MediaUploadResponseBody::toJson() const
+    {
+        nlohmann::json j = nlohmann::json::object();
+
+        j["file"] = file.toJson();
+        
+        return j;
+    }
+
     FilesGetRequestBody FilesGetRequestBody::fromJson(const nlohmann::json& j)
     {
         return FilesGetRequestBody{};
@@ -116,6 +135,18 @@ namespace GeminiCPP
     nlohmann::json FilesGetRequestBody::toJson() const
     {
         return nlohmann::json::object();
+    }
+
+    FilesGetResponseBody FilesGetResponseBody::fromJson(const nlohmann::json& j)
+    {
+        FilesGetResponseBody result{};
+        result.response = File::fromJson(j);
+        return result;
+    }
+
+    nlohmann::json FilesGetResponseBody::toJson() const
+    {
+        return response.toJson();
     }
 
     FilesListQueryParameters FilesListQueryParameters::fromJson(const nlohmann::json& j)
@@ -216,25 +247,6 @@ namespace GeminiCPP
 
         if (file.has_value())
             j["file"] = file->toJson();
-        
-        return j;
-    }
-
-    MediaUploadResponseBody MediaUploadResponseBody::fromJson(const nlohmann::json& j)
-    {
-        MediaUploadResponseBody result{};
-
-        if (j.contains("file") && j["file"].is_object())
-            result.file = File::fromJson(j["file"]);
-        
-        return result;
-    }
-
-    nlohmann::json MediaUploadResponseBody::toJson() const
-    {
-        nlohmann::json j = nlohmann::json::object();
-
-        j["file"] = file.toJson();
         
         return j;
     }

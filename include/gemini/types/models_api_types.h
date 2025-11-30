@@ -6,42 +6,12 @@
 #include <cstdint>
 #include <string>
 
+#include "batch_api_types.h"
 #include "gemini/types_base.h"
 #include "gemini/url.h"
 
 namespace GeminiCPP
 {
-    struct ModelsPredictRequestBody : IJsonSerializable<ModelsPredictRequestBody>
-    {
-        // Required. The instances that are the input to the prediction call.
-        std::vector<nlohmann::json> instances;
-        // Optional. The parameters that govern the prediction call.
-        std::optional<nlohmann::json> parameters;
-
-        [[nodiscard]] static ModelsPredictRequestBody fromJson(const nlohmann::json& j);
-        [[nodiscard]] nlohmann::json toJson() const override;
-    };
-    
-    struct ModelsPredictResponseBody : IJsonSerializable<ModelsPredictResponseBody>
-    {
-        // The outputs of the prediction call.
-        std::vector<nlohmann::json> predictions;
-        
-        [[nodiscard]] static ModelsPredictResponseBody fromJson(const nlohmann::json& j);
-        [[nodiscard]] nlohmann::json toJson() const override;
-    };
-
-    struct ModelsPredictLongRunningRequestBody : IJsonSerializable<ModelsPredictLongRunningRequestBody>
-    {
-        // Required. The instances that are the input to the prediction call.
-        std::vector<nlohmann::json> instances;
-        // Optional. The parameters that govern the prediction call.
-        std::optional<nlohmann::json> parameters;
-
-        [[nodiscard]] static ModelsPredictLongRunningRequestBody fromJson(const nlohmann::json& j);
-        [[nodiscard]] nlohmann::json toJson() const override;
-    };
-
     // Information about a Generative Language Model.
     struct ModelInfo : IJsonSerializable<ModelInfo>
     {
@@ -91,6 +61,14 @@ namespace GeminiCPP
         [[nodiscard]] nlohmann::json toJson() const override;
     };
 
+    struct ModelsGetResponseBody : IJsonSerializable<ModelsGetResponseBody>
+    {
+        ModelInfo response;
+        
+        [[nodiscard]] static ModelsGetResponseBody fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
     struct ModelsListQueryParameters : IJsonSerializable<ModelsListQueryParameters>
     {
         // The maximum number of Models to return (per page).  If unspecified, 50 models will be returned per page.
@@ -120,6 +98,45 @@ namespace GeminiCPP
         std::string nextPageToken;
         
         [[nodiscard]] static ModelsListResponseBody fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    struct ModelsPredictRequestBody : IJsonSerializable<ModelsPredictRequestBody>
+    {
+        // Required. The instances that are the input to the prediction call.
+        std::vector<nlohmann::json> instances;
+        // Optional. The parameters that govern the prediction call.
+        std::optional<nlohmann::json> parameters;
+
+        [[nodiscard]] static ModelsPredictRequestBody fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+    
+    struct ModelsPredictResponseBody : IJsonSerializable<ModelsPredictResponseBody>
+    {
+        // The outputs of the prediction call.
+        std::vector<nlohmann::json> predictions;
+        
+        [[nodiscard]] static ModelsPredictResponseBody fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    struct ModelsPredictLongRunningRequestBody : IJsonSerializable<ModelsPredictLongRunningRequestBody>
+    {
+        // Required. The instances that are the input to the prediction call.
+        std::vector<nlohmann::json> instances;
+        // Optional. The parameters that govern the prediction call.
+        std::optional<nlohmann::json> parameters;
+
+        [[nodiscard]] static ModelsPredictLongRunningRequestBody fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    struct ModelsPredictLongRunningResponseBody : IJsonSerializable<ModelsPredictLongRunningResponseBody>
+    {
+        Operation response;
+
+        [[nodiscard]] static ModelsPredictLongRunningResponseBody fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const override;
     };
 }

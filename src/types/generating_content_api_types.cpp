@@ -1181,9 +1181,9 @@ namespace GeminiCPP
         return j;
     }
 
-    GenerateContentResponse GenerateContentResponse::fromJson(const nlohmann::json& j)
+    GenerateContentResponseBody GenerateContentResponseBody::fromJson(const nlohmann::json& j)
     {
-        GenerateContentResponse result{};
+        GenerateContentResponseBody result{};
 
         if (j.contains("promptFeedback"))
             result.promptFeedback = PromptFeedback::fromJson(j["promptFeedback"]);
@@ -1204,7 +1204,7 @@ namespace GeminiCPP
         return result;
     }
 
-    nlohmann::json GenerateContentResponse::toJson() const
+    nlohmann::json GenerateContentResponseBody::toJson() const
     {
         nlohmann::json j = nlohmann::json::object();
 
@@ -1219,5 +1219,17 @@ namespace GeminiCPP
             j["candidates"].push_back(candidate.toJson());
         
         return j;
+    }
+
+    StreamGenerateContentResponseBody StreamGenerateContentResponseBody::fromJson(const nlohmann::json& j)
+    {
+        StreamGenerateContentResponseBody result {};
+        result.response = GenerateContentResponseBody::fromJson(j);
+        return result;
+    }
+
+    nlohmann::json StreamGenerateContentResponseBody::toJson() const
+    {
+        return response.toJson();
     }
 }

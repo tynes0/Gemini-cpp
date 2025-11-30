@@ -9,8 +9,9 @@
 #include <optional>
 #include <variant>
 
-#include "../types_base.h"
 #include "frenum.h"
+
+#include "gemini/types_base.h"
 #include "gemini/duration.h"
 #include "gemini/support.h"
 #include "gemini/url.h"
@@ -103,9 +104,35 @@ namespace GeminiCPP
         [[nodiscard]] nlohmann::json toJson() const override;
     };
 
+    struct MediaUploadRequestBody : IJsonSerializable<MediaUploadRequestBody>
+    {
+        // Optional. Metadata for the file to create.
+        std::optional<File> file;
+
+        [[nodiscard]] static MediaUploadRequestBody fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    struct MediaUploadResponseBody : IJsonSerializable<MediaUploadResponseBody>
+    {
+        // Metadata for the created file.
+        File file;
+
+        [[nodiscard]] static MediaUploadResponseBody fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
     struct FilesGetRequestBody : IJsonSerializable<FilesGetRequestBody>
     {
         [[nodiscard]] static FilesGetRequestBody fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    struct FilesGetResponseBody : IJsonSerializable<FilesGetResponseBody>
+    {
+        File response;
+        
+        [[nodiscard]] static FilesGetResponseBody fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const override;
     };
 
@@ -146,24 +173,6 @@ namespace GeminiCPP
     struct FilesDeleteResponseBody : IJsonSerializable<FilesDeleteResponseBody>
     {
         [[nodiscard]] static FilesDeleteResponseBody fromJson(const nlohmann::json& j);
-        [[nodiscard]] nlohmann::json toJson() const override;
-    };
-
-    struct MediaUploadRequestBody : IJsonSerializable<MediaUploadRequestBody>
-    {
-        // Optional. Metadata for the file to create.
-        std::optional<File> file;
-
-        [[nodiscard]] static MediaUploadRequestBody fromJson(const nlohmann::json& j);
-        [[nodiscard]] nlohmann::json toJson() const override;
-    };
-
-    struct MediaUploadResponseBody : IJsonSerializable<MediaUploadResponseBody>
-    {
-        // Metadata for the created file.
-        File file;
-
-        [[nodiscard]] static MediaUploadResponseBody fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const override;
     };
 }
