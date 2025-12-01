@@ -12,8 +12,6 @@ namespace GeminiCPP
     FrenumClassInNamespace(GeminiCPP, ResourceType, uint8_t,
         MODEL,          // models/
         FILE,           // files/
-        TUNED_MODEL,    // tunedModels/
-        CORPUS,         // corpora/
         OPERATION,      // operations/
         CACHED_CONTENT, // cachedContents/
         BATCH,          // batches/
@@ -48,10 +46,9 @@ namespace GeminiCPP
         // Ex: ResourceName::File("video123")
         static ResourceName File(std::string name);
         static ResourceName Model(std::string name);
-        static ResourceName TunedModel(std::string name);
-        static ResourceName Corpus(std::string name);
         static ResourceName Operation(std::string name);
         static ResourceName CachedContent(std::string name);
+        static ResourceName Batch(std::string name);
         static ResourceName FileSearchStores(std::string name);
         static ResourceName Raw(std::string name); // No Prefix
         

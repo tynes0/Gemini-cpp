@@ -27,20 +27,11 @@ namespace GeminiCPP
 
     ResourceName ResourceName::File(std::string name)
     {
-        return {std::move(name), ResourceType::FILE};
+        return { std::move(name), ResourceType::FILE };
     }
     ResourceName ResourceName::Model(std::string name)
     {
-        return {std::move(name), ResourceType::MODEL};
-    }
-    ResourceName ResourceName::TunedModel(std::string name)
-    {
-        return {std::move(name), ResourceType::TUNED_MODEL};
-    }
-
-    ResourceName ResourceName::Corpus(std::string name)
-    {
-        return { std::move(name), ResourceType::CORPUS };
+        return { std::move(name), ResourceType::MODEL };
     }
 
     ResourceName ResourceName::Operation(std::string name)
@@ -50,7 +41,12 @@ namespace GeminiCPP
 
     ResourceName ResourceName::CachedContent(std::string name)
     {
-        return {std::move(name), ResourceType::CACHED_CONTENT};
+        return { std::move(name), ResourceType::CACHED_CONTENT };
+    }
+
+    ResourceName ResourceName::Batch(std::string name)
+    {
+        return { std::move(name), ResourceType::BATCH };
     }
 
     ResourceName ResourceName::FileSearchStores(std::string name)
@@ -60,7 +56,7 @@ namespace GeminiCPP
 
     ResourceName ResourceName::Raw(std::string name)
     {
-        return {std::move(name), ResourceType::NONE};
+        return { std::move(name), ResourceType::NONE };
     }
 
     std::string ResourceName::str() const
@@ -79,8 +75,6 @@ namespace GeminiCPP
         {
         case ResourceType::MODEL:           prefix = "models/"; break;
         case ResourceType::FILE:            prefix = "files/"; break;
-        case ResourceType::TUNED_MODEL:     prefix = "tunedModels/"; break;
-        case ResourceType::CORPUS:          prefix = "corpora/"; break;
         case ResourceType::OPERATION:       prefix = "operations/"; break;
         case ResourceType::CACHED_CONTENT:  prefix = "cachedContents/"; break;
         case ResourceType::BATCH:           prefix = "batches/"; break;
@@ -98,8 +92,6 @@ namespace GeminiCPP
     {
         if (s.starts_with("models/"))           return ResourceType::MODEL;
         if (s.starts_with("files/"))            return ResourceType::FILE;
-        if (s.starts_with("tunedModels/"))      return ResourceType::TUNED_MODEL;
-        if (s.starts_with("corpora/"))          return ResourceType::CORPUS;
         if (s.starts_with("operations/"))       return ResourceType::OPERATION;
         if (s.starts_with("cachedContents/"))   return ResourceType::CACHED_CONTENT;
         if (s.starts_with("batches/"))          return ResourceType::BATCH;
