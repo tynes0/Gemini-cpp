@@ -95,6 +95,9 @@ namespace GeminiCPP
 
     std::string Utils::parseErrorMessage(const std::string& rawJson)
     {
+        if (rawJson.empty())
+            return "";
+        
         std::string err = rawJson;
             
         try

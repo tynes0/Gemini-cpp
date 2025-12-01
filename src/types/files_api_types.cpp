@@ -50,13 +50,16 @@ namespace GeminiCPP
     {
         File result{};
 
-        result.name = j.value("name", "");
-        if (j.contains("displayName"))
-            result.displayName = j["displayName"].get<std::string>();
+        nlohmann::json json = j.contains("file") ? j["file"] : j;
+
+
+        result.name = json.value("name", "");
+        if (json.contains("displayName"))
+            result.displayName = json["displayName"].get<std::string>();
 
         try
         {
-            std::string sizeStr = j.value("sizeBytes", "0");
+            std::string sizeStr = json.value("sizeBytes", "0");
             result.sizeBytes = std::stoi(sizeStr);
         }
         catch (const std::exception& e)
@@ -64,18 +67,18 @@ namespace GeminiCPP
             GEMINI_ERROR("sizeBytes string to int64_t casting failed. ({})", e.what());
         }
 
-        result.createTime = j.value("createTime", "");
-        result.updateTime = j.value("updateTime", "");
-        result.expirationTime = j.value("expirationTime", "");
-        result.sha256Hash = Support::Base64String::fromBase64(j.value("sha256Hash", ""));
-        result.uri = j.value("uri", "");
-        result.downloadUri = j.value("downloadUri", "");
-        result.state = frenum::cast<FileState>(j.value("state", "")).value_or(FileState::STATE_UNSPECIFIED);
-        result.source = frenum::cast<Source>(j.value("source", "")).value_or(Source::SOURCE_UNSPECIFIED);
-        if (j.contains("error"))
-            result.error = Status::fromJson(j["error"]);
-        if (j.contains("metadata"))
-            result.metadata = VideoFileMetadata::fromJson(j["videoMetadata"]);
+        result.createTime = json.value("createTime", "");
+        result.updateTime = json.value("updateTime", "");
+        result.expirationTime = json.value("expirationTime", "");
+        result.sha256Hash = Support::Base64String::fromBase64(json.value("sha256Hash", ""));
+        result.uri = json.value("uri", "");
+        result.downloadUri = json.value("downloadUri", "");
+        result.state = frenum::cast<FileState>(json.value("state", "")).value_or(FileState::STATE_UNSPECIFIED);
+        result.source = frenum::cast<Source>(json.value("source", "")).value_or(Source::SOURCE_UNSPECIFIED);
+        if (json.contains("error"))
+            result.error = Status::fromJson(json["error"]);
+        if (json.contains("metadata"))
+            result.metadata = VideoFileMetadata::fromJson(json["videoMetadata"]);
 
         return result;
     }

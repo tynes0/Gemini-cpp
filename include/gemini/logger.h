@@ -24,6 +24,7 @@ namespace GeminiCPP
 
 #define GEMINI_TRACE(...)    ::GeminiCPP::Log::getLogger()->trace(__VA_ARGS__)
 #define GEMINI_INFO(...)     ::GeminiCPP::Log::getLogger()->info(__VA_ARGS__)
+#define GEMINI_DEBUG(...)   ::GeminiCPP::Log::getLogger()->debug(__VA_ARGS__)
 #define GEMINI_WARN(...)     ::GeminiCPP::Log::getLogger()->warning(__VA_ARGS__)
 #define GEMINI_ERROR(...)    ::GeminiCPP::Log::getLogger()->error(__VA_ARGS__)
 #define GEMINI_CRITICAL(...) ::GeminiCPP::Log::getLogger()->critical(__VA_ARGS__)

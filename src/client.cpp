@@ -48,7 +48,9 @@ namespace GeminiCPP
         }
     }
     
-    Client::Client(std::string api_key) : api_key_(std::move(api_key)) {}
+    Client::Client(std::string api_key) 
+        : files(this), models(this), tokens(this), api_key_(std::move(api_key)) 
+    {}
 
     void Client::setRetryConfig(const Support::RetryConfig& config) { retryConfig_ = config; }
     const Support::RetryConfig& Client::getRetryConfig() const { return retryConfig_; }
@@ -371,6 +373,25 @@ namespace GeminiCPP
             cpr::VerifySsl(false)
         );
 
+        text = r.text;
+        statusCode = r.status_code;
+    }
+
+    void Client::multipartHelper(const Url& url, const std::string& filePath, const std::string& mimeType, const nlohmann::json& metadata, std::string& text, long& statusCode)
+    {
+        cpr::Response r = cpr::Post(
+            cpr::Url{url.str()},
+            cpr::Header{
+                {"x-goog-api-key", api_key_},
+                {"X-Goog-Upload-Protocol", "multipart"},
+                {"X-Goog-Upload-Mime-Type", mimeType}
+            },
+            cpr::Multipart{
+                {"metadata", metadata.dump(), "application/json"},
+                {"file", cpr::File(filePath), mimeType}
+            },
+            cpr::VerifySsl(false)
+        );
         text = r.text;
         statusCode = r.status_code;
     }

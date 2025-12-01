@@ -14,6 +14,10 @@
 #include "utils.h"
 #include "types/generating_content_api_types.h"
 
+#include "apis/files.h"
+#include "apis/models.h"
+#include "apis/tokens.h"
+
 namespace GeminiCPP
 {
     // Forward declaration
@@ -31,6 +35,11 @@ namespace GeminiCPP
         Client& operator=(Client&&) = default;
         ~Client() = default;
 
+        // --- API MODULES ---
+        Files files;
+        Models models;
+        Tokens tokens;
+
         // --- CORE GENERATION METHODS ---
         [[nodiscard]] GenerationResult generateContent(const std::string& model, const GenerateContentRequestBody& request);
         [[nodiscard]] GenerationResult streamGenerateContent(const std::string& model, const StreamGenerateContentRequestBody& request, const StreamCallback& callback);
@@ -45,21 +54,17 @@ namespace GeminiCPP
 
         // --- UTILITIES ---
         [[nodiscard]] Support::ApiValidationResult verifyApiKey();
-
         void setRetryConfig(const Support::RetryConfig& config);
         [[nodiscard]] const Support::RetryConfig& getRetryConfig() const;
-
         [[nodiscard]] RequestBuilder request();
         [[nodiscard]] ChatSession startChat(Model model = Model::GEMINI_2_0_FLASH, std::string sessionName = "", std::string systemInstruction = "");
-
-        // --- HTTP ENGINE ---
-        // Template constraint: JsonSerializable
+        
         template <JsonSerializable ResponseType>
         Result<ResponseType> post(const std::string& url, const nlohmann::json& payload);
-
         template <JsonSerializable ResponseType>
         Result<ResponseType> get(const std::string& url, const std::map<std::string, std::string>& params = {});
-
+        template <JsonSerializable ResponseType>
+        Result<ResponseType> postMultipart(const std::string& endpoint, const std::string& filePath, const std::string& mimeType, const nlohmann::json& metadata);
         Result<bool> deleteResource(const std::string& url);
 
     private:
@@ -68,6 +73,7 @@ namespace GeminiCPP
 
         void postHelper(const Url& url, const nlohmann::json& payload, std::string& text, long& statusCode);
         void getHelper(const Url& url, const std::map<std::string, std::string>& params, std::string& text, long& statusCode);
+        void multipartHelper(const Url& url, const std::string& filePath, const std::string& mimeType, const nlohmann::json& metadata, std::string& text, long& statusCode);
 
         std::string api_key_;
         Support::RetryConfig retryConfig_;
@@ -113,6 +119,31 @@ namespace GeminiCPP
         try
         {
             return Result<ResponseType>::Success(ResponseType::fromJson(nlohmann::json::parse(text)), statusCode);
+        }
+        catch (const std::exception& e)
+        {
+            using namespace std::string_literals;
+            return Result<ResponseType>::Failure("Parse Error: "s + e.what(), statusCode);
+        }
+    }
+
+    template <JsonSerializable ResponseType>
+    Result<ResponseType> Client::postMultipart(const std::string& endpoint, const std::string& filePath, const std::string& mimeType, const nlohmann::json& metadata)
+    {
+        Url url(endpoint, EndpointType::UPLOAD);
+        
+        long statusCode;
+        std::string text;
+        multipartHelper(url, filePath, mimeType, metadata, text, statusCode);
+
+        if (!HttpMappedStatusCodeHelper::isSuccess(statusCode))
+        {
+            return Result<ResponseType>::Failure(Utils::parseErrorMessage(text), statusCode);
+        }
+        try
+        {
+            auto json = nlohmann::json::parse(text);
+            return Result<ResponseType>::Success(ResponseType::fromJson(json), statusCode);
         }
         catch (const std::exception& e)
         {

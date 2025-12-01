@@ -3,7 +3,6 @@
 #ifndef GEMINI_FILES_API_TYPES_H
 #define GEMINI_FILES_API_TYPES_H
 
-#include <climits>
 #include <string>
 #include <vector>
 #include <optional>
@@ -15,6 +14,9 @@
 #include "gemini/duration.h"
 #include "gemini/support.h"
 #include "gemini/url.h"
+
+// Windows headers (windows.h, etc.) can define these names as macros.
+// These macros corrupt our enum definitions, so we're deleting them.
 
 #ifdef FAILED
 #undef FAILED
@@ -112,7 +114,7 @@ namespace GeminiCPP
         // Metadata for the File.
         MetadataType metadata;
 
-        [[nodiscard]] static File fromJson(const nlohmann::json& j);
+        [[nodiscard]] static File fromJson(const nlohmann::json& json);
         [[nodiscard]] nlohmann::json toJson() const override;
     };
 
