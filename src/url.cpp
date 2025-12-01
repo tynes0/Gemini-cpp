@@ -27,36 +27,36 @@ namespace GeminiCPP
 
     ResourceName ResourceName::File(std::string name)
     {
-        return { std::move(name), ResourceType::FILE };
+        return ResourceName{ std::move(name), ResourceType::FILE };
     }
     ResourceName ResourceName::Model(std::string name)
     {
-        return { std::move(name), ResourceType::MODEL };
+        return ResourceName{ std::move(name), ResourceType::MODEL };
     }
 
     ResourceName ResourceName::Operation(std::string name)
     {
-        return { std::move(name), ResourceType::OPERATION };
+        return ResourceName{ std::move(name), ResourceType::OPERATION };
     }
 
     ResourceName ResourceName::CachedContent(std::string name)
     {
-        return { std::move(name), ResourceType::CACHED_CONTENT };
+        return ResourceName{ std::move(name), ResourceType::CACHED_CONTENT };
     }
 
     ResourceName ResourceName::Batch(std::string name)
     {
-        return { std::move(name), ResourceType::BATCH };
+        return ResourceName{ std::move(name), ResourceType::BATCH };
     }
 
     ResourceName ResourceName::FileSearchStores(std::string name)
     {
-        return  { std::move(name), ResourceType::FILE_SEARCH_STORES };
+        return ResourceName{ std::move(name), ResourceType::FILE_SEARCH_STORES };
     }
 
     ResourceName ResourceName::Raw(std::string name)
     {
-        return { std::move(name), ResourceType::NONE };
+        return ResourceName{ std::move(name), ResourceType::NONE };
     }
 
     std::string ResourceName::str() const

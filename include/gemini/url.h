@@ -37,7 +37,7 @@ namespace GeminiCPP
         ResourceName& operator=(ResourceName&& other) noexcept = default;
         ~ResourceName() = default;
         
-        ResourceName(std::string name, ResourceType type = ResourceType::MODEL);
+        explicit ResourceName(std::string name, ResourceType type = ResourceType::MODEL);
         ResourceName& operator=(const std::string& name);
         
         ResourceName(Model model);
@@ -53,7 +53,7 @@ namespace GeminiCPP
         static ResourceName Raw(std::string name); // No Prefix
         
         [[nodiscard]] std::string str() const;
-        operator std::string() const;
+        explicit operator std::string() const;
 
     private:
         std::string value_;
@@ -87,7 +87,7 @@ namespace GeminiCPP
         Url& addQuery(std::string_view key, std::string_view value = "");
 
         [[nodiscard]] std::string str() const;
-        [[nodiscard]] operator std::string() const;
+        [[nodiscard]] explicit operator std::string() const;
 
     private:
         // Helper: Returns the base URL based on the type

@@ -45,7 +45,7 @@ namespace GeminiCPP
         ModalityTokenCount result{};
         
         result.modality = frenum::cast<Modality>(j.value("modality", "")).value_or(Modality::MODALITY_UNSPECIFIED);
-        result.tokenCount = j["tokenCount"].value("tokenCount", 0);
+        result.tokenCount = j.value("tokenCount", 0);
 
         return result;
     }

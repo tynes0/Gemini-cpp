@@ -58,15 +58,12 @@ namespace GeminiCPP
         [[nodiscard]] std::future<GenerationResult> streamAsync(const StreamCallback& callback) const;
 
     private:
+        GenerationConfig& ensureConfig();
+
         Client* client_;
-        Model model_ = Model::GEMINI_2_5_FLASH;
-        std::string systemInstruction_;
-        GenerationConfig config_;
-        std::vector<SafetySetting> safetySettings_;
-        std::vector<Tool> tools_;
-        std::vector<Part> parts_;
-        std::string cachedContent_;
-        std::optional<ToolConfig> toolConfig_;
+        std::string model_;
+        Content currentContent_; 
+        GenerateContentRequestBody requestPrototype_;
     };
 
 }

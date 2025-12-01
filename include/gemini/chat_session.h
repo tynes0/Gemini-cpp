@@ -20,8 +20,8 @@ namespace GeminiCPP
     class ChatSession 
     {
     public:
-        ChatSession(Client* client, Model model, std::string sessionName = "", std::string systemInstruction = "", std::string sessionId = "");
-        ChatSession(Client* client, std::string_view model, std::string sessionName = "", std::string systemInstruction = "", std::string sessionId = "");
+        ChatSession(Client* client, Model model, std::string sessionName = "", std::string sessionId = "");
+        ChatSession(Client* client, std::string_view model, std::string sessionName = "", std::string sessionId = "");
         
         ChatSession(const ChatSession& other);
         ChatSession& operator=(const ChatSession& other);

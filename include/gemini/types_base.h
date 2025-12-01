@@ -5,6 +5,9 @@
 
 #include <nlohmann/json.hpp>
 
+#include <type_traits>
+#include <utility>
+
 namespace GeminiCPP
 {
     struct IJsonSerializableBase
@@ -47,6 +50,16 @@ namespace GeminiCPP
                 "CRTP ERROR: Derived class must implement 'static T fromJson(const nlohmann::json&)'.");
         }
     };
+    
+    template <typename T, typename = void>
+    struct IsJsonSerializable : std::false_type {};
+
+    template <typename T>
+    struct IsJsonSerializable<T, std::enable_if_t<std::is_base_of_v<IJsonSerializable<T>, T>>> : std::true_type {};
+
+    template <typename T>
+    concept JsonSerializable = IsJsonSerializable<T>::value;
+    
 } // namespace GeminiCPP
 
 #endif // GEMINI_TYPES_H

@@ -4,7 +4,6 @@
 #define GEMINI_RESPONSE_H
 
 #include <string>
-#include <filesystem>
 
 #include <nlohmann/json.hpp>
 #include "http_mapped_status_code.h"

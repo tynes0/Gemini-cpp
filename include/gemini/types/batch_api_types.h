@@ -17,14 +17,14 @@
 namespace GeminiCPP
 {
     // The state of the batch.
-FrenumClassInNamespace(GeminiCPP, BatchState, uint8_t,
-                           BATCH_STATE_UNSPECIFIED,
-                           BATCH_STATE_PENDING, // The service is preparing to run the batch.
-                           BATCH_STATE_RUNNING, // The batch is in progress.
-                           BATCH_STATE_SUCCEEDED, // The batch completed successfully.
-                           BATCH_STATE_FAILED, // The batch failed.
-                           BATCH_STATE_CANCELLED, // The batch has been cancelled.
-                           BATCH_STATE_EXPIRED // The batch has expired.
+    FrenumClassInNamespace(GeminiCPP, BatchState, uint8_t,
+        BATCH_STATE_UNSPECIFIED,
+        BATCH_STATE_PENDING, // The service is preparing to run the batch.
+        BATCH_STATE_RUNNING, // The batch is in progress.
+        BATCH_STATE_SUCCEEDED, // The batch completed successfully.
+        BATCH_STATE_FAILED, // The batch failed.
+        BATCH_STATE_CANCELLED, // The batch has been cancelled.
+        BATCH_STATE_EXPIRED // The batch has expired.
     )
     // This resource represents a long-running operation that is the result of a network API call.
     struct Operation : IJsonSerializable<Operation>
@@ -58,7 +58,41 @@ FrenumClassInNamespace(GeminiCPP, BatchState, uint8_t,
 
         [[nodiscard]] static Operation fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    struct ListOperationsRequest : IJsonSerializable<ListOperationsRequest>
+    {
+        // The name of the operation's parent resource.
+        std::string name;
+        // The standard list filter.
+        std::string filter;
+        // The standard list page size.
+        int pageSize = 0;
+        // The standard list page token.
+        std::string pageToken;
+        // When set to true, operations that are reachable are returned as normal, and those that are unreachable are
+        // returned in the ListOperationsResponse.unreachable field. This can only be true when reading across collections.
+        // For example, when parent is set to 'projects/example/locations/-'. This field is not supported by default and will
+        // result in an UNIMPLEMENTED error if set unless explicitly documented otherwise in service or product specific documentation.
+        bool returnPartialSuccess = false;
         
+        [[nodiscard]] static ListOperationsRequest fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    // The response message for Operations.ListOperations.
+    struct ListOperationsResponse : IJsonSerializable<ListOperationsResponse>
+    {
+        // A list of operations that matches the specified filter in the request.
+        std::vector<Operation> operations;
+        // The standard List next-page token.
+        std::string nextPageToken;
+        // Unordered list. Unreachable resources. Populated when the request sets ListOperationsRequest.return_partial_success
+        // and reads across collections. For example, when attempting to list all resources across all supported locations.
+        std::vector<std::string> unreachable;
+
+        [[nodiscard]] static ListOperationsResponse fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
     };
 
     // Request containing the Content for the model to embed.
@@ -145,6 +179,178 @@ FrenumClassInNamespace(GeminiCPP, BatchState, uint8_t,
         OutputType output;
         
         [[nodiscard]] static GenerateContentBatchOutput fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    // The request to be processed in the batch.
+    struct InlinedRequest : IJsonSerializable<InlinedRequest>
+    {
+        // Required. The request to be processed in the batch.
+        GenerateContentRequestBody request;
+        // Optional. The metadata to be associated with the request.
+        std::optional<nlohmann::json> metadata;
+
+        [[nodiscard]] static InlinedRequest fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    // The requests to be processed in the batch if provided as part of the batch creation request.
+    struct InlinedRequests : IJsonSerializable<InlinedRequests>
+    {
+        // Required. The requests to be processed in the batch.
+        std::vector<InlinedRequest> requests;
+        
+        [[nodiscard]] static InlinedRequests fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    // Configures the input to the batch request.
+    struct InputConfig : IJsonSerializable<InputConfig>
+    {
+        using SourceType = std::variant<
+            std::monostate,
+            // The name of the File containing the input requests.
+            std::string,
+            // The requests to be processed in the batch.
+            InlinedRequests
+        >;
+
+        // Required. The source of the input.
+        SourceType source;
+        
+        [[nodiscard]] static InputConfig fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    // A resource representing a batch of GenerateContent requests.
+    struct GenerateContentBatch : IJsonSerializable<GenerateContentBatch>
+    {
+        // Required. The name of the Model to use for generating the completion. Format: models/{model}.
+        ResourceName model;
+        // Output only. Identifier. Resource name of the batch. Format: batches/{batchId}.
+        ResourceName name;
+        // Required. The user-defined name of this batch.
+        std::string displayName;
+        // Required. Input configuration of the instances on which batch processing are performed.
+        InputConfig inputConfig;
+        // Output only. The output of the batch request.
+        GenerateContentBatchOutput output;
+        // Output only. The time at which the batch was created.
+        Support::Timestamp createTime;
+        // Output only. The time at which the batch processing completed.
+        Support::Timestamp endTime;
+        // Output only. The time at which the batch was last updated.
+        Support::Timestamp updateTime;
+        // Output only. Stats about the batch.
+        BatchStats batchStats;
+        // Output only. The state of the batch.
+        BatchState state;
+        // Optional. The priority of the batch. Batches with a higher priority value will be processed before
+        // batches with a lower priority value. Negative values are allowed. Default is 0.
+        std::optional<int64_t> priority; 
+        
+        [[nodiscard]] static GenerateContentBatch fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    struct ModelsBatchGenerateContentRequestBody : IJsonSerializable<ModelsBatchGenerateContentRequestBody>
+    {
+        GenerateContentBatch request;
+
+        [[nodiscard]] static ModelsBatchGenerateContentRequestBody fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    struct ModelsBatchGenerateContentResponseBody : IJsonSerializable<ModelsBatchGenerateContentResponseBody>
+    {
+        Operation response;
+
+        [[nodiscard]] static ModelsBatchGenerateContentResponseBody fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    struct ModelsAsyncBatchGenerateContentRequestBody : IJsonSerializable<ModelsAsyncBatchGenerateContentRequestBody>
+    {
+        GenerateContentBatch request;
+
+        [[nodiscard]] static ModelsAsyncBatchGenerateContentRequestBody fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    struct ModelsAsyncBatchGenerateContentResponseBody : IJsonSerializable<ModelsAsyncBatchGenerateContentResponseBody>
+    {
+        Operation response;
+
+        [[nodiscard]] static ModelsAsyncBatchGenerateContentResponseBody fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    struct BatchesGetRequestBody : IJsonSerializable<BatchesGetRequestBody>
+    {
+        [[nodiscard]] static BatchesGetRequestBody fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    struct BatchesGetResponseBody : IJsonSerializable<BatchesGetResponseBody>
+    {
+        Operation response;
+        
+        [[nodiscard]] static BatchesGetResponseBody fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+    
+    struct BatchesListRequestBody : IJsonSerializable<BatchesListRequestBody>
+    {
+        [[nodiscard]] static BatchesListRequestBody fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    struct BatchesListResponseBody : IJsonSerializable<BatchesListResponseBody>
+    {
+        ListOperationsResponse response;
+        
+        [[nodiscard]] static BatchesListResponseBody fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    struct BatchesCancelRequestBody : IJsonSerializable<BatchesCancelRequestBody>
+    {
+        [[nodiscard]] static BatchesCancelRequestBody fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    struct BatchesCancelResponseBody : IJsonSerializable<BatchesCancelResponseBody>
+    {
+        [[nodiscard]] static BatchesCancelResponseBody fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    struct BatchesDeleteRequestBody : IJsonSerializable<BatchesDeleteRequestBody>
+    {
+        [[nodiscard]] static BatchesDeleteRequestBody fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    struct BatchesDeleteResponseBody : IJsonSerializable<BatchesDeleteResponseBody>
+    {
+        [[nodiscard]] static BatchesDeleteResponseBody fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    struct BatchesUpdateEmbedContentBatchQueryParameters : IJsonSerializable<BatchesUpdateEmbedContentBatchQueryParameters>
+    {
+        // Optional. The list of fields to update. This is a comma-separated list of fully qualified names of fields. Example: "user.displayName,photo".
+        Support::FieldMask updateMask;
+        
+        [[nodiscard]] static BatchesUpdateEmbedContentBatchQueryParameters fromJson(const nlohmann::json& j);
+        [[nodiscard]] nlohmann::json toJson() const override;
+    };
+
+    struct BatchesUpdateEmbedContentBatchRequestBody : IJsonSerializable<BatchesUpdateEmbedContentBatchRequestBody>
+    {
+        // TODO:
+        
+        [[nodiscard]] static BatchesUpdateEmbedContentBatchRequestBody fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const override;
     };
 }

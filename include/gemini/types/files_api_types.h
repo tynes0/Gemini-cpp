@@ -16,6 +16,18 @@
 #include "gemini/support.h"
 #include "gemini/url.h"
 
+#ifdef FAILED
+#undef FAILED
+#endif
+
+#ifdef REGISTERED
+#undef REGISTERED
+#endif
+
+#ifdef UPLOADED
+#undef UPLOADED
+#endif
+
 namespace GeminiCPP
 {
     FrenumClassInNamespace(GeminiCPP, Source, uint8_t,

@@ -3,29 +3,43 @@
 
 namespace GeminiCPP
 {
-    RequestBuilder::RequestBuilder(Client* client) : client_(client) {}
+    RequestBuilder::RequestBuilder(Client* client) 
+        : client_(client), 
+          model_(ModelHelper::stringRepresentation(Model::GEMINI_2_5_FLASH)),
+          currentContent_(Content::User())
+    {
+    }
+
+    GenerationConfig& RequestBuilder::ensureConfig()
+    {
+        if (!requestPrototype_.generationConfig.has_value())
+        {
+            requestPrototype_.generationConfig = GenerationConfig{};
+        }
+        return *requestPrototype_.generationConfig;
+    }
 
     RequestBuilder& RequestBuilder::model(Model m)
     {
-        model_ = m;
+        model_ = ModelHelper::stringRepresentation(m);
         return *this;
     }
 
     RequestBuilder& RequestBuilder::systemInstruction(const std::string& instruction)
     {
-        systemInstruction_ = instruction;
+        requestPrototype_.systemInstruction = Content::User().text(instruction); // System instruction is technically content
         return *this;
     }
 
     RequestBuilder& RequestBuilder::text(const std::string& t)
     {
-        parts_.push_back(Part::Text(TextData{.text = t}));
+        currentContent_.text(t);
         return *this;
     }
 
     RequestBuilder& RequestBuilder::image(const std::string& filepath)
     {
-        parts_.push_back(Part::Media(Blob::createFromPath(filepath)));
+        currentContent_.image(filepath);
         return *this;
     }
 
@@ -33,7 +47,7 @@ namespace GeminiCPP
     {
         Tool t;
         t.googleSearch = GoogleSearch{};
-        tools_.push_back(t);
+        tool(t);
         return *this;
     }
 
@@ -41,13 +55,13 @@ namespace GeminiCPP
     {
         Tool t;
         t.codeExecution = CodeExecution{};
-        tools_.push_back(t);
+        tool(t);
         return *this;
     }
 
     RequestBuilder& RequestBuilder::cachedContent(const std::string& cacheName)
     {
-        cachedContent_ = cacheName;
+        requestPrototype_.cachedContent = ResourceName::CachedContent(cacheName);
         return *this;
     }
 
@@ -56,92 +70,99 @@ namespace GeminiCPP
         Tool t;
         GoogleMaps maps;
         maps.enableWidget = enableWidget;
-        
         t.googleMaps = maps;
-        tools_.push_back(t);
+        tool(t);
         return *this;
     }
 
     RequestBuilder& RequestBuilder::tool(const Tool& tool)
     {
-        tools_.push_back(tool);
+        if (!requestPrototype_.tools.has_value())
+        {
+            requestPrototype_.tools = std::vector<Tool>{};
+        }
+        requestPrototype_.tools->push_back(tool);
         return *this;
     }
 
     RequestBuilder& RequestBuilder::location(double latitude, double longitude)
     {
-        if (!toolConfig_.has_value())
-            toolConfig_ = ToolConfig{};
+        if (!requestPrototype_.toolConfig.has_value())
+            requestPrototype_.toolConfig = ToolConfig{};
         
-        if (!toolConfig_->retrievalConfig.has_value())
-            toolConfig_->retrievalConfig = RetrievalConfig{};
+        if (!requestPrototype_.toolConfig->retrievalConfig.has_value())
+            requestPrototype_.toolConfig->retrievalConfig = RetrievalConfig{};
             
-        toolConfig_->retrievalConfig->latLng = LatLng{latitude, longitude};
+        requestPrototype_.toolConfig->retrievalConfig->latLng = {
+            .latitude = latitude,
+            .longitude = longitude
+        };
         
         return *this;
     }
 
     RequestBuilder& RequestBuilder::toolConfig(const ToolConfig& config)
     {
-        toolConfig_ = config;
+        requestPrototype_.toolConfig = config;
         return *this;
     }
 
     RequestBuilder& RequestBuilder::jsonMode()
     {
-        config_.responseMimeType = "application/json";
+        ensureConfig().responseMimeType = "application/json";
         return *this;
     }
 
     RequestBuilder& RequestBuilder::temperature(float temp)
     {
-        config_.temperature = temp;
+        ensureConfig().temperature = temp;
         return *this;
     }
 
     RequestBuilder& RequestBuilder::topP(float p)
     {
-        config_.topP = p;
+        ensureConfig().topP = p;
         return *this;
     }
 
     RequestBuilder& RequestBuilder::topK(int k)
     {
-        config_.topK = k;
+        ensureConfig().topK = k;
         return *this;
     }
 
     RequestBuilder& RequestBuilder::maxTokens(int count)
     {
-        config_.maxOutputTokens = count;
+        ensureConfig().maxOutputTokens = count;
         return *this;
     }
 
     RequestBuilder& RequestBuilder::candidateCount(int count)
     {
-        config_.candidateCount = count;
+        ensureConfig().candidateCount = count;
         return *this;
     }
 
     RequestBuilder& RequestBuilder::stopSequences(const std::vector<std::string>& sequences)
     {
-        config_.stopSequences = sequences;
+        ensureConfig().stopSequences = sequences;
         return *this;
     }
 
     RequestBuilder& RequestBuilder::responseSchema(const nlohmann::json& schema)
     {
-        config_.responseJsonSchema = schema;
-        if (!config_.responseMimeType.has_value())
+        ensureConfig().responseJsonSchema = schema;
+        // If a schema is given, mimeType should be (I think) application/json
+        if (!ensureConfig().responseMimeType.has_value())
         {
-            config_.responseMimeType = "application/json";
+            ensureConfig().responseMimeType = "application/json";
         }
         return *this;
     }
 
     RequestBuilder& RequestBuilder::seed(int64_t seedValue)
     {
-        config_.seed = seedValue;
+        ensureConfig().seed = seedValue;
         return *this;
     }
 
@@ -151,7 +172,7 @@ namespace GeminiCPP
         tc.includeThoughts = includeThoughts;
         tc.thinkingBudget = budget;
         
-        config_.thinkingConfig = tc;
+        ensureConfig().thinkingConfig = tc;
         return *this;
     }
 
@@ -161,7 +182,7 @@ namespace GeminiCPP
         tc.includeThoughts = includeThoughts;
         tc.thinkingLevel = level;
         
-        config_.thinkingConfig = tc;
+        ensureConfig().thinkingConfig = tc;
         return *this;
     }
 
@@ -170,62 +191,78 @@ namespace GeminiCPP
         ThinkingConfig tc;
         tc.includeThoughts = includeThoughts;
         
-        config_.thinkingConfig = tc;
+        ensureConfig().thinkingConfig = tc;
         return *this;
     }
 
     RequestBuilder& RequestBuilder::thinking(const ThinkingConfig& thinkingConfig)
     {
-        config_.thinkingConfig = thinkingConfig;
+        ensureConfig().thinkingConfig = thinkingConfig;
         return *this;
     }
 
     RequestBuilder& RequestBuilder::safety(HarmCategory category, HarmBlockThreshold threshold)
     {
+        if (!requestPrototype_.safetySettings.has_value())
+        {
+            requestPrototype_.safetySettings = std::vector<SafetySetting>{};
+        }
+
         SafetySetting setting;
         setting.category = category;
         setting.threshold = threshold;
-        safetySettings_.push_back(setting);
+        requestPrototype_.safetySettings->push_back(setting);
+        
         return *this;
     }
 
     GenerationResult RequestBuilder::generate() const
     {
-        return client_->generateFromBuilder(model_, systemInstruction_, cachedContent_, parts_, config_, safetySettings_, tools_);
+        // Copy the prototype and add the content
+        GenerateContentRequestBody finalRequest = requestPrototype_;
+        finalRequest.contents.push_back(currentContent_);
+
+        return client_->generateContent(model_, finalRequest);
     }
 
     GenerationResult RequestBuilder::stream(const StreamCallback& callback) const
     {
-        return client_->streamFromBuilder(model_, systemInstruction_, cachedContent_, parts_, config_, safetySettings_, callback, tools_);
+        GenerateContentRequestBody finalRequest = requestPrototype_;
+        finalRequest.contents.push_back(currentContent_);
+
+        // The stream request body and the regular request body are (mostly) identical in structure,
+        // but if we used a specialized structure for the stream, copying/conversion is required.
+        // Client::streamGenerateContent expects StreamGenerateContentRequestBody. GenerateContentRequestBody
+        // and StreamGenerateContentRequestBody are structurally identical (JSON fields).
+        // Therefore, we can safely pass values (or write conversion operators within the types xD).
+        
+        StreamGenerateContentRequestBody streamRequest;
+
+        streamRequest.contents = finalRequest.contents;
+        streamRequest.tools = finalRequest.tools;
+        streamRequest.toolConfig = finalRequest.toolConfig;
+        streamRequest.safetySettings = finalRequest.safetySettings;
+        streamRequest.systemInstruction = finalRequest.systemInstruction;
+        streamRequest.generationConfig = finalRequest.generationConfig;
+        streamRequest.cachedContent = finalRequest.cachedContent;
+
+        return client_->streamGenerateContent(model_, streamRequest, callback);
     }
 
     std::future<GenerationResult> RequestBuilder::generateAsync() const
     {
-        return client_->generateFromBuilderAsync(
-            model_, 
-            systemInstruction_,
-            cachedContent_,
-            parts_, 
-            config_, 
-            safetySettings_, 
-            tools_,
-            toolConfig_
-        );
+        // create a copy for lambda capture
+        auto self = *this;
+        return std::async(std::launch::async, [self]() {
+            return self.generate();
+        });
     }
 
     std::future<GenerationResult> RequestBuilder::streamAsync(const StreamCallback& callback) const
     {
-        return client_->streamFromBuilderAsync(
-            model_, 
-            systemInstruction_,
-            cachedContent_,
-            parts_, 
-            config_, 
-            safetySettings_, 
-            callback, 
-            tools_,
-            toolConfig_
-        );
+        auto self = *this;
+        return std::async(std::launch::async, [self, callback]() {
+            return self.stream(callback);
+        });
     }
 }
-    

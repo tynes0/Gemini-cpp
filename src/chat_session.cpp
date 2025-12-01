@@ -5,18 +5,17 @@
 #include "gemini/uuid.h"
 #include "gemini/logger.h"
 #include "gemini/storage.h"
-#include "internal/payload_builder.h"
 
 namespace GeminiCPP
 {
-    ChatSession::ChatSession(Client* client, Model model, std::string sessionName, std::string systemInstruction, std::string sessionId)
-        : client_(client), model_(ModelHelper::stringRepresentation(model)), sessionName_(std::move(sessionName)), systemInstruction_(std::move(systemInstruction))
+    ChatSession::ChatSession(Client* client, Model model, std::string sessionName, std::string sessionId)
+        : client_(client), model_(ModelHelper::stringRepresentation(model)), sessionName_(std::move(sessionName))
     {
         sessionId_ = sessionId.empty() ? Uuid::generate() : std::move(sessionId);
     }
 
-    ChatSession::ChatSession(Client* client, std::string_view model, std::string sessionName, std::string systemInstruction, std::string sessionId)
-        : client_(client), model_(model), sessionId_(std::move(sessionId)), sessionName_(std::move(sessionName)), systemInstruction_(std::move(systemInstruction))
+    ChatSession::ChatSession(Client* client, std::string_view model, std::string sessionName, std::string sessionId)
+        : client_(client), model_(model), sessionId_(std::move(sessionId)), sessionName_(std::move(sessionName))
     {
     }
 
@@ -42,7 +41,6 @@ namespace GeminiCPP
     GenerationResult ChatSession::send(const Content& content)
     {
         int remainingTurns = 0;
-
         {
             std::lock_guard<std::mutex> lock(mutex_);
             history_.push_back(content);
@@ -65,6 +63,7 @@ namespace GeminiCPP
             if (!autoReplyEnabled)
                 return result;
 
+            // --- FUNCTION CALLING AUTO-REPLY LOGIC ---
             bool hasFunctionCall = false;
             Content functionResponseContent = Content::Function();
 
@@ -77,28 +76,25 @@ namespace GeminiCPP
 
                     auto jsonResult = functionRegistry_.invoke(call->name, call->args);
                     
+                    FunctionResponse response;
+                    response.name = call->name;
+                    
                     if (jsonResult.has_value())
                     {
-                        FunctionResponse response;
-                        response.name = call->name;
                         response.responseContent = jsonResult.value();
-                        functionResponseContent.functionResponse(response);
-                    }
-                    else
+                    } else
                     {
                         GEMINI_ERROR("Function invocation failed: {}", call->name);
-                        FunctionResponse response;
-                        response.name = call->name;
-                        response.responseContent = {{"error", "Function execution failed or not found"}};
-                        functionResponseContent.functionResponse(response);
+                        response.responseContent = {
+                            {"error", "Function execution failed or not found"}
+                        };
                     }
+                    functionResponseContent.functionResponse(response);
                 }
             }
 
             if (!hasFunctionCall)
-            {
                 return result;
-            }
 
             {
                 std::lock_guard<std::mutex> lock(mutex_);
@@ -173,7 +169,6 @@ namespace GeminiCPP
     {
         return model_;
     }
-
 
     void ChatSession::setSystemInstruction(std::string systemInstruction)
     {
@@ -317,7 +312,6 @@ namespace GeminiCPP
             client,
             modelName,
             j.value("name", ""),
-            j.value("systemInstruction", ""),
             j.value("id", "")
         );
         
@@ -335,29 +329,35 @@ namespace GeminiCPP
     GenerationResult ChatSession::sendInternal()
     {
         if (!client_)
-        {
-            GEMINI_ERROR("Error: Client is null");
             return GenerationResult::Failure("Client is null");
-        }
 
-        nlohmann::json payload;
-        Url url;
+        GenerateContentRequestBody request;
+        
         {
             std::lock_guard<std::mutex> lock(mutex_);
             
-            payload = Internal::PayloadBuilder::build(
-                history_, 
-                systemInstruction_,
-                cachedContent_,
-                config_,
-                safetySettings_,
-                getCombinedTools()
-            );
-
-            url = Url(ResourceName::Model(model_), ":generateContent");
+            // Populate Request Body using types
+            request.contents = history_;
+            
+            if (!systemInstruction_.empty())
+                request.systemInstruction = Content::User().text(systemInstruction_); // System instruction content
+            
+            if (!cachedContent_.empty())
+                request.cachedContent = ResourceName::CachedContent(cachedContent_);
+            
+            // Config & Safety
+            request.generationConfig = config_;
+            if (!safetySettings_.empty())
+                request.safetySettings = safetySettings_;
+            
+            // Tools
+            std::vector<Tool> combinedTools = getCombinedTools();
+            if (!combinedTools.empty())
+                request.tools = combinedTools;
         }
 
-        auto result = client_->submitRequest(url, payload);
+        // Call Client
+        GenerationResult result = client_->generateContent(model_, request);
 
         if (result.success)
         {
@@ -370,28 +370,31 @@ namespace GeminiCPP
 
     GenerationResult ChatSession::streamInternal(const StreamCallback& callback)
     {
-        if (!client_)
-        {
-            GEMINI_ERROR("Error: Client is null");
-            return GenerationResult::Failure("Client is null");
-        }
-        nlohmann::json payload;
+        if (!client_) return GenerationResult::Failure("Client is null");
+
+        StreamGenerateContentRequestBody request;
+        
         {
             std::lock_guard<std::mutex> lock(mutex_);
-            payload = Internal::PayloadBuilder::build(
-                history_, 
-                systemInstruction_,
-                cachedContent_,
-                config_, 
-                safetySettings_, 
-                getCombinedTools()
-            );
+            
+            request.contents = history_;
+            
+            if (!systemInstruction_.empty())
+                request.systemInstruction = Content::User().text(systemInstruction_);
+            
+            if (!cachedContent_.empty())
+                request.cachedContent = ResourceName::CachedContent(cachedContent_);
+            
+            request.generationConfig = config_;
+            if (!safetySettings_.empty())
+                request.safetySettings = safetySettings_;
+            
+            std::vector<Tool> combinedTools = getCombinedTools();
+            if (!combinedTools.empty())
+                request.tools = combinedTools;
         }
-        
-        Url url(ResourceName::Model(model_), ":streamGenerateContent");
-        url.addQuery("alt", "sse");
 
-        GenerationResult result = client_->submitStreamRequest(url, payload, callback);
+        GenerationResult result = client_->streamGenerateContent(model_, request, callback);
 
         if (result.success)
         {
