@@ -9,10 +9,12 @@ namespace GeminiCPP
     {
         Status result{};
 
-        result.code = static_cast<HttpMappedStatusCode>(j.value("code", 0));
-        result.message = j.value("message", "");
-        if (j.contains("details"))
-            result.details = j.get<std::vector<nlohmann::json>>();
+        nlohmann::json json = j.contains("status") ? j["status"] : j;
+
+        result.code = static_cast<HttpMappedStatusCode>(json.value("code", 0));
+        result.message = json.value("message", "");
+        if (json.contains("details"))
+            result.details = json.get<std::vector<nlohmann::json>>();
 
         return result;
     }
@@ -51,7 +53,6 @@ namespace GeminiCPP
         File result{};
 
         nlohmann::json json = j.contains("file") ? j["file"] : j;
-
 
         result.name = json.value("name", "");
         if (json.contains("displayName"))

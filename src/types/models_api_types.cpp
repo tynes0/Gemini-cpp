@@ -9,24 +9,26 @@ namespace GeminiCPP
     
     ModelInfo ModelInfo::fromJson(const nlohmann::json& j)
     {
+        nlohmann::json json = j.contains("Model") ? j["Model"] : j;
+        
         ModelInfo info{};
-        info.name = j.value("name", "");
-        info.baseModelId = j.value("baseModelId", "");
-        info.version = j.value("version", "");
-        info.displayName = j.value("displayName", "");
-        info.description = j.value("description", "");
-        info.inputTokenLimit = j.value("inputTokenLimit", 0);
-        info.outputTokenLimit = j.value("outputTokenLimit", 0);
-        info.thinking = j.value("thinking", false);
-        info.temperature = j.value("temperature", 0.0f);
-        info.maxTemperature = j.value("maxTemperature", 0.0f);
-        info.topP = j.value("topP", 0.0f);
-        info.topK = j.value("topK", 0);
+        info.name = json.value("name", "");
+        info.baseModelId = json.value("baseModelId", "");
+        info.version = json.value("version", "");
+        info.displayName = json.value("displayName", "");
+        info.description = json.value("description", "");
+        info.inputTokenLimit = json.value("inputTokenLimit", 0);
+        info.outputTokenLimit = json.value("outputTokenLimit", 0);
+        info.thinking = json.value("thinking", false);
+        info.temperature = json.value("temperature", 0.0f);
+        info.maxTemperature = json.value("maxTemperature", 0.0f);
+        info.topP = json.value("topP", 0.0f);
+        info.topK = json.value("topK", 0);
 
         info.supportedGenerationMethods = GM_NONE;
-        if(j.contains("supportedGenerationMethods"))
+        if(json.contains("supportedGenerationMethods"))
         {
-            for(const auto& methodJson : j["supportedGenerationMethods"])
+            for(const auto& methodJson : json["supportedGenerationMethods"])
                 info.supportedGenerationMethods |= GenerationMethodHelper::fromString(methodJson.get<std::string>());
         }
         return info;
@@ -167,10 +169,11 @@ namespace GeminiCPP
 
     ModelsPredictLongRunningRequestBody ModelsPredictLongRunningRequestBody::fromJson(const nlohmann::json& j)
     {
+        nlohmann::json json = j.contains("Operation") ? j["Operation"] : j;
         ModelsPredictLongRunningRequestBody result{};
 
-        if (j.contains("instances")) result.instances = j["instances"].get<std::vector<nlohmann::json>>();
-        if (j.contains("parameters")) result.parameters = j["parameters"];
+        if (json.contains("instances")) result.instances = json["instances"].get<std::vector<nlohmann::json>>();
+        if (json.contains("parameters")) result.parameters = json["parameters"];
 
         return result;
     }
