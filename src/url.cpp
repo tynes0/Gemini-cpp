@@ -99,7 +99,7 @@ namespace GeminiCPP
         return ResourceType::NONE;
     }
 
-    Url::Url(const ResourceName& resource, std::string_view action)
+    Url::Url(const ResourceName& resource, const std::string& action)
     {
         auto base = getBase(EndpointType::REST);
         full_url_.reserve(base.size() + resource.str().size() + action.size());
@@ -129,15 +129,22 @@ namespace GeminiCPP
         full_url_ += resource.str();
     }
 
-    Url::Url(std::string_view endpoint, EndpointType type)
+    Url::Url(const std::string& endpoint, EndpointType type)
     {
-        auto base = getBase(type);
-        full_url_.reserve(base.size() + endpoint.size());
-        full_url_ += base;
-        full_url_ += endpoint;
+        if (endpoint.starts_with("http://") || endpoint.starts_with("https://"))
+        {
+            full_url_ = endpoint;
+        }
+        else
+        {
+            auto base = getBase(type);
+            full_url_.reserve(base.size() + endpoint.size());
+            full_url_ += base;
+            full_url_ += endpoint;
+        }
     }
 
-    Url& Url::addQuery(std::string_view key, std::string_view value)
+    Url& Url::addQuery(const std::string& key, const std::string& value)
     {
         full_url_ += (has_query_ ? "&" : "?");
         full_url_ += key;

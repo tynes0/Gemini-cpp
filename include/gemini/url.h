@@ -77,14 +77,14 @@ namespace GeminiCPP
         Url& operator=(Url&&) = default;
         ~Url() = default;
 
-        Url(const ResourceName& resource, std::string_view action);
+        Url(const ResourceName& resource, const std::string& action);
         Url(const ResourceName& resource, GenerationMethod action);
 
         explicit Url(const ResourceName& resource);
 
-        explicit Url(std::string_view endpoint, EndpointType type = EndpointType::REST);
+        explicit Url(const std::string& endpoint, EndpointType type = EndpointType::REST);
         
-        Url& addQuery(std::string_view key, std::string_view value = "");
+        Url& addQuery(const std::string& key, const std::string& value = "");
 
         [[nodiscard]] std::string str() const;
         [[nodiscard]] explicit operator std::string() const;
