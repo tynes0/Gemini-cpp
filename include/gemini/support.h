@@ -15,31 +15,41 @@
 
 namespace GeminiCPP
 {
+    /// @brief Callback type for handling streamed text chunks.
     using StreamCallback = std::function<void(std::string_view)>;
 }
 
 namespace GeminiCPP::Support
 {
+    /**
+     * @brief Configuration for HTTP request retries.
+     */
     struct RetryConfig
     {
-        int maxRetries = 3;
-        int initialDelayMs = 1000;
-        int multiplier = 2;
-        int maxDelayMs = 10000;
-        bool enableJitter = true;
+        int maxRetries = 3;         ///< Maximum number of retry attempts.
+        int initialDelayMs = 1000;  ///< Initial delay in milliseconds before the first retry.
+        int multiplier = 2;         ///< Multiplier for exponential backoff.
+        int maxDelayMs = 10000;     ///< Maximum delay in milliseconds.
+        bool enableJitter = true;   ///< Whether to add random jitter to the delay.
     };
 
+    /**
+     * @brief Result of an API key validation check.
+     */
     struct ApiValidationResult
     {
-        bool isValid = false;
-        std::string message;
-        std::string reason;
-        HttpMappedStatusCode statusCode = HttpMappedStatusCode::STATUS_CODE_UNSPECIFIED;
+        bool isValid = false;       ///< True if the key is valid.
+        std::string message;        ///< Status message (e.g., "OK" or error details).
+        std::string reason;         ///< Detailed reason for failure.
+        HttpMappedStatusCode statusCode = HttpMappedStatusCode::STATUS_CODE_UNSPECIFIED; ///< HTTP status code returned.
 
         [[nodiscard]] explicit operator bool() const { return isValid; }
     };
     
-    // Supported aspect ratios: 1:1, 2:3, 3:2, 3:4, 4:3, 9:16, 16:9, 21:9.
+    /**
+     * @brief Represents an image aspect ratio.
+     * Supported ratios: 1:1, 2:3, 3:2, 3:4, 4:3, 9:16, 16:9, 21:9.
+     */
     class AspectRatio
     {
     public:
@@ -59,7 +69,10 @@ namespace GeminiCPP::Support
         int h = 0;
     };
 
-    // Supported values are 1K, 2K, 4K. If not specified, default value 1K.
+    /**
+     * @brief Represents the size of an image for generation.
+     * Supported values are 1K, 2K, 4K.
+     */
     class ImageSize
     {
     public:
@@ -86,10 +99,8 @@ namespace GeminiCPP::Support
         Value value = Value::K1;
     };
 
-    /* BCP 47 format -- Valid values are:
-     * de-DE, en-AU, en-GB, en-IN, en-US, es-US, fr-FR, hi-IN, pt-BR, ar-XA,
-     * es-ES, fr-CA, id-ID, it-IT, ja-JP, tr-TR, vi-VN, bn-IN, gu-IN, kn-IN,
-     * ml-IN, mr-IN, ta-IN, te-IN, nl-NL, ko-KR, cmn-CN, pl-PL, ru-RU, th-TH.
+    /**
+     * @brief Helper class for BCP 47 language codes (e.g., "en-US", "tr-TR").
      */
     class LanguageCode
     {
@@ -108,6 +119,9 @@ namespace GeminiCPP::Support
         std::string value = Default;
     };
     
+    /**
+     * @brief Wrapper for Base64 encoded strings to differentiate them from raw strings.
+     */
     class Base64String
     {
     public:
@@ -118,17 +132,24 @@ namespace GeminiCPP::Support
         Base64String& operator=(Base64String&& other) = default;
         ~Base64String() = default;
         
+        /**
+         * @brief Creates an instance from an already encoded base64 string.
+         */
         [[nodiscard]] static Base64String fromBase64(const std::string& b64);
 
-        // Raw string → Base64
+        /**
+         * @brief Creates an instance by encoding a raw string into base64.
+         */
         Base64String(const std::string& raw);
         Base64String& operator=(const std::string& raw);
 
         [[nodiscard]] std::string str() const;
         [[nodiscard]] operator std::string() const;
-        // Raw data decode (binary)
+        
+        /// @brief Decodes the base64 string into a byte vector.
         [[nodiscard]] std::vector<unsigned char> decode() const;
-        // Raw string decode (text)
+        
+        /// @brief Decodes the base64 string into a text string.
         [[nodiscard]] std::string decodeToString() const;
 
     private:
@@ -137,9 +158,9 @@ namespace GeminiCPP::Support
         std::string value;
     };
 
-    // Uses RFC 3339, where generated output will always be Z-normalized and use 0, 3, 6 or 9 fractional digits.
-    // Offsets other than "Z" are also accepted.
-    // Examples: "2014-10-02T15:01:23Z", "2014-10-02T15:01:23.045123456Z" or "2014-10-02T15:01:23+05:30".
+    /**
+     * @brief Represents a timestamp in RFC 3339 format.
+     */
     class Timestamp
     {
     public:
@@ -155,63 +176,43 @@ namespace GeminiCPP::Support
         [[nodiscard]] std::string str() const;
         [[nodiscard]] operator std::string() const;
     
-        // Convert to system_clock::time_point (UTC)
         [[nodiscard]] std::optional<std::chrono::system_clock::time_point> to_time_point() const;
     
     private:
-        // Stored as RFC3339 Z-normalized string (or empty if invalid)
         std::string value;
-        
-        // -------------------------
-        // Date math utilities (Howard Hinnant style)
-        // -------------------------
-        
-        // Returns days since civil 1970-01-01, can be negative. Implementation from Howard Hinnant.
+        // ... (private helpers omitted for brevity in docs)
         static int64_t days_from_civil(int64_t y, unsigned m, unsigned d) noexcept;
-    
-        // Convert a civil date/time to epoch seconds (UTC). Returns nullopt if overflowed.
         static std::optional<int64_t> civilToEpochSeconds(int year, int month, int day, int hour, int minute, int second) noexcept;
-        // Convert epoch seconds + nanos to RFC3339 Z-normalized with automatic fractional digits selection
         static std::string formatEpochZ(int64_t epoch_seconds, int nanos);
         static std::string formatEpochWithDigits(int64_t epoch_seconds, int nanos, int digits);
-        // helper: floor division for negative epoch seconds
         static int64_t floor_div(int64_t x, int64_t y);
-    
-        // inverse of days_from_civil: produce {year, month, day}
         static std::array<int,3> civil_from_days(int64_t z) noexcept;
     };
 
+    /**
+     * @brief Represents a FieldMask for update operations (JSON-style paths).
+     */
     class FieldMask
     {
     public:
         FieldMask() = default;
 
-        // Construct from JSON-style mask string: "user.displayName,photo"
         explicit FieldMask(const std::string& jsonMaskString);
-        // Construct from list of paths
         explicit FieldMask(const std::vector<std::string>& paths);
 
-        // Convert to JSON string format
         [[nodiscard]] std::string toJsonString() const;
-        // Parse JSON string
         void fromJsonString(const std::string& json);
-        // explicit → implicit cast to string
         operator std::string() const;
-        // Add a single path
+        
         void addPath(const std::string& path);
-        // Replace all paths
         void setPaths(const std::vector<std::string>& paths);
-        // Access underlying paths
         [[nodiscard]] const std::vector<std::string>& paths() const;
 
     private:
         std::vector<std::string> paths_;
         
-        // Trim whitespace
         static std::string trim(const std::string& s);
-        // snake_case → lowerCamelCase
         static std::string toLowerCamelCase(const std::string& field);
-        // Normalize and validate a single path
         void addProcessedPath(const std::string& raw);
     };
 }

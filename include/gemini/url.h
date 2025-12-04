@@ -9,6 +9,9 @@
 
 namespace GeminiCPP
 {
+    /**
+     * @brief Enum defining different types of Google API resources.
+     */
     FrenumClassInNamespace(GeminiCPP, ResourceType, uint8_t,
         MODEL,          // models/
         FILE,           // files/
@@ -19,14 +22,18 @@ namespace GeminiCPP
         NONE            // No Prefix (Raw string)
     )
     
+    /**
+     * @brief Enum defining endpoint types (Standard REST or Upload).
+     */
     FrenumClassInNamespace(GeminiCPP, EndpointType, uint8_t,
         REST, // Standard API (generativelanguage.googleapis.com/v1beta/)
         UPLOAD // File Upload (generativelanguage.googleapis.com/upload/v1beta/)
     )
     
-    // --- GENERAL RESOURCE MANAGER ---
-    // ResourceName("gemini-2.5", ResourceType::MODEL) -> "models/gemini-1.5"
-    // ResourceName("video.mp4", ResourceType::FILE)   -> "files/video.mp4"
+    /**
+     * @brief Helper class to manage and format resource names.
+     * * Ensures correct prefixes (e.g., "models/", "files/") are applied.
+     */
     class ResourceName
     {
     public:
@@ -37,13 +44,18 @@ namespace GeminiCPP
         ResourceName& operator=(ResourceName&& other) noexcept = default;
         ~ResourceName() = default;
         
+        /**
+         * @brief Constructs a ResourceName with an explicit type.
+         */
         explicit ResourceName(std::string name, ResourceType type = ResourceType::MODEL);
         ResourceName& operator=(const std::string& name);
         
+        /**
+         * @brief Constructs a ResourceName from a Model enum.
+         */
         ResourceName(Model model);
 
         // -- Static Factory Methods --
-        // Ex: ResourceName::File("video123")
         static ResourceName File(std::string name);
         static ResourceName Model(std::string name);
         static ResourceName Operation(std::string name);
@@ -63,7 +75,9 @@ namespace GeminiCPP
         static ResourceType detectTypeFromPrefix(std::string_view s);
     };
 
-    // --- URL BUILDER ---
+    /**
+     * @brief Helper class to build full API URLs.
+     */
     class Url
     {
     public:
@@ -77,20 +91,37 @@ namespace GeminiCPP
         Url& operator=(Url&&) = default;
         ~Url() = default;
 
+        /**
+         * @brief Constructs a URL for a resource and an action string.
+         * @param resource The target resource.
+         * @param action The action suffix (e.g., ":generateContent").
+         */
         Url(const ResourceName& resource, const std::string& action);
+
+        /**
+         * @brief Constructs a URL for a resource and a GenerationMethod enum.
+         */
         Url(const ResourceName& resource, GenerationMethod action);
 
+        /**
+         * @brief Constructs a URL for a resource (usually for GET requests).
+         */
         explicit Url(const ResourceName& resource);
 
+        /**
+         * @brief Constructs a URL from a raw endpoint string.
+         */
         explicit Url(const std::string& endpoint, EndpointType type = EndpointType::REST);
         
+        /**
+         * @brief Appends a query parameter to the URL.
+         */
         Url& addQuery(const std::string& key, const std::string& value = "");
 
         [[nodiscard]] std::string str() const;
         [[nodiscard]] explicit operator std::string() const;
 
     private:
-        // Helper: Returns the base URL based on the type
         static std::string_view getBase(EndpointType type);
         
         std::string full_url_;
