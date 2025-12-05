@@ -8,7 +8,11 @@
 
 namespace GeminiCPP
 {
-    // ref: https://docs.cloud.google.com/tasks/docs/reference/rpc/google.rpc#google.rpc.Code
+    /**
+     * @brief RPC status codes mapped to HTTP status codes.
+     * * Based on google.rpc.Code.
+     * * Ref: https://docs.cloud.google.com/tasks/docs/reference/rpc/google.rpc#google.rpc.Code
+     */
     FrenumClassInNamespace(GeminiCPP, HttpMappedStatusCode, int,
         STATUS_CODE_UNSPECIFIED = 0,
         // Not an error; returned on success. (HTTP Mapping: 200 OK)
@@ -79,19 +83,32 @@ namespace GeminiCPP
         DATA_LOSS = 500
     );
 
+    /**
+     * @brief Helper methods for status codes.
+     */
     class HttpMappedStatusCodeHelper
     {
     public:
+        /**
+         * @brief Checks if a raw integer code represents success (200).
+         */
         [[nodiscard]] static constexpr bool isSuccess(int code)
         {
             return code == 200;
         }
         
+        /**
+         * @brief Checks if an enum code represents success.
+         */
         [[nodiscard]] static constexpr bool isSuccess(HttpMappedStatusCode code)
         {
             return isSuccess(frenum::value(code));
         }
         
+        /**
+         * @brief Checks if the error is potentially transient and retryable.
+         * @details Retryable codes: 409, 429, 500, 503, 504.
+         */
         [[nodiscard]] static constexpr bool isRetryable(int code)
         {
             return code == 409 || code == 429 || code == 500 || code == 503 || code == 504;
