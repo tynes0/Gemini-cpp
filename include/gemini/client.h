@@ -7,7 +7,7 @@
 #include <future>
 #include <map>
 
-#include "model.h"
+#include "generation_method.h"
 #include "response.h"
 #include "url.h"
 #include "support.h"
@@ -67,7 +67,7 @@ namespace GeminiCPP
         /**
          * @brief Generates content using the specified model and a fully constructed request body.
          * * This is a low-level method that allows full control over the request payload.
-         * * @param model The model identifier (e.g., "models/gemini-1.5-flash").
+         * * @param model The model identifier (e.g., "models/gemini-2.5-flash").
          * @param request The structured request body containing contents, tools, config, etc.
          * @return GenerationResult containing the generated content or error details.
          */
@@ -88,19 +88,19 @@ namespace GeminiCPP
         /**
          * @brief Helper method to generate content from a simple text prompt.
          * * @param prompt The user's input text.
-         * @param model The model to use (default: GEMINI_2_5_FLASH).
+         * @param model The model to use (default: gemini-2.0-flash).
          * @return GenerationResult containing the response.
          */
-        [[nodiscard]] GenerationResult generateContent(const std::string& prompt, Model model = Model::GEMINI_2_5_FLASH);
+        [[nodiscard]] GenerationResult generateContent(const std::string& prompt, const std::string& model = "gemini-2.0-flash");
 
         /**
          * @brief Helper method for streaming content generation from a simple text prompt.
          * * @param prompt The user's input text.
          * @param callback Function to handle stream chunks.
-         * @param model The model to use (default: GEMINI_2_0_FLASH).
+         * @param model The model to use (default: gemini-2.0-flash).
          * @return GenerationResult containing the final response.
          */
-        [[nodiscard]] GenerationResult streamGenerateContent(const std::string& prompt, const StreamCallback& callback, Model model = Model::GEMINI_2_0_FLASH);
+        [[nodiscard]] GenerationResult streamGenerateContent(const std::string& prompt, const StreamCallback& callback, const std::string& model = "gemini-2.0-flash");
 
         // --- ASYNC METHODS ---
 
@@ -151,10 +151,9 @@ namespace GeminiCPP
          * @brief Starts a new multi-turn chat session.
          * * @param model The model to be used for the chat.
          * @param sessionName Optional name for the session.
-         * @param systemInstruction Optional system instruction to guide the model's behavior.
          * @return ChatSession A new chat session object.
          */
-        [[nodiscard]] ChatSession startChat(Model model = Model::GEMINI_2_0_FLASH, std::string sessionName = "", std::string systemInstruction = "");
+        [[nodiscard]] ChatSession startChat(const std::string& model, std::string sessionName = "");
 
         // --- HTTP ENGINE (Public for Modules) ---
         

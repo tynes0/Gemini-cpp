@@ -18,12 +18,6 @@ namespace GeminiCPP
         type_ = detectTypeFromPrefix(value_);
         return *this;
     }
-    
-    ResourceName::ResourceName(GeminiCPP::Model model)
-        : value_(ModelHelper::stringRepresentation(model)), type_(ResourceType::MODEL)
-    {
-        ensurePrefix();
-    }
 
     ResourceName ResourceName::File(std::string name)
     {

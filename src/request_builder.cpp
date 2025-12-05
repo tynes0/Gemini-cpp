@@ -5,7 +5,7 @@ namespace GeminiCPP
 {
     RequestBuilder::RequestBuilder(Client* client) 
         : client_(client), 
-          model_(ModelHelper::stringRepresentation(Model::GEMINI_2_5_FLASH)),
+          model_("gemini-2.0-flash"),
           currentContent_(Content::User())
     {
     }
@@ -19,9 +19,9 @@ namespace GeminiCPP
         return *requestPrototype_.generationConfig;
     }
 
-    RequestBuilder& RequestBuilder::model(Model m)
+    RequestBuilder& RequestBuilder::model(const std::string& m)
     {
-        model_ = ModelHelper::stringRepresentation(m);
+        model_ = m;
         return *this;
     }
 

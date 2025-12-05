@@ -73,21 +73,21 @@ namespace GeminiCPP
 
     // --- CONVENIENCE OVERLOADS ---
 
-    GenerationResult Client::generateContent(const std::string& prompt, Model model)
+    GenerationResult Client::generateContent(const std::string& prompt, const std::string& model)
     {
         // Construct a simple request body using the new types
         GenerateContentRequestBody req;
         req.contents.push_back(Content::User().text(prompt));
         
-        return generateContent(std::string(ModelHelper::stringRepresentation(model)), req);
+        return generateContent(model, req);
     }
 
-    GenerationResult Client::streamGenerateContent(const std::string& prompt, const StreamCallback& callback, Model model)
+    GenerationResult Client::streamGenerateContent(const std::string& prompt, const StreamCallback& callback, const std::string& model)
     {
         StreamGenerateContentRequestBody req;
         req.contents.push_back(Content::User().text(prompt));
 
-        return streamGenerateContent(std::string(ModelHelper::stringRepresentation(model)), req, callback);
+        return streamGenerateContent(model, req, callback);
     }
 
     // --- ASYNC WRAPPERS ---
@@ -113,9 +113,9 @@ namespace GeminiCPP
         return RequestBuilder(this);
     }
 
-    ChatSession Client::startChat(Model model, std::string sessionName, std::string systemInstruction)
+    ChatSession Client::startChat(const std::string& model, std::string sessionName)
     {
-        return {this, model, std::move(sessionName), std::move(systemInstruction)};
+        return {this, model, std::move(sessionName) };
     }
 
     // --- HTTP ENGINE & UTILS ---

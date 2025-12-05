@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#include "model.h"
+#include "generation_method.h"
 #include "response.h"
 #include "support.h"
 #include "types/generating_content_api_types.h"
@@ -32,10 +32,10 @@ namespace GeminiCPP
 
         /**
          * @brief Sets the model to be used for generation.
-         * @param m The model enum (e.g., Model::GEMINI_PRO).
+         * @param m The model to be used (e.g., gemini-2.0-flash).
          * @return RequestBuilder& Reference to self for chaining.
          */
-        RequestBuilder& model(Model m);
+        RequestBuilder& model(const std::string& m);
 
         /**
          * @brief Appends text content to the user's message.

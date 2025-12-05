@@ -8,15 +8,10 @@
 
 namespace GeminiCPP
 {
-    ChatSession::ChatSession(Client* client, Model model, std::string sessionName, std::string sessionId)
-        : client_(client), model_(ModelHelper::stringRepresentation(model)), sessionName_(std::move(sessionName))
+    ChatSession::ChatSession(Client* client, std::string_view model, std::string sessionName, std::string sessionId)
+        : client_(client), model_(model), sessionName_(std::move(sessionName))
     {
         sessionId_ = sessionId.empty() ? Uuid::generate() : std::move(sessionId);
-    }
-
-    ChatSession::ChatSession(Client* client, std::string_view model, std::string sessionName, std::string sessionId)
-        : client_(client), model_(model), sessionId_(std::move(sessionId)), sessionName_(std::move(sessionName))
-    {
     }
 
     ChatSession::ChatSession(const ChatSession& other)
@@ -151,12 +146,6 @@ namespace GeminiCPP
     std::string ChatSession::getId() const
     {
         return sessionId_;
-    }
-
-    void ChatSession::setModel(Model model)
-    {
-        std::lock_guard<std::mutex> lock(mutex_);
-        model_ = ModelHelper::stringRepresentation(model);
     }
 
     void ChatSession::setModel(std::string_view model)

@@ -5,7 +5,7 @@
 
 #include <string>
 #include <string_view>
-#include "model.h"
+#include "generation_method.h"
 
 namespace GeminiCPP
 {
@@ -50,11 +50,6 @@ namespace GeminiCPP
         explicit ResourceName(std::string name, ResourceType type = ResourceType::MODEL);
         ResourceName& operator=(const std::string& name);
         
-        /**
-         * @brief Constructs a ResourceName from a Model enum.
-         */
-        ResourceName(Model model);
-
         // -- Static Factory Methods --
         static ResourceName File(std::string name);
         static ResourceName Model(std::string name);

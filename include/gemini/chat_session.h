@@ -8,7 +8,7 @@
 #include <string>
 #include <mutex>
 
-#include "model.h"
+#include "generation_method.h"
 #include "response.h"
 #include "function_registry.h"
 #include "support.h"
@@ -26,15 +26,6 @@ namespace GeminiCPP
     class ChatSession 
     {
     public:
-        /**
-         * @brief Constructs a new ChatSession.
-         * @param client Pointer to the Client instance (must remain valid).
-         * @param model The model enum to use.
-         * @param sessionName Optional display name for the session.
-         * @param sessionId Optional ID (if empty, a UUID is generated).
-         */
-        ChatSession(Client* client, Model model, std::string sessionName = "", std::string sessionId = "");
-        
         /**
          * @brief Constructs a new ChatSession using a string for the model name.
          * @param client Pointer to the Client instance.
@@ -94,7 +85,6 @@ namespace GeminiCPP
         /**
          * @brief Updates the model used for this session.
          */
-        void setModel(Model model);
         void setModel(std::string_view model);
         [[nodiscard]] std::string getModel() const;
         

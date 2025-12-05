@@ -46,43 +46,6 @@ namespace GeminiCPP
         [[nodiscard]] static std::string bitmaskToString(uint32_t flags);
         [[nodiscard]] static std::vector<std::string> bitmaskToStringArray(uint32_t flags);
     };
-    
-    /**
-     * @brief Enumeration of supported Gemini models.
-     * * This enum maps C++ identifiers to the API string representations (e.g., GEMINI_2_5_FLASH -> "gemini-2.5-flash").
-     */
-    FrenumClassInNamespace(GeminiCPP, Model,  uint8_t,
-        GEMINI_2_0_FLASH,
-        GEMINI_2_0_FLASH_LITE,
-        GEMINI_2_5_FLASH,
-        GEMINI_2_5_FLASH_IMAGE,
-        GEMINI_2_5_FLASH_TTS,
-        GEMINI_2_5_FLASH_LITE,
-        GEMINI_2_5_PRO,
-        GEMINI_2_5_PRO_TTS,
-        GEMINI_3_0_PRO_PREVIEW,
-        GEMINI_3_0_PRO_IMAGE_PREVIEW,
-
-        GEMINI_FLASH_LATEST,
-        GEMINI_PRO_LATEST
-    )
-
-    struct ModelHelper
-    {
-        /**
-         * @brief Converts a Model enum to its API string representation.
-         * @param model The model enum.
-         * @return String view of the model ID (e.g., "gemini-2.5-flash").
-         */
-        [[nodiscard]] static std::string_view stringRepresentation(Model model);
-        
-        /**
-         * @brief Converts a string model ID to a Model enum.
-         * @param str The model ID string.
-         * @return The corresponding Model enum (defaults to GEMINI_2_5_FLASH if unknown).
-         */
-        [[nodiscard]] static Model fromStringRepresentation(const std::string& str);
-    };
 }
 
 #endif // GEMINI_MODEL_H
