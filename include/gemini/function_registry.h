@@ -16,14 +16,26 @@
 
 namespace GeminiCPP
 {
+    /**
+     * @brief Manages client-side function registration and invocation for Tool use.
+     * * This class automatically generates JSON schemas from C++ function signatures and
+     * handles the invocation of these functions when requested by the model.
+     */
     class FunctionRegistry
     {
     public:
+        /**
+         * @brief Internal structure to hold function metadata and its invoker.
+         */
         struct RegisteredFunction
         {
             FunctionDeclaration declaration;
             std::function<nlohmann::json(const nlohmann::json&)> invoker; 
         };
+
+        // ====================================================================
+        // ==== Template metaprogramming traits for function introspection ====
+        // ====================================================================
 
         template <typename T>
         struct function_traits;
@@ -45,7 +57,19 @@ namespace GeminiCPP
         // Functor Wrapper
         template <typename T>
         struct function_traits : public function_traits<decltype(&T::operator())> {};
+        
+        // ====================================================================
+        // ====================================================================
+        // ====================================================================
 
+        /**
+         * @brief Registers a C++ function/lambda to be available to the Gemini model.
+         * @tparam Func The function type.
+         * @param name The name of the function (exposed to LLM).
+         * @param func The actual C++ function or lambda to execute.
+         * @param description A description of what the function does (critical for LLM to use it correctly).
+         * @param argNames A list of argument names corresponding to the function parameters.
+         */
         template <typename Func>
         void registerFunction(const std::string& name, Func&& func, const std::string& description, const std::vector<std::string>& argNames)
         {
@@ -82,6 +106,12 @@ namespace GeminiCPP
             GEMINI_INFO("Function registered: {}", name);
         }
 
+        /**
+         * @brief Invokes a registered function by name using JSON arguments.
+         * @param name The function name to call.
+         * @param args The arguments as a JSON object (key-value pairs).
+         * @return std::optional<nlohmann::json> The result of the function execution, or nullopt if not found.
+         */
         [[nodiscard]] std::optional<nlohmann::json> invoke(const std::string& name, const nlohmann::json& args)
         {
             if (functions_.contains(name))
@@ -91,6 +121,10 @@ namespace GeminiCPP
             return std::nullopt;
         }
 
+        /**
+         * @brief Generates a Tool definition containing all registered functions.
+         * @return A Tool object ready to be sent in a Gemini API request.
+         */
         [[nodiscard]] Tool getTool() const
         {
             Tool t;
@@ -101,6 +135,9 @@ namespace GeminiCPP
             return t;
         }
 
+        /**
+         * @brief Checks if the registry is empty.
+         */
         [[nodiscard]] bool empty() const { return functions_.empty(); }
 
     private:
