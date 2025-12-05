@@ -16,7 +16,9 @@
 
 namespace GeminiCPP
 {
-    // The state of the batch.
+    /**
+     * @brief State of a Batch Job.
+     */
     FrenumClassInNamespace(GeminiCPP, BatchState, uint8_t,
         BATCH_STATE_UNSPECIFIED,
         BATCH_STATE_PENDING, // The service is preparing to run the batch.
@@ -26,7 +28,11 @@ namespace GeminiCPP
         BATCH_STATE_CANCELLED, // The batch has been cancelled.
         BATCH_STATE_EXPIRED // The batch has expired.
     )
-    // This resource represents a long-running operation that is the result of a network API call.
+    
+    /**
+     * @brief Represents a Long-Running Operation (LRO).
+     * * Used for operations that take significant time, like batch processing or model tuning.
+     */
     struct Operation : IJsonSerializable<Operation>
     {
         using ResultType = std::variant<

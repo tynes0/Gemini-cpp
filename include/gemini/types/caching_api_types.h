@@ -16,6 +16,9 @@
 
 namespace GeminiCPP
 {
+    /**
+     * @brief Scheduling options for function calls.
+     */
     FrenumClassInNamespace(GeminiCPP, Scheduling, uint8_t,
         SCHEDULING_UNSPECIFIED, // This value is unused.
         SILENT,                 // Only add the result to the conversation context, do not interrupt or trigger generation.
@@ -23,11 +26,17 @@ namespace GeminiCPP
         INTERRUPT               // Add the result to the conversation context, interrupt ongoing generation and prompt to generate output.
     )
 
+    /**
+     * @brief Supported programming languages for code execution.
+     */
     FrenumClassInNamespace(GeminiCPP, Language, uint8_t,
         LANGUAGE_UNSPECIFIED,   // Unspecified language. This value should not be used.
         PYTHON                  // Python >= 3.10, numpy and simpy are available. The default language is Python.
     )
 
+    /**
+     * @brief Outcome of a code execution.
+     */
     FrenumClassInNamespace(GeminiCPP, Outcome, uint8_t,
         OUTCOME_UNSPECIFIED,        // Status not specified. This value should not be used.
         OUTCOME_OK,                 // Code execution completed successfully. 
@@ -35,13 +44,18 @@ namespace GeminiCPP
         OUTCOME_DEADLINE_EXCEEDED   // Code execution ran for too long, and was cancelled. There may or may not be a partial output present.
     )
 
-    // Who's talking?
+    /**
+     * @brief Role of the message sender.
+     */
     FrenumClassInNamespace(GeminiCPP, Role, uint8_t,
         USER,
         MODEL,
         FUNCTION // I am not sure about this. Is it work?
     )
 
+    /**
+     * @brief Configuration for how the model should use provided functions.
+     */
     FrenumClassInNamespace(GeminiCPP, FunctionCallingMode, uint8_t,
         MODE_UNSPECIFIED, // Unspecified function calling mode. This value should not be used.
         AUTO, // Default model behavior, model decides to predict either a function call or a natural language response.
@@ -49,7 +63,8 @@ namespace GeminiCPP
         NONE, // Model will not predict any function call. Model behavior is same as when not passing any function declarations.
         VALIDATED // Model decides to predict either a function call or a natural language response, but will validate function calls with constrained decoding. If "allowedFunctionNames" are set, the predicted function call will be limited to any one of "allowedFunctionNames", else the predicted function call will be any one of the provided "functionDeclarations".
     )
-        struct FunctionResponseBlob
+
+    struct FunctionResponseBlob
     {
         std::string mimeType;
         std::string data; // Base64
@@ -150,6 +165,11 @@ namespace GeminiCPP
         [[nodiscard]] nlohmann::json toJson() const;
     };
 
+    /**
+     * @brief Represents a part of a message content.
+     * * Can be text, binary blob (image/audio), function call, function response, etc.
+     * * This class uses std::variant to hold one of many possible data types.
+     */
     struct Part
     {
         using DataType = std::variant<
@@ -201,7 +221,11 @@ namespace GeminiCPP
         [[nodiscard]] static Part fromJson(const nlohmann::json& j);
         [[nodiscard]] nlohmann::json toJson() const;
     };
-    
+
+    /**
+     * @brief Represents a single turn in a conversation.
+     * * Consists of a role (User/Model) and a list of parts (Text/Image/Function).
+     */
     struct Content
     {
         Role role = Role::USER; // Normally, this is optional, but we act like it's always there. I don't know why. I wanted to do it this way.
@@ -290,6 +314,9 @@ namespace GeminiCPP
         [[nodiscard]] nlohmann::json toJson() const;
     };
 
+    /**
+     * @brief A collection of tools (functions, search, etc.) provided to the model.
+     */
     struct Tool
     {
         std::vector<FunctionDeclaration> functionDeclarations;
@@ -306,6 +333,11 @@ namespace GeminiCPP
         int tokenCount = 0;
     };
 
+    /**
+     * @brief Represents cached content on the server.
+     * * Caching allows reusing large contexts (like books or codebases) across multiple requests
+     * without re-uploading or re-processing them, saving tokens and time.
+     */
     struct CachedContent
     {
         std::string name; // ID: "cachedContents/..."
@@ -314,7 +346,7 @@ namespace GeminiCPP
         std::string createTime;
         std::string updateTime;
         std::string expireTime;
-        std::optional<Duration> ttl;
+        std::optional<Duration> ttl; ///< Time-to-live.
 
         CachedContentUsageMetadata usage;
 

@@ -16,6 +16,9 @@
 
 namespace GeminiCPP
 {
+    /**
+     * @brief Thresholds for blocking harmful content.
+     */
     FrenumClassInNamespace(GeminiCPP, HarmBlockThreshold, uint8_t,
         HARM_BLOCK_THRESHOLD_UNSPECIFIED, // Unspecified.
         BLOCK_LOW_AND_ABOVE, // Block low risk and above (Very Strict).
@@ -24,6 +27,10 @@ namespace GeminiCPP
         BLOCK_NONE, // Don't block anything (Risky).
         OFF // Turn off the filter completely.
     )
+
+    /**
+     * @brief Probability levels for harmful content.
+     */
     FrenumClassInNamespace(GeminiCPP, HarmProbability, uint8_t,
         HARM_PROBABILITY_UNSPECIFIED,   // Probability is unspecified.
         NEGLIGIBLE,                     // Content has a negligible chance of being unsafe.
@@ -31,7 +38,10 @@ namespace GeminiCPP
         MEDIUM,                         // Content has a medium chance of being unsafe.
         HIGH                            // Content has a high chance of being unsafe.
     )
-    
+
+    /**
+     * @brief Content modalities (Text, Image, Video, etc.).
+     */
     FrenumClassInNamespace(GeminiCPP, Modality, uint8_t,
         MODALITY_UNSPECIFIED,
         TEXT,
@@ -41,6 +51,9 @@ namespace GeminiCPP
         DOCUMENT
     )
 
+    /**
+     * @brief Categories of harm to detect and block.
+     */
     FrenumClassInNamespace(GeminiCPP, HarmCategory, uint8_t,
         HARM_CATEGORY_UNSPECIFIED, // Default, not used.
     
@@ -68,6 +81,9 @@ namespace GeminiCPP
         HARM_CATEGORY_JAILBREAK // Prompts that attempt to bypass security filters.
     )
 
+    /**
+     * @brief Resolution levels for media generation.
+     */
     FrenumClassInNamespace(GeminiCPP, MediaResolution, uint8_t,
         MEDIA_RESOLUTION_UNSPECIFIED, // Media resolution has not been set.
         MEDIA_RESOLUTION_LOW, // Media resolution set to 'low' (64 tokens).
@@ -75,11 +91,17 @@ namespace GeminiCPP
         MEDIA_RESOLUTION_HIGH // Media resolution set to 'high' (zoomed reframing with 256 tokens).
     )
 
+    /**
+     * @brief Thinking depth level for models that support reasoning.
+     */
     FrenumClassInNamespace(GeminiCPP, ThinkingLevel, uint8_t,
         LOW,
         HIGH
     )
 
+    /**
+     * @brief Status of a URL retrieval operation by the model.
+     */
     FrenumClassInNamespace(GeminiCPP, UrlRetrievalStatus, uint8_t,
         URL_RETRIEVAL_STATUS_UNSPECIFIED,
         URL_RETRIEVAL_STATUS_SUCCESS,
@@ -88,6 +110,9 @@ namespace GeminiCPP
         URL_RETRIEVAL_STATUS_UNSAFE
     )
 
+    /**
+     * @brief The reason why the model stopped generating tokens.
+     */
     FrenumClassInNamespace(GeminiCPP, FinishReason, uint8_t,
         FINISH_REASON_UNSPECIFIED,// Default.
         STOP,                   // Natural ending or stopping sequence.
@@ -113,6 +138,9 @@ namespace GeminiCPP
         PROMPT_BLOCKED
     )
 
+    /**
+     * @brief Reason why a prompt was blocked.
+     */
     FrenumClassInNamespace(GeminiCPP, BlockReason, uint8_t,
         BLOCK_REASON_UNSPECIFIED,// Default value. This value is not used.
         SAFETY,                 // The request was blocked for security reasons. Examine the safetyRatings icon to understand which security category is blocking it.

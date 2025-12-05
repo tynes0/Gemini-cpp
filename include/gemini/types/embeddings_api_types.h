@@ -11,6 +11,10 @@
 
 namespace GeminiCPP
 {
+    /**
+     * @brief Enum defining the specific task type for which the embedding will be used.
+     * * Helps the model optimize the embedding for the intended use case.
+     */
     FrenumClassInNamespace(GeminiCPP, TaskType, uint8_t,
         TASK_TYPE_UNSPECIFIED, // Unset value, which will default to one of the other enum values.
         RETRIEVAL_QUERY,     // Specifies the given text is a query in a search/retrieval setting.
