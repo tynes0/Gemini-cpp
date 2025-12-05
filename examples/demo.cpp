@@ -99,7 +99,7 @@ int main() {
     
     GEMINI_DEBUG("Generating request (Model: gemini-2.0-flash)...");
     auto response = client.request()
-        .model(GeminiCPP::Model::GEMINI_2_0_FLASH)
+        .model("gemini-2.0-flash")
         .text("Tell me something about C++.")
         .temperature(0.7f)
         .generate();
@@ -120,7 +120,7 @@ int main() {
     std::cout << "\033[1;33mStream Output: \033[0m";
     
     auto streamRes = client.request()
-        .model(GeminiCPP::Model::GEMINI_2_0_FLASH)
+        .model("gemini-2.0-flash")
         .text("Count from 1 to 100 and add a fruit next to the number as you count.")
         .stream([](std::string_view chunk) {
             std::cout << chunk << std::flush;
@@ -139,7 +139,7 @@ int main() {
 
     std::cout << SEPERATOR("TEST 6: Chat Session");
     
-    auto chat = client.startChat(GeminiCPP::Model::GEMINI_2_0_FLASH);
+    auto chat = client.startChat("gemini-2.0-flash");
 
     std::string message = "Hi, My name is Tynes0. I am a C++ developer.";
     GEMINI_TRACE("User: {}", message);
