@@ -1,0 +1,174 @@
+\doxysection{Gemini\+CPP\+::Remote\+Storage Class Reference}
+\hypertarget{class_gemini_c_p_p_1_1_remote_storage}{}\label{class_gemini_c_p_p_1_1_remote_storage}\index{GeminiCPP::RemoteStorage@{GeminiCPP::RemoteStorage}}
+
+
+Implementation of \doxylink{class_gemini_c_p_p_1_1_i_chat_storage}{IChat\+Storage} that interacts with a remote server via REST API.  
+
+
+
+
+{\ttfamily \#include $<$storage.\+h$>$}
+
+Inheritance diagram for Gemini\+CPP\+::Remote\+Storage\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_gemini_c_p_p_1_1_remote_storage}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_gemini_c_p_p_1_1_remote_storage_a885fa982694fdb2aa264fbcbcb5d1e9d}{Remote\+Storage}} (std\+::string base\+Url, std\+::string auth\+Token="{}"{})
+\begin{DoxyCompactList}\small\item\em Constructs a \doxylink{class_gemini_c_p_p_1_1_remote_storage}{Remote\+Storage}. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_gemini_c_p_p_1_1_remote_storage_a0b573fb15ed5da162e6ed7adc61ab2bf}{save}} (const \mbox{\hyperlink{class_gemini_c_p_p_1_1_chat_session}{Chat\+Session}} \&session) override
+\begin{DoxyCompactList}\small\item\em Saves a chat session synchronously. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_result}{Result}}$<$ \mbox{\hyperlink{class_gemini_c_p_p_1_1_chat_session}{Chat\+Session}} $>$ \mbox{\hyperlink{class_gemini_c_p_p_1_1_remote_storage_a105cbe285d721f392ed668135bc265ca}{load}} (const std\+::string \&session\+Id, \mbox{\hyperlink{class_gemini_c_p_p_1_1_client}{Client}} \texorpdfstring{$\ast$}{*}client) override
+\begin{DoxyCompactList}\small\item\em Loads a chat session synchronously. \end{DoxyCompactList}\item 
+std\+::vector$<$ std\+::string $>$ \mbox{\hyperlink{class_gemini_c_p_p_1_1_remote_storage_a783406b5a52ff235f93f8dbf68922610}{list\+Sessions}} () override
+\begin{DoxyCompactList}\small\item\em Lists available session IDs. \end{DoxyCompactList}\item 
+std\+::future$<$ bool $>$ \mbox{\hyperlink{class_gemini_c_p_p_1_1_remote_storage_a7031472a71a47e6bdd66655be63710c9}{save\+Async}} (const \mbox{\hyperlink{class_gemini_c_p_p_1_1_chat_session}{Chat\+Session}} \&session) override
+\begin{DoxyCompactList}\small\item\em Saves a chat session asynchronously. \end{DoxyCompactList}\item 
+std\+::future$<$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_result}{Result}}$<$ \mbox{\hyperlink{class_gemini_c_p_p_1_1_chat_session}{Chat\+Session}} $>$ $>$ \mbox{\hyperlink{class_gemini_c_p_p_1_1_remote_storage_a2c3ef07cff1fa0d98beab2405797aaa3}{load\+Async}} (const std\+::string \&session\+Id, \mbox{\hyperlink{class_gemini_c_p_p_1_1_client}{Client}} \texorpdfstring{$\ast$}{*}client) override
+\begin{DoxyCompactList}\small\item\em Loads a chat session asynchronously. \end{DoxyCompactList}\item 
+std\+::future$<$ std\+::vector$<$ std\+::string $>$ $>$ \mbox{\hyperlink{class_gemini_c_p_p_1_1_remote_storage_ad04a30c901c1b319023e49bc1e5916eb}{list\+Sessions\+Async}} () override
+\begin{DoxyCompactList}\small\item\em Lists available session IDs asynchronously. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_gemini_c_p_p_1_1_i_chat_storage}{Gemini\+CPP\+::\+IChat\+Storage}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual \mbox{\hyperlink{class_gemini_c_p_p_1_1_i_chat_storage_afbb1c74d2760106e78cff6ce18662fb2}{\texorpdfstring{$\sim$}{\string~}\+IChat\+Storage}} ()=default
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Implementation of \doxylink{class_gemini_c_p_p_1_1_i_chat_storage}{IChat\+Storage} that interacts with a remote server via REST API. 
+
+Assumes standard endpoints\+: POST /chats (save), GET /chats/\{id\} (load), GET /chats (list). 
+
+\label{doc-constructors}
+\Hypertarget{class_gemini_c_p_p_1_1_remote_storage_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_gemini_c_p_p_1_1_remote_storage_a885fa982694fdb2aa264fbcbcb5d1e9d}\index{GeminiCPP::RemoteStorage@{GeminiCPP::RemoteStorage}!RemoteStorage@{RemoteStorage}}
+\index{RemoteStorage@{RemoteStorage}!GeminiCPP::RemoteStorage@{GeminiCPP::RemoteStorage}}
+\doxysubsubsection{\texorpdfstring{RemoteStorage()}{RemoteStorage()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_remote_storage_a885fa982694fdb2aa264fbcbcb5d1e9d} 
+Gemini\+CPP\+::\+Remote\+Storage\+::\+Remote\+Storage (\begin{DoxyParamCaption}\item[{std\+::string}]{base\+Url}{, }\item[{std\+::string}]{auth\+Token}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+Constructs a \doxylink{class_gemini_c_p_p_1_1_remote_storage}{Remote\+Storage}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em base\+Url} & The base URL of the remote storage service. \\
+\hline
+{\em auth\+Token} & Optional authorization token (Bearer). \\
+\hline
+\end{DoxyParams}
+
+
+\label{doc-func-members}
+\Hypertarget{class_gemini_c_p_p_1_1_remote_storage_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_gemini_c_p_p_1_1_remote_storage_a783406b5a52ff235f93f8dbf68922610}\index{GeminiCPP::RemoteStorage@{GeminiCPP::RemoteStorage}!listSessions@{listSessions}}
+\index{listSessions@{listSessions}!GeminiCPP::RemoteStorage@{GeminiCPP::RemoteStorage}}
+\doxysubsubsection{\texorpdfstring{listSessions()}{listSessions()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_remote_storage_a783406b5a52ff235f93f8dbf68922610} 
+std\+::vector$<$ std\+::string $>$ Gemini\+CPP\+::\+Remote\+Storage\+::list\+Sessions (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Lists available session IDs. 
+
+
+
+Implements \mbox{\hyperlink{class_gemini_c_p_p_1_1_i_chat_storage_a05332ed879d3330fb4b85082fb4bae30}{Gemini\+CPP\+::\+IChat\+Storage}}.
+
+\Hypertarget{class_gemini_c_p_p_1_1_remote_storage_ad04a30c901c1b319023e49bc1e5916eb}\index{GeminiCPP::RemoteStorage@{GeminiCPP::RemoteStorage}!listSessionsAsync@{listSessionsAsync}}
+\index{listSessionsAsync@{listSessionsAsync}!GeminiCPP::RemoteStorage@{GeminiCPP::RemoteStorage}}
+\doxysubsubsection{\texorpdfstring{listSessionsAsync()}{listSessionsAsync()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_remote_storage_ad04a30c901c1b319023e49bc1e5916eb} 
+std\+::future$<$ std\+::vector$<$ std\+::string $>$ $>$ Gemini\+CPP\+::\+Remote\+Storage\+::list\+Sessions\+Async (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Lists available session IDs asynchronously. 
+
+
+
+Implements \mbox{\hyperlink{class_gemini_c_p_p_1_1_i_chat_storage_a84f71e587026e514a317587d0efbb7f6}{Gemini\+CPP\+::\+IChat\+Storage}}.
+
+\Hypertarget{class_gemini_c_p_p_1_1_remote_storage_a105cbe285d721f392ed668135bc265ca}\index{GeminiCPP::RemoteStorage@{GeminiCPP::RemoteStorage}!load@{load}}
+\index{load@{load}!GeminiCPP::RemoteStorage@{GeminiCPP::RemoteStorage}}
+\doxysubsubsection{\texorpdfstring{load()}{load()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_remote_storage_a105cbe285d721f392ed668135bc265ca} 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_result}{Result}}$<$ \mbox{\hyperlink{class_gemini_c_p_p_1_1_chat_session}{Chat\+Session}} $>$ Gemini\+CPP\+::\+Remote\+Storage\+::load (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{session\+Id}{, }\item[{\mbox{\hyperlink{class_gemini_c_p_p_1_1_client}{Client}} \texorpdfstring{$\ast$}{*}}]{client}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Loads a chat session synchronously. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em session\+Id} & The ID of the session to load. \\
+\hline
+{\em client} & Pointer to the \doxylink{class_gemini_c_p_p_1_1_client}{Client} (needed to reconstruct the Session). \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_gemini_c_p_p_1_1_i_chat_storage_a74d550ab7fe89e8c877a1295963c27e2}{Gemini\+CPP\+::\+IChat\+Storage}}.
+
+\Hypertarget{class_gemini_c_p_p_1_1_remote_storage_a2c3ef07cff1fa0d98beab2405797aaa3}\index{GeminiCPP::RemoteStorage@{GeminiCPP::RemoteStorage}!loadAsync@{loadAsync}}
+\index{loadAsync@{loadAsync}!GeminiCPP::RemoteStorage@{GeminiCPP::RemoteStorage}}
+\doxysubsubsection{\texorpdfstring{loadAsync()}{loadAsync()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_remote_storage_a2c3ef07cff1fa0d98beab2405797aaa3} 
+std\+::future$<$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_result}{Result}}$<$ \mbox{\hyperlink{class_gemini_c_p_p_1_1_chat_session}{Chat\+Session}} $>$ $>$ Gemini\+CPP\+::\+Remote\+Storage\+::load\+Async (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{session\+Id}{, }\item[{\mbox{\hyperlink{class_gemini_c_p_p_1_1_client}{Client}} \texorpdfstring{$\ast$}{*}}]{client}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Loads a chat session asynchronously. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em session\+Id} & The ID of the session to load. \\
+\hline
+{\em client} & Pointer to the \doxylink{class_gemini_c_p_p_1_1_client}{Client} (needed to reconstruct the Session). \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{class_gemini_c_p_p_1_1_i_chat_storage_aea07fcb17698685c3972f3fe85764186}{Gemini\+CPP\+::\+IChat\+Storage}}.
+
+\Hypertarget{class_gemini_c_p_p_1_1_remote_storage_a0b573fb15ed5da162e6ed7adc61ab2bf}\index{GeminiCPP::RemoteStorage@{GeminiCPP::RemoteStorage}!save@{save}}
+\index{save@{save}!GeminiCPP::RemoteStorage@{GeminiCPP::RemoteStorage}}
+\doxysubsubsection{\texorpdfstring{save()}{save()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_remote_storage_a0b573fb15ed5da162e6ed7adc61ab2bf} 
+bool Gemini\+CPP\+::\+Remote\+Storage\+::save (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_gemini_c_p_p_1_1_chat_session}{Chat\+Session}} \&}]{session}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Saves a chat session synchronously. 
+
+
+
+Implements \mbox{\hyperlink{class_gemini_c_p_p_1_1_i_chat_storage_a8aefd37a52bef7d04baa9a286d167eda}{Gemini\+CPP\+::\+IChat\+Storage}}.
+
+\Hypertarget{class_gemini_c_p_p_1_1_remote_storage_a7031472a71a47e6bdd66655be63710c9}\index{GeminiCPP::RemoteStorage@{GeminiCPP::RemoteStorage}!saveAsync@{saveAsync}}
+\index{saveAsync@{saveAsync}!GeminiCPP::RemoteStorage@{GeminiCPP::RemoteStorage}}
+\doxysubsubsection{\texorpdfstring{saveAsync()}{saveAsync()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_remote_storage_a7031472a71a47e6bdd66655be63710c9} 
+std\+::future$<$ bool $>$ Gemini\+CPP\+::\+Remote\+Storage\+::save\+Async (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_gemini_c_p_p_1_1_chat_session}{Chat\+Session}} \&}]{session}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Saves a chat session asynchronously. 
+
+
+
+Implements \mbox{\hyperlink{class_gemini_c_p_p_1_1_i_chat_storage_a299d07e6d3be942849c7db0ef85db6a5}{Gemini\+CPP\+::\+IChat\+Storage}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+gemini/\mbox{\hyperlink{storage_8h}{storage.\+h}}\end{DoxyCompactItemize}

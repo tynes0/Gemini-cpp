@@ -1,0 +1,210 @@
+\doxysection{gemini/types/generating\+\_\+content\+\_\+api\+\_\+types.h File Reference}
+\hypertarget{generating__content__api__types_8h}{}\label{generating__content__api__types_8h}\index{gemini/types/generating\_content\_api\_types.h@{gemini/types/generating\_content\_api\_types.h}}
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$optional$>$}\newline
+{\ttfamily \#include "{}frenum.\+h"{}}\newline
+{\ttfamily \#include "{}gemini/types\+\_\+base.\+h"{}}\newline
+{\ttfamily \#include "{}gemini/support.\+h"{}}\newline
+{\ttfamily \#include "{}gemini/url.\+h"{}}\newline
+{\ttfamily \#include "{}caching\+\_\+api\+\_\+types.\+h"{}}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_safety_rating}{Gemini\+CPP\+::\+Safety\+Rating}}
+\begin{DoxyCompactList}\small\item\em Reason why a prompt was blocked. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_modality_token_count}{Gemini\+CPP\+::\+Modality\+Token\+Count}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_image_config}{Gemini\+CPP\+::\+Image\+Config}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_thinking_config}{Gemini\+CPP\+::\+Thinking\+Config}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_prebuilt_voice_config}{Gemini\+CPP\+::\+Prebuilt\+Voice\+Config}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_voice_config}{Gemini\+CPP\+::\+Voice\+Config}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_speaker_voice_config}{Gemini\+CPP\+::\+Speaker\+Voice\+Config}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_multi_speaker_voice_config}{Gemini\+CPP\+::\+Multi\+Speaker\+Voice\+Config}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_speech_config}{Gemini\+CPP\+::\+Speech\+Config}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_config}{Gemini\+CPP\+::\+Generation\+Config}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_citation_source}{Gemini\+CPP\+::\+Citation\+Source}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_citation_metadata}{Gemini\+CPP\+::\+Citation\+Metadata}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_url_metadata}{Gemini\+CPP\+::\+Url\+Metadata}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_url_context_metadata}{Gemini\+CPP\+::\+Url\+Context\+Metadata}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_logprobs_candidate}{Gemini\+CPP\+::\+Logprobs\+Candidate}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_top_logprobs_candidates}{Gemini\+CPP\+::\+Top\+Logprobs\+Candidates}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_logprobs_result}{Gemini\+CPP\+::\+Logprobs\+Result}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_retrieval_metadata}{Gemini\+CPP\+::\+Retrieval\+Metadata}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_segment}{Gemini\+CPP\+::\+Segment}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_grounding_support}{Gemini\+CPP\+::\+Grounding\+Support}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_review_snippet}{Gemini\+CPP\+::\+Review\+Snippet}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_place_answer_sources}{Gemini\+CPP\+::\+Place\+Answer\+Sources}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_maps}{Gemini\+CPP\+::\+Maps}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_retrieved_context}{Gemini\+CPP\+::\+Retrieved\+Context}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_web}{Gemini\+CPP\+::\+Web}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_grounding_chunk}{Gemini\+CPP\+::\+Grounding\+Chunk}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_search_entry_point}{Gemini\+CPP\+::\+Search\+Entry\+Point}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_grounding_metadata}{Gemini\+CPP\+::\+Grounding\+Metadata}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_semantic_retriever_chunk}{Gemini\+CPP\+::\+Semantic\+Retriever\+Chunk}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_grounding_passage_id}{Gemini\+CPP\+::\+Grounding\+Passage\+Id}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_attribution_source_id}{Gemini\+CPP\+::\+Attribution\+Source\+Id}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_grounding_attribution}{Gemini\+CPP\+::\+Grounding\+Attribution}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_response_candidate}{Gemini\+CPP\+::\+Response\+Candidate}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_usage_metadata}{Gemini\+CPP\+::\+Usage\+Metadata}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_prompt_feedback}{Gemini\+CPP\+::\+Prompt\+Feedback}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_request_body}{Gemini\+CPP\+::\+Generate\+Content\+Request\+Body}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_stream_generate_content_request_body}{Gemini\+CPP\+::\+Stream\+Generate\+Content\+Request\+Body}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_response_body}{Gemini\+CPP\+::\+Generate\+Content\+Response\+Body}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_stream_generate_content_response_body}{Gemini\+CPP\+::\+Stream\+Generate\+Content\+Response\+Body}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespace_gemini_c_p_p}{Gemini\+CPP}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{generating__content__api__types_8h_a2004781e318913e9b712808d5ec33574}{GEMINI\+\_\+\+GENERATING\+\_\+\+CONTENT\+\_\+\+API\+\_\+\+TYPES\+\_\+H}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespace_gemini_c_p_p_ac52a5fb4f02b5125e53a91012ca5cfe1}{Gemini\+CPP\+::\+Frenum\+Class\+In\+Namespace}} (\mbox{\hyperlink{namespace_gemini_c_p_p}{Gemini\+CPP}}, Harm\+Block\+Threshold, \mbox{\hyperlink{namespace_gemini_c_p_p_a67b60949cc5e2c9c29ae5f9f4c669513}{uint8\+\_\+t}}, HARM\+\_\+\+BLOCK\+\_\+\+THRESHOLD\+\_\+\+UNSPECIFIED, BLOCK\+\_\+\+LOW\+\_\+\+AND\+\_\+\+ABOVE, BLOCK\+\_\+\+MEDIUM\+\_\+\+AND\+\_\+\+ABOVE, BLOCK\+\_\+\+ONLY\+\_\+\+HIGH, BLOCK\+\_\+\+NONE, OFF) Frenum\+Class\+In\+Namespace(\mbox{\hyperlink{namespace_gemini_c_p_p}{Gemini\+CPP}}
+\begin{DoxyCompactList}\small\item\em Thresholds for blocking harmful content. \end{DoxyCompactList}\item 
+HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_a1b09cf8dc8f03620e7baebba97ab5567}{Gemini\+CPP\+::\+Frenum\+Class\+In\+Namespace}} (\mbox{\hyperlink{namespace_gemini_c_p_p}{Gemini\+CPP}}, Modality, \mbox{\hyperlink{namespace_gemini_c_p_p_a67b60949cc5e2c9c29ae5f9f4c669513}{uint8\+\_\+t}}, MODALITY\+\_\+\+UNSPECIFIED, TEXT, IMAGE, VIDEO, AUDIO, DOCUMENT) Frenum\+Class\+In\+Namespace(\mbox{\hyperlink{namespace_gemini_c_p_p}{Gemini\+CPP}}
+\begin{DoxyCompactList}\small\item\em \doxylink{struct_gemini_c_p_p_1_1_content}{Content} modalities (Text, Image, Video, etc.). \end{DoxyCompactList}\item 
+HIGH HARM\+\_\+\+CATEGORY\+\_\+\+JAILBREAK \mbox{\hyperlink{namespace_gemini_c_p_p_a0d8153c91e68a9008c49255a6f5257eb}{Gemini\+CPP\+::\+Frenum\+Class\+In\+Namespace}} (\mbox{\hyperlink{namespace_gemini_c_p_p}{Gemini\+CPP}}, Media\+Resolution, \mbox{\hyperlink{namespace_gemini_c_p_p_a67b60949cc5e2c9c29ae5f9f4c669513}{uint8\+\_\+t}}, MEDIA\+\_\+\+RESOLUTION\+\_\+\+UNSPECIFIED, MEDIA\+\_\+\+RESOLUTION\+\_\+\+LOW, MEDIA\+\_\+\+RESOLUTION\+\_\+\+MEDIUM, MEDIA\+\_\+\+RESOLUTION\+\_\+\+HIGH) Frenum\+Class\+In\+Namespace(\mbox{\hyperlink{namespace_gemini_c_p_p}{Gemini\+CPP}}
+\begin{DoxyCompactList}\small\item\em Resolution levels for media generation. \end{DoxyCompactList}\item 
+HIGH HARM\+\_\+\+CATEGORY\+\_\+\+JAILBREAK HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_ab0a1b9b2806f65e5a601f2a8949f475d}{Gemini\+CPP\+::\+Frenum\+Class\+In\+Namespace}} (\mbox{\hyperlink{namespace_gemini_c_p_p}{Gemini\+CPP}}, Url\+Retrieval\+Status, \mbox{\hyperlink{namespace_gemini_c_p_p_a67b60949cc5e2c9c29ae5f9f4c669513}{uint8\+\_\+t}}, URL\+\_\+\+RETRIEVAL\+\_\+\+STATUS\+\_\+\+UNSPECIFIED, URL\+\_\+\+RETRIEVAL\+\_\+\+STATUS\+\_\+\+SUCCESS, URL\+\_\+\+RETRIEVAL\+\_\+\+STATUS\+\_\+\+ERROR, URL\+\_\+\+RETRIEVAL\+\_\+\+STATUS\+\_\+\+PAYWALL, URL\+\_\+\+RETRIEVAL\+\_\+\+STATUS\+\_\+\+UNSAFE) Frenum\+Class\+In\+Namespace(\mbox{\hyperlink{namespace_gemini_c_p_p}{Gemini\+CPP}}
+\begin{DoxyCompactList}\small\item\em \doxylink{struct_gemini_c_p_p_1_1_status}{Status} of a URL retrieval operation by the model. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespace_gemini_c_p_p_afdcb25f95f26fc0634d1d26ee4787baa}{Gemini\+CPP\+::\+Harm\+Probability}}
+\item 
+\mbox{\hyperlink{namespace_gemini_c_p_p_ab98b7f14982d3de7825bbb936bd763ee}{Gemini\+CPP\+::\+HARM\+\_\+\+PROBABILITY\+\_\+\+UNSPECIFIED}}
+\item 
+\mbox{\hyperlink{namespace_gemini_c_p_p_a97bd7d240f47dac2c50f352187e3bfdb}{Gemini\+CPP\+::\+NEGLIGIBLE}}
+\item 
+\mbox{\hyperlink{namespace_gemini_c_p_p_a615076a11cef0e9fd74d415bf7fd24d5}{Gemini\+CPP\+::\+LOW}}
+\item 
+\mbox{\hyperlink{namespace_gemini_c_p_p_a8851b8ff90df2331c759b751d98f3765}{Gemini\+CPP\+::\+MEDIUM}}
+\item 
+HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_a1f59a22bd8c42ca01cd92776458d027d}{Gemini\+CPP\+::\+Harm\+Category}}
+\item 
+HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_aed01b8225bab686d812a44daf3a5aa4e}{Gemini\+CPP\+::\+HARM\+\_\+\+CATEGORY\+\_\+\+UNSPECIFIED}}
+\item 
+HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_a495baac00dda6cae6befb6d476ee9ccc}{Gemini\+CPP\+::\+HARM\+\_\+\+CATEGORY\+\_\+\+HARASSMENT}}
+\item 
+HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_a20d41f2dbdbe862f4a7a48a1c6f136f8}{Gemini\+CPP\+::\+HARM\+\_\+\+CATEGORY\+\_\+\+HATE\+\_\+\+SPEECH}}
+\item 
+HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_a1c4723ae59a39263f031b05ca0aec40f}{Gemini\+CPP\+::\+HARM\+\_\+\+CATEGORY\+\_\+\+SEXUALLY\+\_\+\+EXPLICIT}}
+\item 
+HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_aa8e9b1fbb15efed7cf377d007ae028c3}{Gemini\+CPP\+::\+HARM\+\_\+\+CATEGORY\+\_\+\+DANGEROUS\+\_\+\+CONTENT}}
+\item 
+HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_a956df9368dfa4b2a8809c4e9c64612e6}{Gemini\+CPP\+::\+HARM\+\_\+\+CATEGORY\+\_\+\+DEROGATORY}}
+\item 
+HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_ac7ba5fb513c7cbd0e256d4f151c39256}{Gemini\+CPP\+::\+HARM\+\_\+\+CATEGORY\+\_\+\+TOXICITY}}
+\item 
+HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_a1a6b56b94294de12bc41c660c99a4711}{Gemini\+CPP\+::\+HARM\+\_\+\+CATEGORY\+\_\+\+VIOLENCE}}
+\item 
+HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_a1e5ecd98b31c1c4e99b9adeb16aea76c}{Gemini\+CPP\+::\+HARM\+\_\+\+CATEGORY\+\_\+\+SEXUAL}}
+\item 
+HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_a127af134af9d1aeb68b18b0e0343fa00}{Gemini\+CPP\+::\+HARM\+\_\+\+CATEGORY\+\_\+\+MEDICAL}}
+\item 
+HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_ab87106fc78852302e6462fb377d0cefb}{Gemini\+CPP\+::\+HARM\+\_\+\+CATEGORY\+\_\+\+DANGEROUS}}
+\item 
+HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_ab264c77925e4074aa1504030b93277f1}{Gemini\+CPP\+::\+HARM\+\_\+\+CATEGORY\+\_\+\+IMAGE\+\_\+\+HATE}}
+\item 
+HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_ad9d008f73bca9f16c91e91d3aab7824d}{Gemini\+CPP\+::\+HARM\+\_\+\+CATEGORY\+\_\+\+IMAGE\+\_\+\+DANGEROUS\+\_\+\+CONTENT}}
+\item 
+HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_ae62fdd6a65d07016bd13dd30556081d1}{Gemini\+CPP\+::\+HARM\+\_\+\+CATEGORY\+\_\+\+IMAGE\+\_\+\+HARASSMENT}}
+\item 
+HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_ac3c9d76cd471d1167c73825a7ba5675f}{Gemini\+CPP\+::\+HARM\+\_\+\+CATEGORY\+\_\+\+IMAGE\+\_\+\+SEXUALLY\+\_\+\+EXPLICIT}}
+\item 
+HIGH HARM\+\_\+\+CATEGORY\+\_\+\+JAILBREAK \mbox{\hyperlink{namespace_gemini_c_p_p_abca2811b506b678f1c822744cfcccdae}{Gemini\+CPP\+::\+Thinking\+Level}}
+\item 
+HIGH HARM\+\_\+\+CATEGORY\+\_\+\+JAILBREAK HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_ab0640c43614ccb6bb1944a0d6f7f7d16}{Gemini\+CPP\+::\+Finish\+Reason}}
+\item 
+HIGH HARM\+\_\+\+CATEGORY\+\_\+\+JAILBREAK HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_a63149fa3d92ed30047cece2c887fb10e}{Gemini\+CPP\+::\+FINISH\+\_\+\+REASON\+\_\+\+UNSPECIFIED}}
+\item 
+HIGH HARM\+\_\+\+CATEGORY\+\_\+\+JAILBREAK HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_a7d0e485889362c476ee776238d226966}{Gemini\+CPP\+::\+STOP}}
+\item 
+HIGH HARM\+\_\+\+CATEGORY\+\_\+\+JAILBREAK HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_ad7022c87e728e7c79054d2ac7a91e496}{Gemini\+CPP\+::\+MAX\+\_\+\+TOKENS}}
+\item 
+HIGH HARM\+\_\+\+CATEGORY\+\_\+\+JAILBREAK HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_a77bceb2271f140e504d90bad57687549}{Gemini\+CPP\+::\+SAFETY}}
+\item 
+HIGH HARM\+\_\+\+CATEGORY\+\_\+\+JAILBREAK HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_a7af7c89b3619ce070cb9d7028d19024c}{Gemini\+CPP\+::\+RECITATION}}
+\item 
+HIGH HARM\+\_\+\+CATEGORY\+\_\+\+JAILBREAK HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_af3aa9b766bda0e1944486fe8cbd9c9ee}{Gemini\+CPP\+::\+LANGUAGE}}
+\item 
+HIGH HARM\+\_\+\+CATEGORY\+\_\+\+JAILBREAK HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_a15fa825dd2f34845c2ded2a979324652}{Gemini\+CPP\+::\+OTHER}}
+\item 
+HIGH HARM\+\_\+\+CATEGORY\+\_\+\+JAILBREAK HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_a981971fe50e7ebc26059d2ad38a0b304}{Gemini\+CPP\+::\+BLOCKLIST}}
+\item 
+HIGH HARM\+\_\+\+CATEGORY\+\_\+\+JAILBREAK HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_aa8165b7dff6a9cc79834d5cb8bf22a79}{Gemini\+CPP\+::\+PROHIBITED\+\_\+\+CONTENT}}
+\item 
+HIGH HARM\+\_\+\+CATEGORY\+\_\+\+JAILBREAK HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_aca5554668c25502facac609966f4b91e}{Gemini\+CPP\+::\+SPII}}
+\item 
+HIGH HARM\+\_\+\+CATEGORY\+\_\+\+JAILBREAK HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_a3cfd33b59dc3aeb2473d82e408d53d7f}{Gemini\+CPP\+::\+MALFORMED\+\_\+\+FUNCTION\+\_\+\+CALL}}
+\item 
+HIGH HARM\+\_\+\+CATEGORY\+\_\+\+JAILBREAK HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_a5047a235961ae39d9950d5e804952f6f}{Gemini\+CPP\+::\+IMAGE\+\_\+\+SAFETY}}
+\item 
+HIGH HARM\+\_\+\+CATEGORY\+\_\+\+JAILBREAK HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_ad175bf5bfee7193b77e6a664444e2071}{Gemini\+CPP\+::\+IMAGE\+\_\+\+PROHIBITED\+\_\+\+CONTENT}}
+\item 
+HIGH HARM\+\_\+\+CATEGORY\+\_\+\+JAILBREAK HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_aadebaef979e34c17fafeac5510100ea2}{Gemini\+CPP\+::\+IMAGE\+\_\+\+OTHER}}
+\item 
+HIGH HARM\+\_\+\+CATEGORY\+\_\+\+JAILBREAK HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_a64037e175aacf03f267c4930b2d362cc}{Gemini\+CPP\+::\+NO\+\_\+\+IMAGE}}
+\item 
+HIGH HARM\+\_\+\+CATEGORY\+\_\+\+JAILBREAK HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_acd229c94f9b7b145f4c8cbfaad2ae0cb}{Gemini\+CPP\+::\+IMAGE\+\_\+\+RECITATION}}
+\item 
+HIGH HARM\+\_\+\+CATEGORY\+\_\+\+JAILBREAK HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_a28d83ba21a9f1a255195130a9981ac70}{Gemini\+CPP\+::\+UNEXPECTED\+\_\+\+TOOL\+\_\+\+CALL}}
+\item 
+HIGH HARM\+\_\+\+CATEGORY\+\_\+\+JAILBREAK HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_ac10632fed58c21b499cdba3ea973d3a7}{Gemini\+CPP\+::\+TOO\+\_\+\+MANY\+\_\+\+TOOL\+\_\+\+CALLS}}
+\item 
+HIGH HARM\+\_\+\+CATEGORY\+\_\+\+JAILBREAK HIGH \mbox{\hyperlink{namespace_gemini_c_p_p_a6eb9ed1e9211de093236a4b13a13a750}{Gemini\+CPP\+::\+MISSING\+\_\+\+THOUGHT\+\_\+\+SIGNATURE}}
+\end{DoxyCompactItemize}
+
+
+\label{doc-define-members}
+\Hypertarget{generating__content__api__types_8h_doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{generating__content__api__types_8h_a2004781e318913e9b712808d5ec33574}\index{generating\_content\_api\_types.h@{generating\_content\_api\_types.h}!GEMINI\_GENERATING\_CONTENT\_API\_TYPES\_H@{GEMINI\_GENERATING\_CONTENT\_API\_TYPES\_H}}
+\index{GEMINI\_GENERATING\_CONTENT\_API\_TYPES\_H@{GEMINI\_GENERATING\_CONTENT\_API\_TYPES\_H}!generating\_content\_api\_types.h@{generating\_content\_api\_types.h}}
+\doxysubsubsection{\texorpdfstring{GEMINI\_GENERATING\_CONTENT\_API\_TYPES\_H}{GEMINI\_GENERATING\_CONTENT\_API\_TYPES\_H}}
+{\footnotesize\ttfamily \label{generating__content__api__types_8h_a2004781e318913e9b712808d5ec33574} 
+\#define GEMINI\+\_\+\+GENERATING\+\_\+\+CONTENT\+\_\+\+API\+\_\+\+TYPES\+\_\+H}
+

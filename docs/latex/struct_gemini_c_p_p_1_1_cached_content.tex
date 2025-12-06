@@ -1,0 +1,151 @@
+\doxysection{Gemini\+CPP\+::Cached\+Content Struct Reference}
+\hypertarget{struct_gemini_c_p_p_1_1_cached_content}{}\label{struct_gemini_c_p_p_1_1_cached_content}\index{GeminiCPP::CachedContent@{GeminiCPP::CachedContent}}
+
+
+Represents cached content on the server.  
+
+
+
+
+{\ttfamily \#include $<$caching\+\_\+api\+\_\+types.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+nlohmann\+::json \mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_content_ae4d80ea9425d60fd1100f95af1c25616}{to\+Json}} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_content}{Cached\+Content}} \mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_content_aafac3d43848e5ad437fa3c7141f30659}{from\+Json}} (const nlohmann\+::json \&j)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::string \mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_content_a7ffeacdbdff22c959f66927ed0f31de1}{name}}
+\item 
+std\+::string \mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_content_ad819e2c245ebee5c68e2769fee9d502c}{model}}
+\item 
+std\+::string \mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_content_a674e1d52520c5565b75e703311a91d00}{display\+Name}}
+\item 
+std\+::string \mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_content_a033c5e848cbd50322f4178f41de132d5}{create\+Time}}
+\item 
+std\+::string \mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_content_aa0353481acd7ab426ad26aa5bad18044}{update\+Time}}
+\item 
+std\+::string \mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_content_a8c6ac54f433d6809dfceb3a66164d4e4}{expire\+Time}}
+\item 
+std\+::optional$<$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_duration}{Duration}} $>$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_content_af14bc27bd97ce2a7efecdee7a3240d63}{ttl}}
+\begin{DoxyCompactList}\small\item\em Time-\/to-\/live. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_content_usage_metadata}{Cached\+Content\+Usage\+Metadata}} \mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_content_ab0044a667578b16007967ac4387b6a05}{usage}}
+\item 
+std\+::optional$<$ std\+::string $>$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_content_a0b1342ff373059494ace84c0916b50e8}{system\+Instruction}}
+\item 
+std\+::vector$<$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_content}{Content}} $>$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_content_a46eabd0c483fbf48643f1fefdadc672b}{contents}}
+\item 
+std\+::vector$<$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_tool}{Tool}} $>$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_content_a69de7df9d4bebd0035ba14a6133b4fb6}{tools}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents cached content on the server. 
+
+
+\begin{DoxyItemize}
+\item Caching allows reusing large contexts (like books or codebases) across multiple requests without re-\/uploading or re-\/processing them, saving tokens and time. 
+\end{DoxyItemize}
+
+\label{doc-func-members}
+\Hypertarget{struct_gemini_c_p_p_1_1_cached_content_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{struct_gemini_c_p_p_1_1_cached_content_aafac3d43848e5ad437fa3c7141f30659}\index{GeminiCPP::CachedContent@{GeminiCPP::CachedContent}!fromJson@{fromJson}}
+\index{fromJson@{fromJson}!GeminiCPP::CachedContent@{GeminiCPP::CachedContent}}
+\doxysubsubsection{\texorpdfstring{fromJson()}{fromJson()}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_cached_content_aafac3d43848e5ad437fa3c7141f30659} 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_content}{Cached\+Content}} Gemini\+CPP\+::\+Cached\+Content\+::from\+Json (\begin{DoxyParamCaption}\item[{const nlohmann\+::json \&}]{j}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_cached_content_ae4d80ea9425d60fd1100f95af1c25616}\index{GeminiCPP::CachedContent@{GeminiCPP::CachedContent}!toJson@{toJson}}
+\index{toJson@{toJson}!GeminiCPP::CachedContent@{GeminiCPP::CachedContent}}
+\doxysubsubsection{\texorpdfstring{toJson()}{toJson()}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_cached_content_ae4d80ea9425d60fd1100f95af1c25616} 
+nlohmann\+::json Gemini\+CPP\+::\+Cached\+Content\+::to\+Json (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+\label{doc-variable-members}
+\Hypertarget{struct_gemini_c_p_p_1_1_cached_content_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_gemini_c_p_p_1_1_cached_content_a46eabd0c483fbf48643f1fefdadc672b}\index{GeminiCPP::CachedContent@{GeminiCPP::CachedContent}!contents@{contents}}
+\index{contents@{contents}!GeminiCPP::CachedContent@{GeminiCPP::CachedContent}}
+\doxysubsubsection{\texorpdfstring{contents}{contents}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_cached_content_a46eabd0c483fbf48643f1fefdadc672b} 
+std\+::vector$<$\mbox{\hyperlink{struct_gemini_c_p_p_1_1_content}{Content}}$>$ Gemini\+CPP\+::\+Cached\+Content\+::contents}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_cached_content_a033c5e848cbd50322f4178f41de132d5}\index{GeminiCPP::CachedContent@{GeminiCPP::CachedContent}!createTime@{createTime}}
+\index{createTime@{createTime}!GeminiCPP::CachedContent@{GeminiCPP::CachedContent}}
+\doxysubsubsection{\texorpdfstring{createTime}{createTime}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_cached_content_a033c5e848cbd50322f4178f41de132d5} 
+std\+::string Gemini\+CPP\+::\+Cached\+Content\+::create\+Time}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_cached_content_a674e1d52520c5565b75e703311a91d00}\index{GeminiCPP::CachedContent@{GeminiCPP::CachedContent}!displayName@{displayName}}
+\index{displayName@{displayName}!GeminiCPP::CachedContent@{GeminiCPP::CachedContent}}
+\doxysubsubsection{\texorpdfstring{displayName}{displayName}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_cached_content_a674e1d52520c5565b75e703311a91d00} 
+std\+::string Gemini\+CPP\+::\+Cached\+Content\+::display\+Name}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_cached_content_a8c6ac54f433d6809dfceb3a66164d4e4}\index{GeminiCPP::CachedContent@{GeminiCPP::CachedContent}!expireTime@{expireTime}}
+\index{expireTime@{expireTime}!GeminiCPP::CachedContent@{GeminiCPP::CachedContent}}
+\doxysubsubsection{\texorpdfstring{expireTime}{expireTime}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_cached_content_a8c6ac54f433d6809dfceb3a66164d4e4} 
+std\+::string Gemini\+CPP\+::\+Cached\+Content\+::expire\+Time}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_cached_content_ad819e2c245ebee5c68e2769fee9d502c}\index{GeminiCPP::CachedContent@{GeminiCPP::CachedContent}!model@{model}}
+\index{model@{model}!GeminiCPP::CachedContent@{GeminiCPP::CachedContent}}
+\doxysubsubsection{\texorpdfstring{model}{model}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_cached_content_ad819e2c245ebee5c68e2769fee9d502c} 
+std\+::string Gemini\+CPP\+::\+Cached\+Content\+::model}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_cached_content_a7ffeacdbdff22c959f66927ed0f31de1}\index{GeminiCPP::CachedContent@{GeminiCPP::CachedContent}!name@{name}}
+\index{name@{name}!GeminiCPP::CachedContent@{GeminiCPP::CachedContent}}
+\doxysubsubsection{\texorpdfstring{name}{name}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_cached_content_a7ffeacdbdff22c959f66927ed0f31de1} 
+std\+::string Gemini\+CPP\+::\+Cached\+Content\+::name}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_cached_content_a0b1342ff373059494ace84c0916b50e8}\index{GeminiCPP::CachedContent@{GeminiCPP::CachedContent}!systemInstruction@{systemInstruction}}
+\index{systemInstruction@{systemInstruction}!GeminiCPP::CachedContent@{GeminiCPP::CachedContent}}
+\doxysubsubsection{\texorpdfstring{systemInstruction}{systemInstruction}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_cached_content_a0b1342ff373059494ace84c0916b50e8} 
+std\+::optional$<$std\+::string$>$ Gemini\+CPP\+::\+Cached\+Content\+::system\+Instruction}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_cached_content_a69de7df9d4bebd0035ba14a6133b4fb6}\index{GeminiCPP::CachedContent@{GeminiCPP::CachedContent}!tools@{tools}}
+\index{tools@{tools}!GeminiCPP::CachedContent@{GeminiCPP::CachedContent}}
+\doxysubsubsection{\texorpdfstring{tools}{tools}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_cached_content_a69de7df9d4bebd0035ba14a6133b4fb6} 
+std\+::vector$<$\mbox{\hyperlink{struct_gemini_c_p_p_1_1_tool}{Tool}}$>$ Gemini\+CPP\+::\+Cached\+Content\+::tools}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_cached_content_af14bc27bd97ce2a7efecdee7a3240d63}\index{GeminiCPP::CachedContent@{GeminiCPP::CachedContent}!ttl@{ttl}}
+\index{ttl@{ttl}!GeminiCPP::CachedContent@{GeminiCPP::CachedContent}}
+\doxysubsubsection{\texorpdfstring{ttl}{ttl}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_cached_content_af14bc27bd97ce2a7efecdee7a3240d63} 
+std\+::optional$<$\mbox{\hyperlink{struct_gemini_c_p_p_1_1_duration}{Duration}}$>$ Gemini\+CPP\+::\+Cached\+Content\+::ttl}
+
+
+
+Time-\/to-\/live. 
+
+\Hypertarget{struct_gemini_c_p_p_1_1_cached_content_aa0353481acd7ab426ad26aa5bad18044}\index{GeminiCPP::CachedContent@{GeminiCPP::CachedContent}!updateTime@{updateTime}}
+\index{updateTime@{updateTime}!GeminiCPP::CachedContent@{GeminiCPP::CachedContent}}
+\doxysubsubsection{\texorpdfstring{updateTime}{updateTime}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_cached_content_aa0353481acd7ab426ad26aa5bad18044} 
+std\+::string Gemini\+CPP\+::\+Cached\+Content\+::update\+Time}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_cached_content_ab0044a667578b16007967ac4387b6a05}\index{GeminiCPP::CachedContent@{GeminiCPP::CachedContent}!usage@{usage}}
+\index{usage@{usage}!GeminiCPP::CachedContent@{GeminiCPP::CachedContent}}
+\doxysubsubsection{\texorpdfstring{usage}{usage}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_cached_content_ab0044a667578b16007967ac4387b6a05} 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_content_usage_metadata}{Cached\+Content\+Usage\+Metadata}} Gemini\+CPP\+::\+Cached\+Content\+::usage}
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+gemini/types/\mbox{\hyperlink{caching__api__types_8h}{caching\+\_\+api\+\_\+types.\+h}}\end{DoxyCompactItemize}

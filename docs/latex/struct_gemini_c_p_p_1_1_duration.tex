@@ -1,0 +1,221 @@
+\doxysection{Gemini\+CPP\+::Duration Struct Reference}
+\hypertarget{struct_gemini_c_p_p_1_1_duration}{}\label{struct_gemini_c_p_p_1_1_duration}\index{GeminiCPP::Duration@{GeminiCPP::Duration}}
+
+
+Represents a duration of time with nanosecond precision.  
+
+
+
+
+{\ttfamily \#include $<$duration.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_duration}{Duration}} \& \mbox{\hyperlink{struct_gemini_c_p_p_1_1_duration_a665121d94e426510379ee28f849a598a}{operator=}} (const std\+::string \&\mbox{\hyperlink{struct_gemini_c_p_p_1_1_duration_aa165e4f987873d38d3a2f352e4e45d50}{str}})
+\begin{DoxyCompactList}\small\item\em Assigns the duration from a string representation. \end{DoxyCompactList}\item 
+nlohmann\+::json \mbox{\hyperlink{struct_gemini_c_p_p_1_1_duration_ab678ff6d90728b6a598dab0aeb81c1ce}{to\+Json}} () const
+\begin{DoxyCompactList}\small\item\em Serializes the \doxylink{struct_gemini_c_p_p_1_1_duration}{Duration} to a JSON representation. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{struct_gemini_c_p_p_1_1_duration_aa165e4f987873d38d3a2f352e4e45d50}{str}} () const
+\begin{DoxyCompactList}\small\item\em Converts the duration to its string representation (e.\+g., "{}3.\+5s"{}). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{struct_gemini_c_p_p_1_1_duration}{Duration}} \mbox{\hyperlink{struct_gemini_c_p_p_1_1_duration_aec60c776ae5b7d11d7fe67a1c665feb9}{from\+Seconds}} (int64\+\_\+t s)
+\begin{DoxyCompactList}\small\item\em Creates a \doxylink{struct_gemini_c_p_p_1_1_duration}{Duration} object from a given number of seconds. \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{struct_gemini_c_p_p_1_1_duration}{Duration}} \mbox{\hyperlink{struct_gemini_c_p_p_1_1_duration_a4cbedd5b050a6a78ebea84ad22ffd031}{from\+Millis}} (int64\+\_\+t ms)
+\begin{DoxyCompactList}\small\item\em Creates a \doxylink{struct_gemini_c_p_p_1_1_duration}{Duration} object from a given number of milliseconds. \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{struct_gemini_c_p_p_1_1_duration}{Duration}} \mbox{\hyperlink{struct_gemini_c_p_p_1_1_duration_aa7ae1255a410339999c8ec63fbf1b33b}{from\+Minutes}} (int64\+\_\+t m)
+\begin{DoxyCompactList}\small\item\em Creates a \doxylink{struct_gemini_c_p_p_1_1_duration}{Duration} object from a given number of minutes. \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{struct_gemini_c_p_p_1_1_duration}{Duration}} \mbox{\hyperlink{struct_gemini_c_p_p_1_1_duration_a52f476d235b37c9079c24ff8e705ab20}{from\+String}} (const std\+::string \&\mbox{\hyperlink{struct_gemini_c_p_p_1_1_duration_aa165e4f987873d38d3a2f352e4e45d50}{str}})
+\begin{DoxyCompactList}\small\item\em Parses a string representation (e.\+g., "{}3.\+5s"{}) into a \doxylink{struct_gemini_c_p_p_1_1_duration}{Duration} object. \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{struct_gemini_c_p_p_1_1_duration}{Duration}} \mbox{\hyperlink{struct_gemini_c_p_p_1_1_duration_a0762f7c6a885a03478495dda40e9c759}{from\+Json}} (const nlohmann\+::json \&j)
+\begin{DoxyCompactList}\small\item\em Deserializes a \doxylink{struct_gemini_c_p_p_1_1_duration}{Duration} from a JSON object (or string value within JSON). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int64\+\_\+t \mbox{\hyperlink{struct_gemini_c_p_p_1_1_duration_aa9220d228eaa52df3cdb7f82902e7f4d}{seconds}} = 0
+\begin{DoxyCompactList}\small\item\em Signed seconds of the span of time. Must be from -\/315,576,000,000 to +315,576,000,000 inclusive. \end{DoxyCompactList}\item 
+int32\+\_\+t \mbox{\hyperlink{struct_gemini_c_p_p_1_1_duration_a81f1ebe6eb02883612715b34b7779407}{nanos}} = 0
+\begin{DoxyCompactList}\small\item\em Signed fractions of a second at nanosecond resolution of the span of time. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents a duration of time with nanosecond precision. 
+
+
+\begin{DoxyItemize}
+\item This structure roughly corresponds to {\ttfamily google.\+protobuf.\+Duration}.
+\item It stores time as signed seconds and signed nanoseconds. 
+\end{DoxyItemize}
+
+\label{doc-func-members}
+\Hypertarget{struct_gemini_c_p_p_1_1_duration_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{struct_gemini_c_p_p_1_1_duration_a0762f7c6a885a03478495dda40e9c759}\index{GeminiCPP::Duration@{GeminiCPP::Duration}!fromJson@{fromJson}}
+\index{fromJson@{fromJson}!GeminiCPP::Duration@{GeminiCPP::Duration}}
+\doxysubsubsection{\texorpdfstring{fromJson()}{fromJson()}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_duration_a0762f7c6a885a03478495dda40e9c759} 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_duration}{Duration}} Gemini\+CPP\+::\+Duration\+::from\+Json (\begin{DoxyParamCaption}\item[{const nlohmann\+::json \&}]{j}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+
+
+Deserializes a \doxylink{struct_gemini_c_p_p_1_1_duration}{Duration} from a JSON object (or string value within JSON). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em j} & The JSON object/value. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new \doxylink{struct_gemini_c_p_p_1_1_duration}{Duration} instance. 
+\end{DoxyReturn}
+\Hypertarget{struct_gemini_c_p_p_1_1_duration_a4cbedd5b050a6a78ebea84ad22ffd031}\index{GeminiCPP::Duration@{GeminiCPP::Duration}!fromMillis@{fromMillis}}
+\index{fromMillis@{fromMillis}!GeminiCPP::Duration@{GeminiCPP::Duration}}
+\doxysubsubsection{\texorpdfstring{fromMillis()}{fromMillis()}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_duration_a4cbedd5b050a6a78ebea84ad22ffd031} 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_duration}{Duration}} Gemini\+CPP\+::\+Duration\+::from\+Millis (\begin{DoxyParamCaption}\item[{int64\+\_\+t}]{ms}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+
+
+Creates a \doxylink{struct_gemini_c_p_p_1_1_duration}{Duration} object from a given number of milliseconds. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ms} & The number of milliseconds. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new \doxylink{struct_gemini_c_p_p_1_1_duration}{Duration} instance. 
+\end{DoxyReturn}
+\Hypertarget{struct_gemini_c_p_p_1_1_duration_aa7ae1255a410339999c8ec63fbf1b33b}\index{GeminiCPP::Duration@{GeminiCPP::Duration}!fromMinutes@{fromMinutes}}
+\index{fromMinutes@{fromMinutes}!GeminiCPP::Duration@{GeminiCPP::Duration}}
+\doxysubsubsection{\texorpdfstring{fromMinutes()}{fromMinutes()}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_duration_aa7ae1255a410339999c8ec63fbf1b33b} 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_duration}{Duration}} Gemini\+CPP\+::\+Duration\+::from\+Minutes (\begin{DoxyParamCaption}\item[{int64\+\_\+t}]{m}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+
+
+Creates a \doxylink{struct_gemini_c_p_p_1_1_duration}{Duration} object from a given number of minutes. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em m} & The number of minutes. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new \doxylink{struct_gemini_c_p_p_1_1_duration}{Duration} instance. 
+\end{DoxyReturn}
+\Hypertarget{struct_gemini_c_p_p_1_1_duration_aec60c776ae5b7d11d7fe67a1c665feb9}\index{GeminiCPP::Duration@{GeminiCPP::Duration}!fromSeconds@{fromSeconds}}
+\index{fromSeconds@{fromSeconds}!GeminiCPP::Duration@{GeminiCPP::Duration}}
+\doxysubsubsection{\texorpdfstring{fromSeconds()}{fromSeconds()}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_duration_aec60c776ae5b7d11d7fe67a1c665feb9} 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_duration}{Duration}} Gemini\+CPP\+::\+Duration\+::from\+Seconds (\begin{DoxyParamCaption}\item[{int64\+\_\+t}]{s}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+
+
+Creates a \doxylink{struct_gemini_c_p_p_1_1_duration}{Duration} object from a given number of seconds. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em s} & The number of seconds. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new \doxylink{struct_gemini_c_p_p_1_1_duration}{Duration} instance. 
+\end{DoxyReturn}
+\Hypertarget{struct_gemini_c_p_p_1_1_duration_a52f476d235b37c9079c24ff8e705ab20}\index{GeminiCPP::Duration@{GeminiCPP::Duration}!fromString@{fromString}}
+\index{fromString@{fromString}!GeminiCPP::Duration@{GeminiCPP::Duration}}
+\doxysubsubsection{\texorpdfstring{fromString()}{fromString()}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_duration_a52f476d235b37c9079c24ff8e705ab20} 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_duration}{Duration}} Gemini\+CPP\+::\+Duration\+::from\+String (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{str}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+
+
+Parses a string representation (e.\+g., "{}3.\+5s"{}) into a \doxylink{struct_gemini_c_p_p_1_1_duration}{Duration} object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em str} & The string to parse. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new \doxylink{struct_gemini_c_p_p_1_1_duration}{Duration} instance. 
+\end{DoxyReturn}
+\Hypertarget{struct_gemini_c_p_p_1_1_duration_a665121d94e426510379ee28f849a598a}\index{GeminiCPP::Duration@{GeminiCPP::Duration}!operator=@{operator=}}
+\index{operator=@{operator=}!GeminiCPP::Duration@{GeminiCPP::Duration}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_duration_a665121d94e426510379ee28f849a598a} 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_duration}{Duration}} \& Gemini\+CPP\+::\+Duration\+::operator= (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{str}{}\end{DoxyParamCaption})}
+
+
+
+Assigns the duration from a string representation. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em str} & A string representing the duration (e.\+g., "{}3.\+5s"{}). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Reference to this \doxylink{struct_gemini_c_p_p_1_1_duration}{Duration} object. 
+\end{DoxyReturn}
+\Hypertarget{struct_gemini_c_p_p_1_1_duration_aa165e4f987873d38d3a2f352e4e45d50}\index{GeminiCPP::Duration@{GeminiCPP::Duration}!str@{str}}
+\index{str@{str}!GeminiCPP::Duration@{GeminiCPP::Duration}}
+\doxysubsubsection{\texorpdfstring{str()}{str()}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_duration_aa165e4f987873d38d3a2f352e4e45d50} 
+std\+::string Gemini\+CPP\+::\+Duration\+::str (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Converts the duration to its string representation (e.\+g., "{}3.\+5s"{}). 
+
+\begin{DoxyReturn}{Returns}
+The formatted string. 
+\end{DoxyReturn}
+\Hypertarget{struct_gemini_c_p_p_1_1_duration_ab678ff6d90728b6a598dab0aeb81c1ce}\index{GeminiCPP::Duration@{GeminiCPP::Duration}!toJson@{toJson}}
+\index{toJson@{toJson}!GeminiCPP::Duration@{GeminiCPP::Duration}}
+\doxysubsubsection{\texorpdfstring{toJson()}{toJson()}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_duration_ab678ff6d90728b6a598dab0aeb81c1ce} 
+nlohmann\+::json Gemini\+CPP\+::\+Duration\+::to\+Json (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Serializes the \doxylink{struct_gemini_c_p_p_1_1_duration}{Duration} to a JSON representation. 
+
+\begin{DoxyReturn}{Returns}
+The JSON object (typically a string like "{}3.\+5s"{}). 
+\end{DoxyReturn}
+
+
+\label{doc-variable-members}
+\Hypertarget{struct_gemini_c_p_p_1_1_duration_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_gemini_c_p_p_1_1_duration_a81f1ebe6eb02883612715b34b7779407}\index{GeminiCPP::Duration@{GeminiCPP::Duration}!nanos@{nanos}}
+\index{nanos@{nanos}!GeminiCPP::Duration@{GeminiCPP::Duration}}
+\doxysubsubsection{\texorpdfstring{nanos}{nanos}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_duration_a81f1ebe6eb02883612715b34b7779407} 
+int32\+\_\+t Gemini\+CPP\+::\+Duration\+::nanos = 0}
+
+
+
+Signed fractions of a second at nanosecond resolution of the span of time. 
+
+\begin{DoxyNote}{Note}
+Durations less than one second are represented with a 0 {\ttfamily \doxylink{struct_gemini_c_p_p_1_1_duration_aa9220d228eaa52df3cdb7f82902e7f4d}{seconds}} field and a positive or negative {\ttfamily \doxylink{struct_gemini_c_p_p_1_1_duration_a81f1ebe6eb02883612715b34b7779407}{nanos}} field. For durations of one second or more, a non-\/zero value for the {\ttfamily \doxylink{struct_gemini_c_p_p_1_1_duration_a81f1ebe6eb02883612715b34b7779407}{nanos}} field must be of the same sign as the {\ttfamily \doxylink{struct_gemini_c_p_p_1_1_duration_aa9220d228eaa52df3cdb7f82902e7f4d}{seconds}} field. 
+\end{DoxyNote}
+\Hypertarget{struct_gemini_c_p_p_1_1_duration_aa9220d228eaa52df3cdb7f82902e7f4d}\index{GeminiCPP::Duration@{GeminiCPP::Duration}!seconds@{seconds}}
+\index{seconds@{seconds}!GeminiCPP::Duration@{GeminiCPP::Duration}}
+\doxysubsubsection{\texorpdfstring{seconds}{seconds}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_duration_aa9220d228eaa52df3cdb7f82902e7f4d} 
+int64\+\_\+t Gemini\+CPP\+::\+Duration\+::seconds = 0}
+
+
+
+Signed seconds of the span of time. Must be from -\/315,576,000,000 to +315,576,000,000 inclusive. 
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+gemini/\mbox{\hyperlink{duration_8h}{duration.\+h}}\end{DoxyCompactItemize}

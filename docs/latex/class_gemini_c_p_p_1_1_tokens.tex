@@ -1,0 +1,98 @@
+\doxysection{Gemini\+CPP\+::Tokens Class Reference}
+\hypertarget{class_gemini_c_p_p_1_1_tokens}{}\label{class_gemini_c_p_p_1_1_tokens}\index{GeminiCPP::Tokens@{GeminiCPP::Tokens}}
+
+
+Provides methods for counting tokens.  
+
+
+
+
+{\ttfamily \#include $<$tokens.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_gemini_c_p_p_1_1_tokens_a73f00e3202b38b81f5bd6dd76324ab75}{Tokens}} (\mbox{\hyperlink{class_gemini_c_p_p_1_1_client}{Client}} \texorpdfstring{$\ast$}{*}client)
+\begin{DoxyCompactList}\small\item\em Constructs a new \doxylink{class_gemini_c_p_p_1_1_tokens}{Tokens} API module. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_result}{Result}}$<$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_count_tokens_response_body}{Count\+Tokens\+Response\+Body}} $>$ \mbox{\hyperlink{class_gemini_c_p_p_1_1_tokens_a95c419d7ba4233218d4f7eaa9c27b848}{count}} (const std\+::string \&model, const \mbox{\hyperlink{struct_gemini_c_p_p_1_1_count_tokens_request_body}{Count\+Tokens\+Request\+Body}} \&request)
+\begin{DoxyCompactList}\small\item\em Counts tokens for a complex request (multi-\/modal, tools, etc.). \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_result}{Result}}$<$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_count_tokens_response_body}{Count\+Tokens\+Response\+Body}} $>$ \mbox{\hyperlink{class_gemini_c_p_p_1_1_tokens_aeb368cfe22311f007076609db4696a0e}{count}} (const std\+::string \&model, const std\+::string \&text)
+\begin{DoxyCompactList}\small\item\em Convenience overload to count tokens for a simple text string. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Provides methods for counting tokens. 
+
+
+\begin{DoxyItemize}
+\item Useful for estimating costs and ensuring requests stay within model context limits. 
+\end{DoxyItemize}
+
+\label{doc-constructors}
+\Hypertarget{class_gemini_c_p_p_1_1_tokens_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_gemini_c_p_p_1_1_tokens_a73f00e3202b38b81f5bd6dd76324ab75}\index{GeminiCPP::Tokens@{GeminiCPP::Tokens}!Tokens@{Tokens}}
+\index{Tokens@{Tokens}!GeminiCPP::Tokens@{GeminiCPP::Tokens}}
+\doxysubsubsection{\texorpdfstring{Tokens()}{Tokens()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_tokens_a73f00e3202b38b81f5bd6dd76324ab75} 
+Gemini\+CPP\+::\+Tokens\+::\+Tokens (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_gemini_c_p_p_1_1_client}{Client}} \texorpdfstring{$\ast$}{*}}]{client}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+Constructs a new \doxylink{class_gemini_c_p_p_1_1_tokens}{Tokens} API module. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em client} & Pointer to the main \doxylink{class_gemini_c_p_p_1_1_client}{Client} instance. \\
+\hline
+\end{DoxyParams}
+
+
+\label{doc-func-members}
+\Hypertarget{class_gemini_c_p_p_1_1_tokens_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_gemini_c_p_p_1_1_tokens_a95c419d7ba4233218d4f7eaa9c27b848}\index{GeminiCPP::Tokens@{GeminiCPP::Tokens}!count@{count}}
+\index{count@{count}!GeminiCPP::Tokens@{GeminiCPP::Tokens}}
+\doxysubsubsection{\texorpdfstring{count()}{count()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_tokens_a95c419d7ba4233218d4f7eaa9c27b848} 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_result}{Result}}$<$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_count_tokens_response_body}{Count\+Tokens\+Response\+Body}} $>$ Gemini\+CPP\+::\+Tokens\+::count (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{model}{, }\item[{const \mbox{\hyperlink{struct_gemini_c_p_p_1_1_count_tokens_request_body}{Count\+Tokens\+Request\+Body}} \&}]{request}{}\end{DoxyParamCaption})}
+
+
+
+Counts tokens for a complex request (multi-\/modal, tools, etc.). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model} & The model to use for tokenization (e.\+g., "{}models/gemini-\/1.\+5-\/flash"{}). \\
+\hline
+{\em request} & The full token counting request body containing the content. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{struct_gemini_c_p_p_1_1_result}{Result$<$\+Count\+Tokens\+Response\+Body$>$} containing the total token count. 
+\end{DoxyReturn}
+\Hypertarget{class_gemini_c_p_p_1_1_tokens_aeb368cfe22311f007076609db4696a0e}\index{GeminiCPP::Tokens@{GeminiCPP::Tokens}!count@{count}}
+\index{count@{count}!GeminiCPP::Tokens@{GeminiCPP::Tokens}}
+\doxysubsubsection{\texorpdfstring{count()}{count()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_tokens_aeb368cfe22311f007076609db4696a0e} 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_result}{Result}}$<$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_count_tokens_response_body}{Count\+Tokens\+Response\+Body}} $>$ Gemini\+CPP\+::\+Tokens\+::count (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{model}{, }\item[{const std\+::string \&}]{text}{}\end{DoxyParamCaption})}
+
+
+
+Convenience overload to count tokens for a simple text string. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model} & The model to use for tokenization. \\
+\hline
+{\em text} & The text content to tokenize. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{struct_gemini_c_p_p_1_1_result}{Result$<$\+Count\+Tokens\+Response\+Body$>$} containing the total token count. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+gemini/apis/\mbox{\hyperlink{tokens_8h}{tokens.\+h}}\end{DoxyCompactItemize}

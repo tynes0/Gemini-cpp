@@ -1,0 +1,518 @@
+\doxysection{Gemini\+CPP\+::Client Class Reference}
+\hypertarget{class_gemini_c_p_p_1_1_client}{}\label{class_gemini_c_p_p_1_1_client}\index{GeminiCPP::Client@{GeminiCPP::Client}}
+
+
+The main client class for interacting with the Google Gemini API.  
+
+
+
+
+{\ttfamily \#include $<$client.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_gemini_c_p_p_1_1_client_af22128f17fb6641d9bfd62b24def3711}{Client}} (std\+::string api\+\_\+key)
+\begin{DoxyCompactList}\small\item\em Constructs a new \doxylink{class_gemini_c_p_p_1_1_client}{Client} instance. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_gemini_c_p_p_1_1_client_a9d1e2478b5e9663ce8f345ad2828b33b}{Client}} (const Client \&)=delete
+\item 
+\mbox{\hyperlink{class_gemini_c_p_p_1_1_client_af22128f17fb6641d9bfd62b24def3711}{Client}} \& \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_aaed77ddf1449cc324d82b66a44a335d2}{operator=}} (const \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_af22128f17fb6641d9bfd62b24def3711}{Client}} \&)=delete
+\item 
+\mbox{\hyperlink{class_gemini_c_p_p_1_1_client_a6520b5c816abe79870f1aabb3dbfa351}{Client}} (Client \&\&)=default
+\item 
+\mbox{\hyperlink{class_gemini_c_p_p_1_1_client_af22128f17fb6641d9bfd62b24def3711}{Client}} \& \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_aee1ee090945e481da5ae4898c2e5ba85}{operator=}} (\mbox{\hyperlink{class_gemini_c_p_p_1_1_client_af22128f17fb6641d9bfd62b24def3711}{Client}} \&\&)=default
+\item 
+\mbox{\hyperlink{class_gemini_c_p_p_1_1_client_a9417de81fe46d94b44122f7140c108f3}{\texorpdfstring{$\sim$}{\string~}\+Client}} ()=default
+\item 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result}{Generation\+Result}} \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_a9657018673e7a3d74047c5771fa4cf4b}{generate\+Content}} (const std\+::string \&model, const \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_request_body}{Generate\+Content\+Request\+Body}} \&\mbox{\hyperlink{class_gemini_c_p_p_1_1_client_af3e1814c26bd4880f4ff857d8aec58ba}{request}})
+\begin{DoxyCompactList}\small\item\em Generates content using the specified model and a fully constructed request body. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result}{Generation\+Result}} \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_afa7ca4a39df2e677c0501f69fd3dcaf1}{stream\+Generate\+Content}} (const std\+::string \&model, const \mbox{\hyperlink{struct_gemini_c_p_p_1_1_stream_generate_content_request_body}{Stream\+Generate\+Content\+Request\+Body}} \&\mbox{\hyperlink{class_gemini_c_p_p_1_1_client_af3e1814c26bd4880f4ff857d8aec58ba}{request}}, const \mbox{\hyperlink{namespace_gemini_c_p_p_a299d3ceda8e3174a4e47607e0d9fc920}{Stream\+Callback}} \&callback)
+\begin{DoxyCompactList}\small\item\em Generates content in a streaming fashion. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result}{Generation\+Result}} \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_a01ba717ad4317323762cf770103af1a2}{generate\+Content}} (const std\+::string \&prompt, const std\+::string \&model="{}gemini-\/2.\+0-\/flash"{})
+\begin{DoxyCompactList}\small\item\em Helper method to generate content from a simple text prompt. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result}{Generation\+Result}} \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_aa81e894508ebb6d35a0e3913aa7c94fb}{stream\+Generate\+Content}} (const std\+::string \&prompt, const \mbox{\hyperlink{namespace_gemini_c_p_p_a299d3ceda8e3174a4e47607e0d9fc920}{Stream\+Callback}} \&callback, const std\+::string \&model="{}gemini-\/2.\+0-\/flash"{})
+\begin{DoxyCompactList}\small\item\em Helper method for streaming content generation from a simple text prompt. \end{DoxyCompactList}\item 
+std\+::future$<$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result}{Generation\+Result}} $>$ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_a20c488c9722df8a2641ca533bf6b3797}{generate\+Content\+Async}} (std\+::string model, \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_request_body}{Generate\+Content\+Request\+Body}} \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_af3e1814c26bd4880f4ff857d8aec58ba}{request}})
+\begin{DoxyCompactList}\small\item\em Asynchronously generates content. \end{DoxyCompactList}\item 
+std\+::future$<$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result}{Generation\+Result}} $>$ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_ae456044ec2113fe708d94c779693c0af}{stream\+Generate\+Content\+Async}} (std\+::string model, \mbox{\hyperlink{struct_gemini_c_p_p_1_1_stream_generate_content_request_body}{Stream\+Generate\+Content\+Request\+Body}} \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_af3e1814c26bd4880f4ff857d8aec58ba}{request}}, \mbox{\hyperlink{namespace_gemini_c_p_p_a299d3ceda8e3174a4e47607e0d9fc920}{Stream\+Callback}} callback)
+\begin{DoxyCompactList}\small\item\em Asynchronously generates content in a stream. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_support_1_1_api_validation_result}{Support\+::\+Api\+Validation\+Result}} \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_a12ba4280b71d5256dfbb7318019c984b}{verify\+Api\+Key}} ()
+\begin{DoxyCompactList}\small\item\em Verifies if the provided API key is valid by making a lightweight API call. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_ad90bb9cc844aa5cea62adafbb0a0d1e5}{set\+Retry\+Config}} (const \mbox{\hyperlink{struct_gemini_c_p_p_1_1_support_1_1_retry_config}{Support\+::\+Retry\+Config}} \&config)
+\begin{DoxyCompactList}\small\item\em Sets the retry configuration for failed HTTP requests. \end{DoxyCompactList}\item 
+const \mbox{\hyperlink{struct_gemini_c_p_p_1_1_support_1_1_retry_config}{Support\+::\+Retry\+Config}} \& \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_aedc23e53a30a768715540708c1268fbc}{get\+Retry\+Config}} () const
+\begin{DoxyCompactList}\small\item\em Gets the current retry configuration. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_gemini_c_p_p_1_1_request_builder}{Request\+Builder}} \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_af3e1814c26bd4880f4ff857d8aec58ba}{request}} ()
+\begin{DoxyCompactList}\small\item\em Creates a \doxylink{class_gemini_c_p_p_1_1_request_builder}{Request\+Builder} associated with this client. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_gemini_c_p_p_1_1_chat_session}{Chat\+Session}} \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_a9db787b9ecde112b40d1a3eabecb452b}{start\+Chat}} (const std\+::string \&model, std\+::string session\+Name="{}"{})
+\begin{DoxyCompactList}\small\item\em Starts a new multi-\/turn chat session. \end{DoxyCompactList}\item 
+{\footnotesize template$<$Json\+Serializable Response\+Type$>$ }\\\mbox{\hyperlink{struct_gemini_c_p_p_1_1_result}{Result}}$<$ Response\+Type $>$ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_abe95449d0ecb7e672d36ca0ad83cc99b}{post}} (const std\+::string \&url, const nlohmann\+::json \&payload)
+\begin{DoxyCompactList}\small\item\em Performs a generic HTTP POST request expecting a JSON response. \end{DoxyCompactList}\item 
+{\footnotesize template$<$Json\+Serializable Response\+Type$>$ }\\\mbox{\hyperlink{struct_gemini_c_p_p_1_1_result}{Result}}$<$ Response\+Type $>$ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_aaae383b90eaba04fb1bbd9a1e0b2845a}{get}} (const std\+::string \&url, const std\+::map$<$ std\+::string, std\+::string $>$ \&params=\{\})
+\begin{DoxyCompactList}\small\item\em Performs a generic HTTP GET request. \end{DoxyCompactList}\item 
+{\footnotesize template$<$Json\+Serializable Response\+Type$>$ }\\\mbox{\hyperlink{struct_gemini_c_p_p_1_1_result}{Result}}$<$ Response\+Type $>$ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_abf80a88c45f9f7a328efb20c3919865e}{post\+Multipart}} (const std\+::string \&endpoint, const std\+::string \&file\+Path, const std\+::string \&mime\+Type, const nlohmann\+::json \&metadata)
+\begin{DoxyCompactList}\small\item\em Performs a multipart HTTP POST request (typically for file uploads). \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_result}{Result}}$<$ bool $>$ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_aa50e6425278d7f065ac14f7eedd27565}{delete\+Resource}} (const std\+::string \&url)
+\begin{DoxyCompactList}\small\item\em Performs a generic HTTP DELETE request. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_gemini_c_p_p_1_1_files}{Files}} \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_a9aaa9daf69751b7cfc44df82a1c983c5}{files}}
+\begin{DoxyCompactList}\small\item\em Module for \doxylink{struct_gemini_c_p_p_1_1_file}{File} API operations (upload, list, delete, get). \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_gemini_c_p_p_1_1_models}{Models}} \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_a4daedd83ad71bc602df083e4cb664f62}{models}}
+\begin{DoxyCompactList}\small\item\em Module for Model API operations (list models, get model info). \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_gemini_c_p_p_1_1_tokens}{Tokens}} \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_a7eb928c17c117091eef51c16252407c1}{tokens}}
+\begin{DoxyCompactList}\small\item\em Module for Token API operations (count tokens). \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+The main client class for interacting with the Google Gemini API. 
+
+
+\begin{DoxyItemize}
+\item This class acts as the central entry point for all API operations. It manages the API key, network configurations, and provides access to specific API modules (\doxylink{class_gemini_c_p_p_1_1_files}{Files}, \doxylink{class_gemini_c_p_p_1_1_models}{Models}, \doxylink{class_gemini_c_p_p_1_1_tokens}{Tokens}). It also handles the core content generation methods. 
+\end{DoxyItemize}
+
+\label{doc-constructors}
+\Hypertarget{class_gemini_c_p_p_1_1_client_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_gemini_c_p_p_1_1_client_af22128f17fb6641d9bfd62b24def3711}\index{GeminiCPP::Client@{GeminiCPP::Client}!Client@{Client}}
+\index{Client@{Client}!GeminiCPP::Client@{GeminiCPP::Client}}
+\doxysubsubsection{\texorpdfstring{Client()}{Client()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_client_af22128f17fb6641d9bfd62b24def3711} 
+Gemini\+CPP\+::\+Client\+::\+Client (\begin{DoxyParamCaption}\item[{std\+::string}]{api\+\_\+key}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+Constructs a new \doxylink{class_gemini_c_p_p_1_1_client}{Client} instance. 
+
+
+\begin{DoxyItemize}
+\item 
+\begin{DoxyParams}{Parameters}
+{\em api\+\_\+key} & The Google Gemini API key used for authentication. \\
+\hline
+\end{DoxyParams}
+
+\end{DoxyItemize}\Hypertarget{class_gemini_c_p_p_1_1_client_a9d1e2478b5e9663ce8f345ad2828b33b}\index{GeminiCPP::Client@{GeminiCPP::Client}!Client@{Client}}
+\index{Client@{Client}!GeminiCPP::Client@{GeminiCPP::Client}}
+\doxysubsubsection{\texorpdfstring{Client()}{Client()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_client_a9d1e2478b5e9663ce8f345ad2828b33b} 
+Gemini\+CPP\+::\+Client\+::\+Client (\begin{DoxyParamCaption}\item[{const Client \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+\Hypertarget{class_gemini_c_p_p_1_1_client_a6520b5c816abe79870f1aabb3dbfa351}\index{GeminiCPP::Client@{GeminiCPP::Client}!Client@{Client}}
+\index{Client@{Client}!GeminiCPP::Client@{GeminiCPP::Client}}
+\doxysubsubsection{\texorpdfstring{Client()}{Client()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_client_a6520b5c816abe79870f1aabb3dbfa351} 
+Gemini\+CPP\+::\+Client\+::\+Client (\begin{DoxyParamCaption}\item[{Client \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+\Hypertarget{class_gemini_c_p_p_1_1_client_a9417de81fe46d94b44122f7140c108f3}\index{GeminiCPP::Client@{GeminiCPP::Client}!````~Client@{\texorpdfstring{$\sim$}{\string~}Client}}
+\index{````~Client@{\texorpdfstring{$\sim$}{\string~}Client}!GeminiCPP::Client@{GeminiCPP::Client}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}Client()}{\string~Client()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_client_a9417de81fe46d94b44122f7140c108f3} 
+Gemini\+CPP\+::\+Client\+::\texorpdfstring{$\sim$}{\string~}\+Client (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+
+
+\label{doc-func-members}
+\Hypertarget{class_gemini_c_p_p_1_1_client_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_gemini_c_p_p_1_1_client_aa50e6425278d7f065ac14f7eedd27565}\index{GeminiCPP::Client@{GeminiCPP::Client}!deleteResource@{deleteResource}}
+\index{deleteResource@{deleteResource}!GeminiCPP::Client@{GeminiCPP::Client}}
+\doxysubsubsection{\texorpdfstring{deleteResource()}{deleteResource()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_client_aa50e6425278d7f065ac14f7eedd27565} 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_result}{Result}}$<$ bool $>$ Gemini\+CPP\+::\+Client\+::delete\+Resource (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{url}{}\end{DoxyParamCaption})}
+
+
+
+Performs a generic HTTP DELETE request. 
+
+
+\begin{DoxyItemize}
+\item 
+\begin{DoxyParams}{Parameters}
+{\em url} & The target URL. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{struct_gemini_c_p_p_1_1_result}{Result$<$bool$>$} Success status. 
+\end{DoxyReturn}
+
+\end{DoxyItemize}\Hypertarget{class_gemini_c_p_p_1_1_client_a9657018673e7a3d74047c5771fa4cf4b}\index{GeminiCPP::Client@{GeminiCPP::Client}!generateContent@{generateContent}}
+\index{generateContent@{generateContent}!GeminiCPP::Client@{GeminiCPP::Client}}
+\doxysubsubsection{\texorpdfstring{generateContent()}{generateContent()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_client_a9657018673e7a3d74047c5771fa4cf4b} 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result}{Generation\+Result}} Gemini\+CPP\+::\+Client\+::generate\+Content (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{model}{, }\item[{const \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_request_body}{Generate\+Content\+Request\+Body}} \&}]{request}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Generates content using the specified model and a fully constructed request body. 
+
+
+\begin{DoxyItemize}
+\item This is a low-\/level method that allows full control over the request payload.
+\item 
+\begin{DoxyParams}{Parameters}
+{\em model} & The model identifier (e.\+g., "{}models/gemini-\/2.\+5-\/flash"{}). \\
+\hline
+{\em request} & The structured request body containing contents, tools, config, etc. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{struct_gemini_c_p_p_1_1_generation_result}{Generation\+Result} containing the generated content or error details. 
+\end{DoxyReturn}
+
+\end{DoxyItemize}\Hypertarget{class_gemini_c_p_p_1_1_client_a01ba717ad4317323762cf770103af1a2}\index{GeminiCPP::Client@{GeminiCPP::Client}!generateContent@{generateContent}}
+\index{generateContent@{generateContent}!GeminiCPP::Client@{GeminiCPP::Client}}
+\doxysubsubsection{\texorpdfstring{generateContent()}{generateContent()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_client_a01ba717ad4317323762cf770103af1a2} 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result}{Generation\+Result}} Gemini\+CPP\+::\+Client\+::generate\+Content (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{prompt}{, }\item[{const std\+::string \&}]{model}{ = {\ttfamily "{}gemini-\/2.0-\/flash"{}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Helper method to generate content from a simple text prompt. 
+
+
+\begin{DoxyItemize}
+\item 
+\begin{DoxyParams}{Parameters}
+{\em prompt} & The user\textquotesingle{}s input text. \\
+\hline
+{\em model} & The model to use (default\+: gemini-\/2.\+0-\/flash). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{struct_gemini_c_p_p_1_1_generation_result}{Generation\+Result} containing the response. 
+\end{DoxyReturn}
+
+\end{DoxyItemize}\Hypertarget{class_gemini_c_p_p_1_1_client_a20c488c9722df8a2641ca533bf6b3797}\index{GeminiCPP::Client@{GeminiCPP::Client}!generateContentAsync@{generateContentAsync}}
+\index{generateContentAsync@{generateContentAsync}!GeminiCPP::Client@{GeminiCPP::Client}}
+\doxysubsubsection{\texorpdfstring{generateContentAsync()}{generateContentAsync()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_client_a20c488c9722df8a2641ca533bf6b3797} 
+std\+::future$<$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result}{Generation\+Result}} $>$ Gemini\+CPP\+::\+Client\+::generate\+Content\+Async (\begin{DoxyParamCaption}\item[{std\+::string}]{model}{, }\item[{\mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_request_body}{Generate\+Content\+Request\+Body}}}]{request}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Asynchronously generates content. 
+
+
+\begin{DoxyItemize}
+\item 
+\begin{DoxyParams}{Parameters}
+{\em model} & The model identifier. \\
+\hline
+{\em request} & The request body. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::future$<$\+Generation\+Result$>$ A future object to retrieve the result later. 
+\end{DoxyReturn}
+
+\end{DoxyItemize}\Hypertarget{class_gemini_c_p_p_1_1_client_aaae383b90eaba04fb1bbd9a1e0b2845a}\index{GeminiCPP::Client@{GeminiCPP::Client}!get@{get}}
+\index{get@{get}!GeminiCPP::Client@{GeminiCPP::Client}}
+\doxysubsubsection{\texorpdfstring{get()}{get()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_client_aaae383b90eaba04fb1bbd9a1e0b2845a} 
+template$<$Json\+Serializable Response\+Type$>$ \\
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_result}{Result}}$<$ Response\+Type $>$ Gemini\+CPP\+::\+Client\+::get (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{url}{, }\item[{const std\+::map$<$ std\+::string, std\+::string $>$ \&}]{params}{ = {\ttfamily \{\}}}\end{DoxyParamCaption})}
+
+
+
+Performs a generic HTTP GET request. 
+
+
+\begin{DoxyItemize}
+\item 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Response\+Type} & A type that implements the \doxylink{concept_gemini_c_p_p_1_1_json_serializable}{Json\+Serializable} concept. \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em url} & The target URL. \\
+\hline
+{\em params} & Query parameters to append to the URL. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{struct_gemini_c_p_p_1_1_result}{Result$<$\+Response\+Type$>$} The parsed response or error. 
+\end{DoxyReturn}
+
+\end{DoxyItemize}\Hypertarget{class_gemini_c_p_p_1_1_client_aedc23e53a30a768715540708c1268fbc}\index{GeminiCPP::Client@{GeminiCPP::Client}!getRetryConfig@{getRetryConfig}}
+\index{getRetryConfig@{getRetryConfig}!GeminiCPP::Client@{GeminiCPP::Client}}
+\doxysubsubsection{\texorpdfstring{getRetryConfig()}{getRetryConfig()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_client_aedc23e53a30a768715540708c1268fbc} 
+const \mbox{\hyperlink{struct_gemini_c_p_p_1_1_support_1_1_retry_config}{Support\+::\+Retry\+Config}} \& Gemini\+CPP\+::\+Client\+::get\+Retry\+Config (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Gets the current retry configuration. 
+
+
+\begin{DoxyItemize}
+\item \begin{DoxyReturn}{Returns}
+const \doxylink{struct_gemini_c_p_p_1_1_support_1_1_retry_config}{Support\+::\+Retry\+Config}\& The current configuration. 
+\end{DoxyReturn}
+
+\end{DoxyItemize}\Hypertarget{class_gemini_c_p_p_1_1_client_aee1ee090945e481da5ae4898c2e5ba85}\index{GeminiCPP::Client@{GeminiCPP::Client}!operator=@{operator=}}
+\index{operator=@{operator=}!GeminiCPP::Client@{GeminiCPP::Client}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_client_aee1ee090945e481da5ae4898c2e5ba85} 
+\mbox{\hyperlink{class_gemini_c_p_p_1_1_client_af22128f17fb6641d9bfd62b24def3711}{Client}} \& Gemini\+CPP\+::\+Client\+::operator= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_gemini_c_p_p_1_1_client_af22128f17fb6641d9bfd62b24def3711}{Client}} \&\&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+\Hypertarget{class_gemini_c_p_p_1_1_client_aaed77ddf1449cc324d82b66a44a335d2}\index{GeminiCPP::Client@{GeminiCPP::Client}!operator=@{operator=}}
+\index{operator=@{operator=}!GeminiCPP::Client@{GeminiCPP::Client}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_client_aaed77ddf1449cc324d82b66a44a335d2} 
+\mbox{\hyperlink{class_gemini_c_p_p_1_1_client_af22128f17fb6641d9bfd62b24def3711}{Client}} \& Gemini\+CPP\+::\+Client\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_af22128f17fb6641d9bfd62b24def3711}{Client}} \&}]{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+\Hypertarget{class_gemini_c_p_p_1_1_client_abe95449d0ecb7e672d36ca0ad83cc99b}\index{GeminiCPP::Client@{GeminiCPP::Client}!post@{post}}
+\index{post@{post}!GeminiCPP::Client@{GeminiCPP::Client}}
+\doxysubsubsection{\texorpdfstring{post()}{post()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_client_abe95449d0ecb7e672d36ca0ad83cc99b} 
+template$<$Json\+Serializable Response\+Type$>$ \\
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_result}{Result}}$<$ Response\+Type $>$ Gemini\+CPP\+::\+Client\+::post (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{url}{, }\item[{const nlohmann\+::json \&}]{payload}{}\end{DoxyParamCaption})}
+
+
+
+Performs a generic HTTP POST request expecting a JSON response. 
+
+
+\begin{DoxyItemize}
+\item 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Response\+Type} & A type that implements the \doxylink{concept_gemini_c_p_p_1_1_json_serializable}{Json\+Serializable} concept. \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em url} & The target URL. \\
+\hline
+{\em payload} & The JSON body to send. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{struct_gemini_c_p_p_1_1_result}{Result$<$\+Response\+Type$>$} The parsed response or error. 
+\end{DoxyReturn}
+
+\end{DoxyItemize}\Hypertarget{class_gemini_c_p_p_1_1_client_abf80a88c45f9f7a328efb20c3919865e}\index{GeminiCPP::Client@{GeminiCPP::Client}!postMultipart@{postMultipart}}
+\index{postMultipart@{postMultipart}!GeminiCPP::Client@{GeminiCPP::Client}}
+\doxysubsubsection{\texorpdfstring{postMultipart()}{postMultipart()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_client_abf80a88c45f9f7a328efb20c3919865e} 
+template$<$Json\+Serializable Response\+Type$>$ \\
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_result}{Result}}$<$ Response\+Type $>$ Gemini\+CPP\+::\+Client\+::post\+Multipart (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{endpoint}{, }\item[{const std\+::string \&}]{file\+Path}{, }\item[{const std\+::string \&}]{mime\+Type}{, }\item[{const nlohmann\+::json \&}]{metadata}{}\end{DoxyParamCaption})}
+
+
+
+Performs a multipart HTTP POST request (typically for file uploads). 
+
+
+\begin{DoxyItemize}
+\item 
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Response\+Type} & A type that implements the \doxylink{concept_gemini_c_p_p_1_1_json_serializable}{Json\+Serializable} concept. \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em endpoint} & The API endpoint (relative to upload base URL). \\
+\hline
+{\em file\+Path} & Local path to the file to upload. \\
+\hline
+{\em mime\+Type} & MIME type of the file. \\
+\hline
+{\em metadata} & JSON metadata associated with the file. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{struct_gemini_c_p_p_1_1_result}{Result$<$\+Response\+Type$>$} The parsed response or error. 
+\end{DoxyReturn}
+
+\end{DoxyItemize}\Hypertarget{class_gemini_c_p_p_1_1_client_af3e1814c26bd4880f4ff857d8aec58ba}\index{GeminiCPP::Client@{GeminiCPP::Client}!request@{request}}
+\index{request@{request}!GeminiCPP::Client@{GeminiCPP::Client}}
+\doxysubsubsection{\texorpdfstring{request()}{request()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_client_af3e1814c26bd4880f4ff857d8aec58ba} 
+\mbox{\hyperlink{class_gemini_c_p_p_1_1_request_builder}{Request\+Builder}} Gemini\+CPP\+::\+Client\+::request (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Creates a \doxylink{class_gemini_c_p_p_1_1_request_builder}{Request\+Builder} associated with this client. 
+
+
+\begin{DoxyItemize}
+\item \begin{DoxyReturn}{Returns}
+\doxylink{class_gemini_c_p_p_1_1_request_builder}{Request\+Builder} A builder object for fluent request construction. 
+\end{DoxyReturn}
+
+\end{DoxyItemize}\Hypertarget{class_gemini_c_p_p_1_1_client_ad90bb9cc844aa5cea62adafbb0a0d1e5}\index{GeminiCPP::Client@{GeminiCPP::Client}!setRetryConfig@{setRetryConfig}}
+\index{setRetryConfig@{setRetryConfig}!GeminiCPP::Client@{GeminiCPP::Client}}
+\doxysubsubsection{\texorpdfstring{setRetryConfig()}{setRetryConfig()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_client_ad90bb9cc844aa5cea62adafbb0a0d1e5} 
+void Gemini\+CPP\+::\+Client\+::set\+Retry\+Config (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_gemini_c_p_p_1_1_support_1_1_retry_config}{Support\+::\+Retry\+Config}} \&}]{config}{}\end{DoxyParamCaption})}
+
+
+
+Sets the retry configuration for failed HTTP requests. 
+
+
+\begin{DoxyItemize}
+\item 
+\begin{DoxyParams}{Parameters}
+{\em config} & The new retry configuration (max retries, delay, etc.). \\
+\hline
+\end{DoxyParams}
+
+\end{DoxyItemize}\Hypertarget{class_gemini_c_p_p_1_1_client_a9db787b9ecde112b40d1a3eabecb452b}\index{GeminiCPP::Client@{GeminiCPP::Client}!startChat@{startChat}}
+\index{startChat@{startChat}!GeminiCPP::Client@{GeminiCPP::Client}}
+\doxysubsubsection{\texorpdfstring{startChat()}{startChat()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_client_a9db787b9ecde112b40d1a3eabecb452b} 
+\mbox{\hyperlink{class_gemini_c_p_p_1_1_chat_session}{Chat\+Session}} Gemini\+CPP\+::\+Client\+::start\+Chat (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{model}{, }\item[{std\+::string}]{session\+Name}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Starts a new multi-\/turn chat session. 
+
+
+\begin{DoxyItemize}
+\item 
+\begin{DoxyParams}{Parameters}
+{\em model} & The model to be used for the chat. \\
+\hline
+{\em session\+Name} & Optional name for the session. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{class_gemini_c_p_p_1_1_chat_session}{Chat\+Session} A new chat session object. 
+\end{DoxyReturn}
+
+\end{DoxyItemize}\Hypertarget{class_gemini_c_p_p_1_1_client_afa7ca4a39df2e677c0501f69fd3dcaf1}\index{GeminiCPP::Client@{GeminiCPP::Client}!streamGenerateContent@{streamGenerateContent}}
+\index{streamGenerateContent@{streamGenerateContent}!GeminiCPP::Client@{GeminiCPP::Client}}
+\doxysubsubsection{\texorpdfstring{streamGenerateContent()}{streamGenerateContent()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_client_afa7ca4a39df2e677c0501f69fd3dcaf1} 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result}{Generation\+Result}} Gemini\+CPP\+::\+Client\+::stream\+Generate\+Content (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{model}{, }\item[{const \mbox{\hyperlink{struct_gemini_c_p_p_1_1_stream_generate_content_request_body}{Stream\+Generate\+Content\+Request\+Body}} \&}]{request}{, }\item[{const \mbox{\hyperlink{namespace_gemini_c_p_p_a299d3ceda8e3174a4e47607e0d9fc920}{Stream\+Callback}} \&}]{callback}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Generates content in a streaming fashion. 
+
+
+\begin{DoxyItemize}
+\item The callback function is invoked repeatedly as chunks of generated text arrive.
+\item 
+\begin{DoxyParams}{Parameters}
+{\em model} & The model identifier. \\
+\hline
+{\em request} & The structured request body. \\
+\hline
+{\em callback} & A function to handle incoming string chunks. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{struct_gemini_c_p_p_1_1_generation_result}{Generation\+Result} containing the final accumulated content and usage metadata. 
+\end{DoxyReturn}
+
+\end{DoxyItemize}\Hypertarget{class_gemini_c_p_p_1_1_client_aa81e894508ebb6d35a0e3913aa7c94fb}\index{GeminiCPP::Client@{GeminiCPP::Client}!streamGenerateContent@{streamGenerateContent}}
+\index{streamGenerateContent@{streamGenerateContent}!GeminiCPP::Client@{GeminiCPP::Client}}
+\doxysubsubsection{\texorpdfstring{streamGenerateContent()}{streamGenerateContent()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_client_aa81e894508ebb6d35a0e3913aa7c94fb} 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result}{Generation\+Result}} Gemini\+CPP\+::\+Client\+::stream\+Generate\+Content (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{prompt}{, }\item[{const \mbox{\hyperlink{namespace_gemini_c_p_p_a299d3ceda8e3174a4e47607e0d9fc920}{Stream\+Callback}} \&}]{callback}{, }\item[{const std\+::string \&}]{model}{ = {\ttfamily "{}gemini-\/2.0-\/flash"{}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Helper method for streaming content generation from a simple text prompt. 
+
+
+\begin{DoxyItemize}
+\item 
+\begin{DoxyParams}{Parameters}
+{\em prompt} & The user\textquotesingle{}s input text. \\
+\hline
+{\em callback} & Function to handle stream chunks. \\
+\hline
+{\em model} & The model to use (default\+: gemini-\/2.\+0-\/flash). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{struct_gemini_c_p_p_1_1_generation_result}{Generation\+Result} containing the final response. 
+\end{DoxyReturn}
+
+\end{DoxyItemize}\Hypertarget{class_gemini_c_p_p_1_1_client_ae456044ec2113fe708d94c779693c0af}\index{GeminiCPP::Client@{GeminiCPP::Client}!streamGenerateContentAsync@{streamGenerateContentAsync}}
+\index{streamGenerateContentAsync@{streamGenerateContentAsync}!GeminiCPP::Client@{GeminiCPP::Client}}
+\doxysubsubsection{\texorpdfstring{streamGenerateContentAsync()}{streamGenerateContentAsync()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_client_ae456044ec2113fe708d94c779693c0af} 
+std\+::future$<$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result}{Generation\+Result}} $>$ Gemini\+CPP\+::\+Client\+::stream\+Generate\+Content\+Async (\begin{DoxyParamCaption}\item[{std\+::string}]{model}{, }\item[{\mbox{\hyperlink{struct_gemini_c_p_p_1_1_stream_generate_content_request_body}{Stream\+Generate\+Content\+Request\+Body}}}]{request}{, }\item[{\mbox{\hyperlink{namespace_gemini_c_p_p_a299d3ceda8e3174a4e47607e0d9fc920}{Stream\+Callback}}}]{callback}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Asynchronously generates content in a stream. 
+
+
+\begin{DoxyItemize}
+\item 
+\begin{DoxyParams}{Parameters}
+{\em model} & The model identifier. \\
+\hline
+{\em request} & The request body. \\
+\hline
+{\em callback} & Function to handle stream chunks. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::future$<$\+Generation\+Result$>$ A future object for the final result. 
+\end{DoxyReturn}
+
+\end{DoxyItemize}\Hypertarget{class_gemini_c_p_p_1_1_client_a12ba4280b71d5256dfbb7318019c984b}\index{GeminiCPP::Client@{GeminiCPP::Client}!verifyApiKey@{verifyApiKey}}
+\index{verifyApiKey@{verifyApiKey}!GeminiCPP::Client@{GeminiCPP::Client}}
+\doxysubsubsection{\texorpdfstring{verifyApiKey()}{verifyApiKey()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_client_a12ba4280b71d5256dfbb7318019c984b} 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_support_1_1_api_validation_result}{Support\+::\+Api\+Validation\+Result}} Gemini\+CPP\+::\+Client\+::verify\+Api\+Key (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Verifies if the provided API key is valid by making a lightweight API call. 
+
+
+\begin{DoxyItemize}
+\item \begin{DoxyReturn}{Returns}
+\doxylink{struct_gemini_c_p_p_1_1_support_1_1_api_validation_result}{Support\+::\+Api\+Validation\+Result} \doxylink{struct_gemini_c_p_p_1_1_result}{Result} indicating validity and status code. 
+\end{DoxyReturn}
+
+\end{DoxyItemize}
+
+\label{doc-variable-members}
+\Hypertarget{class_gemini_c_p_p_1_1_client_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{class_gemini_c_p_p_1_1_client_a9aaa9daf69751b7cfc44df82a1c983c5}\index{GeminiCPP::Client@{GeminiCPP::Client}!files@{files}}
+\index{files@{files}!GeminiCPP::Client@{GeminiCPP::Client}}
+\doxysubsubsection{\texorpdfstring{files}{files}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_client_a9aaa9daf69751b7cfc44df82a1c983c5} 
+\mbox{\hyperlink{class_gemini_c_p_p_1_1_files}{Files}} Gemini\+CPP\+::\+Client\+::files}
+
+
+
+Module for \doxylink{struct_gemini_c_p_p_1_1_file}{File} API operations (upload, list, delete, get). 
+
+\Hypertarget{class_gemini_c_p_p_1_1_client_a4daedd83ad71bc602df083e4cb664f62}\index{GeminiCPP::Client@{GeminiCPP::Client}!models@{models}}
+\index{models@{models}!GeminiCPP::Client@{GeminiCPP::Client}}
+\doxysubsubsection{\texorpdfstring{models}{models}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_client_a4daedd83ad71bc602df083e4cb664f62} 
+\mbox{\hyperlink{class_gemini_c_p_p_1_1_models}{Models}} Gemini\+CPP\+::\+Client\+::models}
+
+
+
+Module for Model API operations (list models, get model info). 
+
+\Hypertarget{class_gemini_c_p_p_1_1_client_a7eb928c17c117091eef51c16252407c1}\index{GeminiCPP::Client@{GeminiCPP::Client}!tokens@{tokens}}
+\index{tokens@{tokens}!GeminiCPP::Client@{GeminiCPP::Client}}
+\doxysubsubsection{\texorpdfstring{tokens}{tokens}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_client_a7eb928c17c117091eef51c16252407c1} 
+\mbox{\hyperlink{class_gemini_c_p_p_1_1_tokens}{Tokens}} Gemini\+CPP\+::\+Client\+::tokens}
+
+
+
+Module for Token API operations (count tokens). 
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+gemini/\mbox{\hyperlink{client_8h}{client.\+h}}\end{DoxyCompactItemize}

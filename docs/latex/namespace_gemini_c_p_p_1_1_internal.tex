@@ -1,0 +1,95 @@
+\doxysection{Gemini\+CPP\+::Internal Namespace Reference}
+\hypertarget{namespace_gemini_c_p_p_1_1_internal}{}\label{namespace_gemini_c_p_p_1_1_internal}\index{GeminiCPP::Internal@{GeminiCPP::Internal}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_internal_1_1_json_type_traits}{Json\+Type\+Traits}}
+\begin{DoxyCompactList}\small\item\em Type traits for mapping C++ types to JSON Schema types. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_internal_1_1_json_type_traits_3_01std_1_1string_01_4}{Json\+Type\+Traits$<$ std\+::string $>$}}
+\begin{DoxyCompactList}\small\item\em Specialization for std\+::string. \doxylink{struct_gemini_c_p_p_1_1_maps}{Maps} to \{"{}type"{}\+: "{}string"{}\}. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_internal_1_1_json_type_traits_3_01const_01char_01_5_01_4}{Json\+Type\+Traits$<$ const char \texorpdfstring{$\ast$}{*} $>$}}
+\begin{DoxyCompactList}\small\item\em Specialization for C-\/strings. \doxylink{struct_gemini_c_p_p_1_1_maps}{Maps} to \{"{}type"{}\+: "{}string"{}\}. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_internal_1_1_json_type_traits_3_01_t_01_4}{Json\+Type\+Traits$<$ T $>$}}
+\begin{DoxyCompactList}\small\item\em Specialization for integral types (excluding bool). \doxylink{struct_gemini_c_p_p_1_1_maps}{Maps} to \{"{}type"{}\+: "{}integer"{}\}. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_internal_1_1_json_type_traits_3_01bool_01_4}{Json\+Type\+Traits$<$ bool $>$}}
+\begin{DoxyCompactList}\small\item\em Specialization for boolean. \doxylink{struct_gemini_c_p_p_1_1_maps}{Maps} to \{"{}type"{}\+: "{}boolean"{}\}. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_internal_1_1_json_type_traits_3_01std_1_1vector_3_01_t_01_4_01_4}{Json\+Type\+Traits$<$ std\+::vector$<$ T $>$ $>$}}
+\begin{DoxyCompactList}\small\item\em Specialization for std\+::vector (arrays). \doxylink{struct_gemini_c_p_p_1_1_maps}{Maps} to \{"{}type"{}\+: "{}array"{}, "{}items"{}\+: ...\}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename T$>$ }\\T \mbox{\hyperlink{namespace_gemini_c_p_p_1_1_internal_a630c86201e2a08af5618454ab087bdd2}{parse\+Arg}} (const nlohmann\+::json \&j, const std\+::string \&name)
+\begin{DoxyCompactList}\small\item\em Parses a named argument from a JSON object into type T. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Tuple\+Type, std\+::size\+\_\+t... Is$>$ }\\Tuple\+Type \mbox{\hyperlink{namespace_gemini_c_p_p_1_1_internal_a5f6026e2e675dfced9232e108e8048f3}{json\+To\+Tuple\+Impl}} (const nlohmann\+::json \&j, const std\+::vector$<$ std\+::string $>$ \&arg\+Names, std\+::index\+\_\+sequence$<$ Is... $>$)
+\item 
+{\footnotesize template$<$typename Tuple\+Type$>$ }\\Tuple\+Type \mbox{\hyperlink{namespace_gemini_c_p_p_1_1_internal_a943063159a5c8a1ba7b272dd3aa0563e}{json\+To\+Tuple}} (const nlohmann\+::json \&j, const std\+::vector$<$ std\+::string $>$ \&arg\+Names)
+\begin{DoxyCompactList}\small\item\em Converts a JSON object of arguments into a std\+::tuple matching function signature. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{namespace_gemini_c_p_p_1_1_internal_doc-func-members}
+\doxysubsection{Function Documentation}
+\Hypertarget{namespace_gemini_c_p_p_1_1_internal_a943063159a5c8a1ba7b272dd3aa0563e}\index{GeminiCPP::Internal@{GeminiCPP::Internal}!jsonToTuple@{jsonToTuple}}
+\index{jsonToTuple@{jsonToTuple}!GeminiCPP::Internal@{GeminiCPP::Internal}}
+\doxysubsubsection{\texorpdfstring{jsonToTuple()}{jsonToTuple()}}
+{\footnotesize\ttfamily \label{namespace_gemini_c_p_p_1_1_internal_a943063159a5c8a1ba7b272dd3aa0563e} 
+template$<$typename Tuple\+Type$>$ \\
+Tuple\+Type Gemini\+CPP\+::\+Internal\+::json\+To\+Tuple (\begin{DoxyParamCaption}\item[{const nlohmann\+::json \&}]{j}{, }\item[{const std\+::vector$<$ std\+::string $>$ \&}]{arg\+Names}{}\end{DoxyParamCaption})}
+
+
+
+Converts a JSON object of arguments into a std\+::tuple matching function signature. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Tuple\+Type} & The target std\+::tuple type representing function arguments. \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em j} & The JSON object containing arguments. \\
+\hline
+{\em arg\+Names} & List of argument names corresponding to the tuple elements. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A tuple populated with values from the JSON. 
+\end{DoxyReturn}
+\Hypertarget{namespace_gemini_c_p_p_1_1_internal_a5f6026e2e675dfced9232e108e8048f3}\index{GeminiCPP::Internal@{GeminiCPP::Internal}!jsonToTupleImpl@{jsonToTupleImpl}}
+\index{jsonToTupleImpl@{jsonToTupleImpl}!GeminiCPP::Internal@{GeminiCPP::Internal}}
+\doxysubsubsection{\texorpdfstring{jsonToTupleImpl()}{jsonToTupleImpl()}}
+{\footnotesize\ttfamily \label{namespace_gemini_c_p_p_1_1_internal_a5f6026e2e675dfced9232e108e8048f3} 
+template$<$typename Tuple\+Type, std\+::size\+\_\+t... Is$>$ \\
+Tuple\+Type Gemini\+CPP\+::\+Internal\+::json\+To\+Tuple\+Impl (\begin{DoxyParamCaption}\item[{const nlohmann\+::json \&}]{j}{, }\item[{const std\+::vector$<$ std\+::string $>$ \&}]{arg\+Names}{, }\item[{std\+::index\+\_\+sequence$<$ Is... $>$}]{}{}\end{DoxyParamCaption})}
+
+\Hypertarget{namespace_gemini_c_p_p_1_1_internal_a630c86201e2a08af5618454ab087bdd2}\index{GeminiCPP::Internal@{GeminiCPP::Internal}!parseArg@{parseArg}}
+\index{parseArg@{parseArg}!GeminiCPP::Internal@{GeminiCPP::Internal}}
+\doxysubsubsection{\texorpdfstring{parseArg()}{parseArg()}}
+{\footnotesize\ttfamily \label{namespace_gemini_c_p_p_1_1_internal_a630c86201e2a08af5618454ab087bdd2} 
+template$<$typename T$>$ \\
+T Gemini\+CPP\+::\+Internal\+::parse\+Arg (\begin{DoxyParamCaption}\item[{const nlohmann\+::json \&}]{j}{, }\item[{const std\+::string \&}]{name}{}\end{DoxyParamCaption})}
+
+
+
+Parses a named argument from a JSON object into type T. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & The target C++ type. \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em j} & The JSON object containing arguments. \\
+\hline
+{\em name} & The key name of the argument. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The parsed value. 
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em std\+::runtime\+\_\+error} & if the argument is missing (and T is not default constructible) or invalid. \\
+\hline
+\end{DoxyExceptions}

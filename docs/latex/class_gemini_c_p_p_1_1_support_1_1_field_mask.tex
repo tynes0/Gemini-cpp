@@ -1,0 +1,104 @@
+\doxysection{Gemini\+CPP\+::Support\+::Field\+Mask Class Reference}
+\hypertarget{class_gemini_c_p_p_1_1_support_1_1_field_mask}{}\label{class_gemini_c_p_p_1_1_support_1_1_field_mask}\index{GeminiCPP::Support::FieldMask@{GeminiCPP::Support::FieldMask}}
+
+
+Represents a \doxylink{class_gemini_c_p_p_1_1_support_1_1_field_mask}{Field\+Mask} for update operations (JSON-\/style paths).  
+
+
+
+
+{\ttfamily \#include $<$support.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_gemini_c_p_p_1_1_support_1_1_field_mask_a53009391e03e826d91e9d0c329945689}{Field\+Mask}} ()=default
+\item 
+\mbox{\hyperlink{class_gemini_c_p_p_1_1_support_1_1_field_mask_ae5360865a0757b5d705bc6a065a11a3e}{Field\+Mask}} (const std\+::string \&json\+Mask\+String)
+\item 
+\mbox{\hyperlink{class_gemini_c_p_p_1_1_support_1_1_field_mask_a173ec2cd801553726fceaab2f77d96ac}{Field\+Mask}} (const std\+::vector$<$ std\+::string $>$ \&\mbox{\hyperlink{class_gemini_c_p_p_1_1_support_1_1_field_mask_aefa92020ffe6a0dd5ba230ab07868aa4}{paths}})
+\item 
+std\+::string \mbox{\hyperlink{class_gemini_c_p_p_1_1_support_1_1_field_mask_afb472edaa6c6686002765dedead8781d}{to\+Json\+String}} () const
+\item 
+void \mbox{\hyperlink{class_gemini_c_p_p_1_1_support_1_1_field_mask_a031aa5279b847d23347e735d69d5c371}{from\+Json\+String}} (const std\+::string \&json)
+\item 
+\mbox{\hyperlink{class_gemini_c_p_p_1_1_support_1_1_field_mask_a72bb46054af1f2ae932b2eb773fb995d}{operator std\+::string}} () const
+\item 
+void \mbox{\hyperlink{class_gemini_c_p_p_1_1_support_1_1_field_mask_ae7997e9e25cf7b4d2c47df0ec467231f}{add\+Path}} (const std\+::string \&path)
+\item 
+void \mbox{\hyperlink{class_gemini_c_p_p_1_1_support_1_1_field_mask_a46717ef71f2eca51aa8cae0530676879}{set\+Paths}} (const std\+::vector$<$ std\+::string $>$ \&\mbox{\hyperlink{class_gemini_c_p_p_1_1_support_1_1_field_mask_aefa92020ffe6a0dd5ba230ab07868aa4}{paths}})
+\item 
+const std\+::vector$<$ std\+::string $>$ \& \mbox{\hyperlink{class_gemini_c_p_p_1_1_support_1_1_field_mask_aefa92020ffe6a0dd5ba230ab07868aa4}{paths}} () const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents a \doxylink{class_gemini_c_p_p_1_1_support_1_1_field_mask}{Field\+Mask} for update operations (JSON-\/style paths). 
+
+\label{doc-constructors}
+\Hypertarget{class_gemini_c_p_p_1_1_support_1_1_field_mask_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_gemini_c_p_p_1_1_support_1_1_field_mask_a53009391e03e826d91e9d0c329945689}\index{GeminiCPP::Support::FieldMask@{GeminiCPP::Support::FieldMask}!FieldMask@{FieldMask}}
+\index{FieldMask@{FieldMask}!GeminiCPP::Support::FieldMask@{GeminiCPP::Support::FieldMask}}
+\doxysubsubsection{\texorpdfstring{FieldMask()}{FieldMask()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_support_1_1_field_mask_a53009391e03e826d91e9d0c329945689} 
+Gemini\+CPP\+::\+Support\+::\+Field\+Mask\+::\+Field\+Mask (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+\Hypertarget{class_gemini_c_p_p_1_1_support_1_1_field_mask_ae5360865a0757b5d705bc6a065a11a3e}\index{GeminiCPP::Support::FieldMask@{GeminiCPP::Support::FieldMask}!FieldMask@{FieldMask}}
+\index{FieldMask@{FieldMask}!GeminiCPP::Support::FieldMask@{GeminiCPP::Support::FieldMask}}
+\doxysubsubsection{\texorpdfstring{FieldMask()}{FieldMask()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_support_1_1_field_mask_ae5360865a0757b5d705bc6a065a11a3e} 
+Gemini\+CPP\+::\+Support\+::\+Field\+Mask\+::\+Field\+Mask (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{json\+Mask\+String}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+\Hypertarget{class_gemini_c_p_p_1_1_support_1_1_field_mask_a173ec2cd801553726fceaab2f77d96ac}\index{GeminiCPP::Support::FieldMask@{GeminiCPP::Support::FieldMask}!FieldMask@{FieldMask}}
+\index{FieldMask@{FieldMask}!GeminiCPP::Support::FieldMask@{GeminiCPP::Support::FieldMask}}
+\doxysubsubsection{\texorpdfstring{FieldMask()}{FieldMask()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_support_1_1_field_mask_a173ec2cd801553726fceaab2f77d96ac} 
+Gemini\+CPP\+::\+Support\+::\+Field\+Mask\+::\+Field\+Mask (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::string $>$ \&}]{paths}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+\label{doc-func-members}
+\Hypertarget{class_gemini_c_p_p_1_1_support_1_1_field_mask_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_gemini_c_p_p_1_1_support_1_1_field_mask_ae7997e9e25cf7b4d2c47df0ec467231f}\index{GeminiCPP::Support::FieldMask@{GeminiCPP::Support::FieldMask}!addPath@{addPath}}
+\index{addPath@{addPath}!GeminiCPP::Support::FieldMask@{GeminiCPP::Support::FieldMask}}
+\doxysubsubsection{\texorpdfstring{addPath()}{addPath()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_support_1_1_field_mask_ae7997e9e25cf7b4d2c47df0ec467231f} 
+void Gemini\+CPP\+::\+Support\+::\+Field\+Mask\+::add\+Path (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{path}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_gemini_c_p_p_1_1_support_1_1_field_mask_a031aa5279b847d23347e735d69d5c371}\index{GeminiCPP::Support::FieldMask@{GeminiCPP::Support::FieldMask}!fromJsonString@{fromJsonString}}
+\index{fromJsonString@{fromJsonString}!GeminiCPP::Support::FieldMask@{GeminiCPP::Support::FieldMask}}
+\doxysubsubsection{\texorpdfstring{fromJsonString()}{fromJsonString()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_support_1_1_field_mask_a031aa5279b847d23347e735d69d5c371} 
+void Gemini\+CPP\+::\+Support\+::\+Field\+Mask\+::from\+Json\+String (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{json}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_gemini_c_p_p_1_1_support_1_1_field_mask_a72bb46054af1f2ae932b2eb773fb995d}\index{GeminiCPP::Support::FieldMask@{GeminiCPP::Support::FieldMask}!operator std::string@{operator std::string}}
+\index{operator std::string@{operator std::string}!GeminiCPP::Support::FieldMask@{GeminiCPP::Support::FieldMask}}
+\doxysubsubsection{\texorpdfstring{operator std::string()}{operator std::string()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_support_1_1_field_mask_a72bb46054af1f2ae932b2eb773fb995d} 
+Gemini\+CPP\+::\+Support\+::\+Field\+Mask\+::operator std\+::string (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const}
+
+\Hypertarget{class_gemini_c_p_p_1_1_support_1_1_field_mask_aefa92020ffe6a0dd5ba230ab07868aa4}\index{GeminiCPP::Support::FieldMask@{GeminiCPP::Support::FieldMask}!paths@{paths}}
+\index{paths@{paths}!GeminiCPP::Support::FieldMask@{GeminiCPP::Support::FieldMask}}
+\doxysubsubsection{\texorpdfstring{paths()}{paths()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_support_1_1_field_mask_aefa92020ffe6a0dd5ba230ab07868aa4} 
+const std\+::vector$<$ std\+::string $>$ \& Gemini\+CPP\+::\+Support\+::\+Field\+Mask\+::paths (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+\Hypertarget{class_gemini_c_p_p_1_1_support_1_1_field_mask_a46717ef71f2eca51aa8cae0530676879}\index{GeminiCPP::Support::FieldMask@{GeminiCPP::Support::FieldMask}!setPaths@{setPaths}}
+\index{setPaths@{setPaths}!GeminiCPP::Support::FieldMask@{GeminiCPP::Support::FieldMask}}
+\doxysubsubsection{\texorpdfstring{setPaths()}{setPaths()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_support_1_1_field_mask_a46717ef71f2eca51aa8cae0530676879} 
+void Gemini\+CPP\+::\+Support\+::\+Field\+Mask\+::set\+Paths (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::string $>$ \&}]{paths}{}\end{DoxyParamCaption})}
+
+\Hypertarget{class_gemini_c_p_p_1_1_support_1_1_field_mask_afb472edaa6c6686002765dedead8781d}\index{GeminiCPP::Support::FieldMask@{GeminiCPP::Support::FieldMask}!toJsonString@{toJsonString}}
+\index{toJsonString@{toJsonString}!GeminiCPP::Support::FieldMask@{GeminiCPP::Support::FieldMask}}
+\doxysubsubsection{\texorpdfstring{toJsonString()}{toJsonString()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_support_1_1_field_mask_afb472edaa6c6686002765dedead8781d} 
+std\+::string Gemini\+CPP\+::\+Support\+::\+Field\+Mask\+::to\+Json\+String (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+gemini/\mbox{\hyperlink{support_8h}{support.\+h}}\end{DoxyCompactItemize}

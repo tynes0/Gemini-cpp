@@ -1,0 +1,56 @@
+\doxysection{cache\+\_\+registry.\+h}
+\hypertarget{cache__registry_8h_source}{}\label{cache__registry_8h_source}\index{gemini/cache\_registry.h@{gemini/cache\_registry.h}}
+\mbox{\hyperlink{cache__registry_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#ifndef\ GEMINI\_CACHE\_REGISTRY\_H}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#define\ GEMINI\_CACHE\_REGISTRY\_H}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <optional>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <filesystem>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <nlohmann/json.hpp>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{caching__api__types_8h}{types/caching\_api\_types.h}}"{}}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_gemini_c_p_p}{GeminiCPP}}}
+\DoxyCodeLine{00014\ \{}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_item_info}{CachedItemInfo}}}
+\DoxyCodeLine{00020\ \ \ \ \ \{}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ std::string\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_item_info_a9979eda0eced875efd361ef2992f71c2}{id}};\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ std::string\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_item_info_aef46ce9abb2172e2c89f35cf895e22db}{alias}};\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ std::string\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_item_info_a42905e33abdcaf9e7122674efb80ddf6}{model}};\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ std::string\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_item_info_a7f0bb31a72df2372768c30a9d836c951}{expireTime}};\ \ \ }
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_item_info_a4f81bbaba6dcc0824e2fd47c45691172}{toJson}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_item_info}{CachedItemInfo}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_item_info_a4ce3bf45497342027a94b86622b2ca28}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00028\ \ \ \ \ \};}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_gemini_c_p_p_1_1_cache_registry_aac142f2a517aa351e1ea60c31c618bec}{CacheRegistry}}}
+\DoxyCodeLine{00036\ \ \ \ \ \{}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_cache_registry_aac142f2a517aa351e1ea60c31c618bec}{CacheRegistry}}(std::string\ registryPath\ =\ \textcolor{stringliteral}{"{}gemini\_caches.json"{}});}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_cache_registry_a39c4c1bc6236e6b60e279d9b1d7fdae2}{registerCache}}(\textcolor{keyword}{const}\ std::string\&\ alias,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_content}{CachedContent}}\&\ content);}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ [[nodiscard]]\ std::optional<std::string>\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_cache_registry_ab59987d1ea2d6c0afd20ffd1a657c329}{getCacheId}}(\textcolor{keyword}{const}\ std::string\&\ alias)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ [[nodiscard]]\ std::optional<CachedItemInfo>\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_cache_registry_af64c48299b5806cff8d28ba302a952d4}{getCacheInfo}}(\textcolor{keyword}{const}\ std::string\&\ alias)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_cache_registry_ae7599dbe2fefaf25a38d410be76d97e9}{unregisterCache}}(\textcolor{keyword}{const}\ std::string\&\ alias);}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ [[nodiscard]]\ std::vector<std::string>\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_cache_registry_a6c4f8148ab2885c866e96c59d2d0cae8}{listAliases}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ std::string\ registryPath\_;}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ nlohmann::json\ registry\_;}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ load();}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ save()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00080\ \ \ \ \ \};}
+\DoxyCodeLine{00081\ \}}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GEMINI\_CACHE\_REGISTRY\_H}}
+
+\end{DoxyCode}

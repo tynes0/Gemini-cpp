@@ -1,0 +1,25 @@
+var searchData=
+[
+  ['reason_0',['reason',['../struct_gemini_c_p_p_1_1_support_1_1_api_validation_result.html#ad8feefeb32744ae7bf5738ee97a0889b',1,'GeminiCPP::Support::ApiValidationResult']]],
+  ['recitation_1',['RECITATION',['../namespace_gemini_c_p_p.html#a7af7c89b3619ce070cb9d7028d19024c',1,'GeminiCPP']]],
+  ['renderedcontent_2',['renderedContent',['../struct_gemini_c_p_p_1_1_search_entry_point.html#a027ad1fc020646da4caa03b08a19df9d',1,'GeminiCPP::SearchEntryPoint']]],
+  ['request_3',['request',['../struct_gemini_c_p_p_1_1_inlined_request.html#a73bfbb932115f55b3b8c5b1b7db5403e',1,'GeminiCPP::InlinedRequest::request'],['../struct_gemini_c_p_p_1_1_models_batch_generate_content_request_body.html#ad60227ba40b623610377afdd702c1b83',1,'GeminiCPP::ModelsBatchGenerateContentRequestBody::request'],['../struct_gemini_c_p_p_1_1_models_async_batch_generate_content_request_body.html#a167f8566ed356b7e6b39c0c30edf12e5',1,'GeminiCPP::ModelsAsyncBatchGenerateContentRequestBody::request']]],
+  ['requestcount_4',['requestCount',['../struct_gemini_c_p_p_1_1_batch_stats.html#a6bc3fc52ff30cf25037ee12ae59a2bcd',1,'GeminiCPP::BatchStats']]],
+  ['requests_5',['requests',['../struct_gemini_c_p_p_1_1_inlined_requests.html#ab01c762586e239c2c92718674940b5ea',1,'GeminiCPP::InlinedRequests']]],
+  ['response_6',['response',['../struct_gemini_c_p_p_1_1_models_batch_generate_content_response_body.html#aac60eca5f0829d38355cfdc054bd7950',1,'GeminiCPP::ModelsBatchGenerateContentResponseBody::response'],['../struct_gemini_c_p_p_1_1_models_async_batch_generate_content_response_body.html#ad8f9040d296965917577a21185d6f0ae',1,'GeminiCPP::ModelsAsyncBatchGenerateContentResponseBody::response'],['../struct_gemini_c_p_p_1_1_batches_get_response_body.html#afa75982cbc53c0ce1184978eb175d13d',1,'GeminiCPP::BatchesGetResponseBody::response'],['../struct_gemini_c_p_p_1_1_batches_list_response_body.html#a33c8f3cdd4aafd01d7afa21ac3578fff',1,'GeminiCPP::BatchesListResponseBody::response'],['../struct_gemini_c_p_p_1_1_files_get_response_body.html#aa95d4c5dfb9915b12be56304a808db34',1,'GeminiCPP::FilesGetResponseBody::response'],['../struct_gemini_c_p_p_1_1_stream_generate_content_response_body.html#a41c338cdd7fd1f072aff38a0fe0ab5d1',1,'GeminiCPP::StreamGenerateContentResponseBody::response'],['../struct_gemini_c_p_p_1_1_models_get_response_body.html#afd996c0bc8bd3b485daad641c1d5d7bc',1,'GeminiCPP::ModelsGetResponseBody::response'],['../struct_gemini_c_p_p_1_1_models_predict_long_running_response_body.html#ac75365e8c9c382e960d7acdebe171de9',1,'GeminiCPP::ModelsPredictLongRunningResponseBody::response']]],
+  ['responsecontent_7',['responseContent',['../struct_gemini_c_p_p_1_1_function_response.html#a50935287c59465189c79f3655b858ac4',1,'GeminiCPP::FunctionResponse']]],
+  ['responseid_8',['responseId',['../struct_gemini_c_p_p_1_1_generate_content_response_body.html#a2ed3c65bb74dda281c798182e0731c75',1,'GeminiCPP::GenerateContentResponseBody']]],
+  ['responsejsonschema_9',['responseJsonSchema',['../struct_gemini_c_p_p_1_1_generation_config.html#ad5889c9f7ced9d9d1fe6bb8e088f039c',1,'GeminiCPP::GenerationConfig']]],
+  ['responselogprobs_10',['responseLogprobs',['../struct_gemini_c_p_p_1_1_generation_config.html#aed4e603dc91f37414bcc4b8ee26fd1c8',1,'GeminiCPP::GenerationConfig']]],
+  ['responsemimetype_11',['responseMimeType',['../struct_gemini_c_p_p_1_1_generation_config.html#a03ed73d7ab35fafb7f3770a87034e3c0',1,'GeminiCPP::GenerationConfig']]],
+  ['responsemodalities_12',['responseModalities',['../struct_gemini_c_p_p_1_1_generation_config.html#ab8e7246ad038f499e3efe6bc65e77a19',1,'GeminiCPP::GenerationConfig']]],
+  ['rest_13',['REST',['../namespace_gemini_c_p_p.html#ae84226c9ad016a6535aa01d540904e53',1,'GeminiCPP']]],
+  ['retrievalconfig_14',['retrievalConfig',['../struct_gemini_c_p_p_1_1_tool_config.html#ab58491c79190aac152d60282eefe31b5',1,'GeminiCPP::ToolConfig']]],
+  ['retrievalmetadata_15',['retrievalMetadata',['../struct_gemini_c_p_p_1_1_grounding_metadata.html#ac9d60a3323d7d0c61ecf00829c8218ba',1,'GeminiCPP::GroundingMetadata']]],
+  ['retrievedurl_16',['retrievedUrl',['../struct_gemini_c_p_p_1_1_url_metadata.html#a09a0f3a54008e6450f0640aa93de1911',1,'GeminiCPP::UrlMetadata']]],
+  ['returnpartialsuccess_17',['returnPartialSuccess',['../struct_gemini_c_p_p_1_1_list_operations_request.html#a32bf732c47411b52f43efcfab7fcd399',1,'GeminiCPP::ListOperationsRequest']]],
+  ['reviewid_18',['reviewId',['../struct_gemini_c_p_p_1_1_review_snippet.html#a89cda317da85dbef7334a0481c29060f',1,'GeminiCPP::ReviewSnippet']]],
+  ['reviewsnippets_19',['reviewSnippets',['../struct_gemini_c_p_p_1_1_place_answer_sources.html#a8a2aceeb930b3a74ae9db28b36aec683',1,'GeminiCPP::PlaceAnswerSources']]],
+  ['role_20',['Role',['../namespace_gemini_c_p_p.html#ae60c3c6675d22c755d9f483cd3057778',1,'GeminiCPP']]],
+  ['role_21',['role',['../struct_gemini_c_p_p_1_1_content.html#af73e308d1122bd6c8a5e424e9a61d840',1,'GeminiCPP::Content']]]
+];

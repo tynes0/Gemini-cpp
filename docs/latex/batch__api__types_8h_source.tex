@@ -1,0 +1,364 @@
+\doxysection{batch\+\_\+api\+\_\+types.\+h}
+\hypertarget{batch__api__types_8h_source}{}\label{batch__api__types_8h_source}\index{gemini/types/batch\_api\_types.h@{gemini/types/batch\_api\_types.h}}
+\mbox{\hyperlink{batch__api__types_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#ifndef\ GEMINI\_BATCH\_API\_TYPES\_H}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#define\ GEMINI\_BATCH\_API\_TYPES\_H}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <optional>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{caching__api__types_8h}{caching\_api\_types.h}}"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{embeddings__api__types_8h}{embeddings\_api\_types.h}}"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{url_8h}{gemini/url.h}}"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{types__base_8h}{gemini/types\_base.h}}"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{files__api__types_8h}{files\_api\_types.h}}"{}}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{generating__content__api__types_8h}{generating\_content\_api\_types.h}}"{}}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_gemini_c_p_p}{GeminiCPP}}}
+\DoxyCodeLine{00018\ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \mbox{\hyperlink{namespace_gemini_c_p_p_ad92ca6fc4845021d21cae8b6dd9a3d96}{FrenumClassInNamespace}}(\mbox{\hyperlink{namespace_gemini_c_p_p}{GeminiCPP}},\ BatchState,\ \mbox{\hyperlink{namespace_gemini_c_p_p_a67b60949cc5e2c9c29ae5f9f4c669513}{uint8\_t}},}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ BATCH\_STATE\_UNSPECIFIED,}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ BATCH\_STATE\_PENDING,\ \textcolor{comment}{//\ The\ service\ is\ preparing\ to\ run\ the\ batch.}}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ BATCH\_STATE\_RUNNING,\ \textcolor{comment}{//\ The\ batch\ is\ in\ progress.}}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ BATCH\_STATE\_SUCCEEDED,\ \textcolor{comment}{//\ The\ batch\ completed\ successfully.}}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ BATCH\_STATE\_FAILED,\ \textcolor{comment}{//\ The\ batch\ failed.}}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ BATCH\_STATE\_CANCELLED,\ \textcolor{comment}{//\ The\ batch\ has\ been\ cancelled.}}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ BATCH\_STATE\_EXPIRED\ \textcolor{comment}{//\ The\ batch\ has\ expired.}}
+\DoxyCodeLine{00030\ \ \ \ \ )}
+\DoxyCodeLine{00031\ \ \ \ \ }
+\DoxyCodeLine{00032\ \ \ \ \ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{struct\ }Operation\ :\ IJsonSerializable<Operation>}
+\DoxyCodeLine{00037\ \ \ \ \ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }ResultType\ =\ std::variant<}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ std::monostate,}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ error\ result\ of\ the\ operation\ in\ case\ of\ failure\ or\ cancellation.}}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ Status,}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ normal,\ successful\ response\ of\ the\ operation.\ If\ the\ original\ method\ returns\ no\ data\ on\ success,\ such\ as\ Delete,}}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ response\ is\ google.protobuf.Empty.\ If\ the\ original\ method\ is\ standard\ Get/Create/Update,\ the\ response\ should\ be\ the\ resource.}}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ For\ other\ methods,\ the\ response\ should\ have\ the\ type\ XxxResponse,\ where\ Xxx\ is\ the\ original\ method\ name.\ For\ example,}}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ the\ original\ method\ name\ is\ TakeSnapshot(),\ the\ inferred\ response\ type\ is\ TakeSnapshotResponse.\ An\ object\ containing}}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ fields\ of\ an\ arbitrary\ type.\ An\ additional\ field\ "{}@type"{}\ contains\ a\ URI\ identifying\ the\ type.}}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Example:\ \{\ "{}id"{}:\ 1234,\ "{}@type"{}:\ "{}types.example.com/standard/id"{}\ \}.}}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ nlohmann::json}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ >;}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ server-\/assigned\ name,\ which\ is\ only\ unique\ within\ the\ same\ service\ that\ originally\ returns\ it.}}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ If\ you\ use\ the\ default\ HTTP\ mapping,\ the\ name\ should\ be\ a\ resource\ name\ ending\ with\ operations/\{unique\_id\}.}}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ ResourceName\ name;}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Service-\/specific\ metadata\ associated\ with\ the\ operation.\ It\ typically\ contains\ progress\ information\ and\ common}}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ metadata\ such\ as\ create\ time.\ Some\ services\ might\ not\ provide\ such\ metadata.\ Any\ method\ that\ returns\ a}}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ long-\/running\ operation\ should\ document\ the\ metadata\ type,\ if\ any.\ An\ object\ containing\ fields\ of\ an\ arbitrary\ type.}}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ An\ additional\ field\ "{}@type"{}\ contains\ a\ URI\ identifying\ the\ type.\ Example:\ \{\ "{}id"{}:\ 1234,\ "{}@type"{}:\ "{}types.example.com/standard/id"{}\ \}.}}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ nlohmann::json\ metadata;}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ If\ the\ value\ is\ false,\ it\ means\ the\ operation\ is\ still\ in\ progress.\ If\ true,\ the\ operation\ is\ completed,\ and\ either\ error\ or\ response\ is\ available.}}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ done\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ operation\ result,\ which\ can\ be\ either\ an\ error\ or\ a\ valid\ response.\ If\ done\ ==\ false,\ neither\ error\ nor\ response\ is\ set.}}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ If\ done\ ==\ true,\ exactly\ one\ of\ error\ or\ response\ can\ be\ set.\ Some\ services\ might\ not\ provide\ the\ result.}}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ ResultType\ result;}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ Operation\ fromJson(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ toJson()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00067\ \ \ \ \ \};}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_list_operations_request}{ListOperationsRequest}}\ :\ IJsonSerializable<ListOperationsRequest>}
+\DoxyCodeLine{00070\ \ \ \ \ \{}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ name\ of\ the\ operation's\ parent\ resource.}}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ std::string\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_list_operations_request_ae226d514acc2d235150a05981cff1fba}{name}};}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ standard\ list\ filter.}}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ std::string\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_list_operations_request_ac1e3a8134631388960642618f4961609}{filter}};}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ standard\ list\ page\ size.}}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_list_operations_request_ab90f4721d57ccc745747001854d92a9c}{pageSize}}\ =\ 0;}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ standard\ list\ page\ token.}}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ std::string\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_list_operations_request_aa49bb2a717ae4d4ba9c4b0045f59c570}{pageToken}};}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ When\ set\ to\ true,\ operations\ that\ are\ reachable\ are\ returned\ as\ normal,\ and\ those\ that\ are\ unreachable\ are}}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ returned\ in\ the\ ListOperationsResponse.unreachable\ field.\ This\ can\ only\ be\ true\ when\ reading\ across\ collections.}}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ For\ example,\ when\ parent\ is\ set\ to\ 'projects/example/locations/-\/'.\ This\ field\ is\ not\ supported\ by\ default\ and\ will}}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ result\ in\ an\ UNIMPLEMENTED\ error\ if\ set\ unless\ explicitly\ documented\ otherwise\ in\ service\ or\ product\ specific\ documentation.}}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_list_operations_request_a32bf732c47411b52f43efcfab7fcd399}{returnPartialSuccess}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_list_operations_request}{ListOperationsRequest}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_list_operations_request_abbb49def8027064fdeacc3c7277fee12}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_list_operations_request_a7003d1e876b20a277e4b8f47db100ef7}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00087\ \ \ \ \ \};}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{comment}{//\ The\ response\ message\ for\ Operations.ListOperations.}}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_list_operations_response}{ListOperationsResponse}}\ :\ IJsonSerializable<ListOperationsResponse>}
+\DoxyCodeLine{00091\ \ \ \ \ \{}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ list\ of\ operations\ that\ matches\ the\ specified\ filter\ in\ the\ request.}}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ std::vector<Operation>\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_list_operations_response_af1d52ec245ccfdcf23f9eaf859f6e636}{operations}};}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ standard\ List\ next-\/page\ token.}}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ std::string\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_list_operations_response_ad204ac2d08977cf122d6a45e989b09a5}{nextPageToken}};}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Unordered\ list.\ Unreachable\ resources.\ Populated\ when\ the\ request\ sets\ ListOperationsRequest.return\_partial\_success}}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ and\ reads\ across\ collections.\ For\ example,\ when\ attempting\ to\ list\ all\ resources\ across\ all\ supported\ locations.}}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ std::vector<std::string>\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_list_operations_response_af0b9c719cae86e5c84f7eba69c6e8907}{unreachable}};}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_list_operations_response}{ListOperationsResponse}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_list_operations_response_adfa047fc4619d9f2f355f791c567d470}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_list_operations_response_abb9e88730d7afe7e86e17a2e926c5c71}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00102\ \ \ \ \ \};}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{comment}{//\ Request\ containing\ the\ Content\ for\ the\ model\ to\ embed.}}
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_embed_content_request}{EmbedContentRequest}}\ :\ IJsonSerializable<EmbedContentRequest>}
+\DoxyCodeLine{00106\ \ \ \ \ \{}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Required.\ The\ model's\ resource\ name.\ This\ serves\ as\ an\ ID\ for\ the\ Model\ to\ use.}}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ This\ name\ should\ match\ a\ model\ name\ returned\ by\ the\ ListModels\ method.\ Format:\ models/\{model\}}}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_gemini_c_p_p_1_1_resource_name}{ResourceName}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_embed_content_request_a54c68732ff99fb22820583abf19972e9}{name}};}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Required.\ The\ content\ to\ embed.\ Only\ the\ parts.text\ fields\ will\ be\ counted.}}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_content}{Content}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_embed_content_request_ae5fd57d405fd19d8c3f489ec8cfbd36d}{content}};}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Optional.\ Optional\ task\ type\ for\ which\ the\ embeddings\ will\ be\ used.\ Not\ supported\ on\ earlier\ models\ (models/embedding-\/001).}}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ std::optional<TaskType>\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_embed_content_request_a1d39a5adfa4c941cd42d1d2961145ceb}{taskType}};}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Optional.\ An\ optional\ title\ for\ the\ text.\ Only\ applicable\ when\ TaskType\ is\ RETRIEVAL\_DOCUMENT.}}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Note:\ Specifying\ a\ title\ for\ RETRIEVAL\_DOCUMENT\ provides\ better\ quality\ embeddings\ for\ retrieval.}}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ std::optional<std::string>\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_embed_content_request_a6ea884f885ae90ae3e0d4cb2e95cce6b}{title}};}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Optional.\ Optional\ reduced\ dimension\ for\ the\ output\ embedding.\ If\ set,\ excessive\ values\ in}}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ output\ embedding\ are\ truncated\ from\ the\ end.\ Supported\ by\ newer\ models\ since\ 2024\ only.}}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ You\ cannot\ set\ this\ value\ if\ using\ the\ earlier\ model\ (models/embedding-\/001).}}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ std::optional<int>\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_embed_content_request_a1dac872ac4d8728085ff309e7e2a2fbc}{outputDimensionality}};}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_embed_content_request}{EmbedContentRequest}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_embed_content_request_a5031eba28601313623371c13d1083a6b}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_embed_content_request_a316afd179f52c916016313c1614519b7}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00124\ \ \ \ \ \};}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{comment}{//\ Stats\ about\ the\ batch.}}
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_batch_stats}{BatchStats}}\ :\ IJsonSerializable<BatchStats>}
+\DoxyCodeLine{00128\ \ \ \ \ \{}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Output\ only.\ The\ number\ of\ requests\ in\ the\ batch.}}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ int64\_t\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batch_stats_a6bc3fc52ff30cf25037ee12ae59a2bcd}{requestCount}}\ =\ 0;}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Output\ only.\ The\ number\ of\ requests\ that\ were\ successfully\ processed.}}
+\DoxyCodeLine{00132\ \ \ \ \ \ \ \ \ int64\_t\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batch_stats_ab2922f1c71395bc73fa449bc7766f85f}{successfulRequestCount}}\ =\ 0;}
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Output\ only.\ The\ number\ of\ requests\ that\ failed\ to\ be\ processed.}}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ int64\_t\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batch_stats_aadf6262053314f3ef10b743d6f8141e8}{failedRequestCount}}\ =\ 0;}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Output\ only.\ The\ number\ of\ requests\ that\ are\ still\ pending\ processing.}}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ int64\_t\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batch_stats_a4392f5802aa523ca5f465a826a11fac8}{pendingRequestCount}}\ =\ 0;}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batch_stats}{BatchStats}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batch_stats_a2f3e0bd9db31d768a519643dbf9979a4}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batch_stats_a8c7891aa5bcdd6a63e1235e83d36c752}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00140\ \ \ \ \ \};}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_inlined_response}{InlinedResponse}}\ :\ IJsonSerializable<InlinedResponse>}
+\DoxyCodeLine{00143\ \ \ \ \ \{}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_inlined_response_a248dfa81cdf107f24ba9e1fdcd60649f}{OutputType}}\ =\ std::variant<}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \ \ \ \ std::monostate,}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Output\ only.\ The\ error\ encountered\ while\ processing\ the\ request.}}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_status}{Status}},}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Output\ only.\ The\ response\ to\ the\ request.}}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_response_body}{GenerateContentResponseBody}}}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ >;}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Output\ only.\ The\ metadata\ associated\ with\ the\ request.}}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_inlined_response_aa9a0007e58e403adb7ece00ea393ed59}{metadata}};}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ output\ of\ the\ request.\ }}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_inlined_response_a248dfa81cdf107f24ba9e1fdcd60649f}{OutputType}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_inlined_response_a622474f7b3f462b1700a7142f8c643ee}{output}};}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_inlined_response}{InlinedResponse}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_inlined_response_a4adfc0dfe6fd6cd8865d47f1aa1c037f}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_inlined_response_a88b2833c3e01cbf4893f03ab72c2c981}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00159\ \ \ \ \ \};}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00161\ \ \ \ \ \textcolor{comment}{//\ The\ responses\ to\ the\ requests\ in\ the\ batch.}}
+\DoxyCodeLine{00162\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_inlined_responses}{InlinedResponses}}\ :\ IJsonSerializable<InlinedResponses>}
+\DoxyCodeLine{00163\ \ \ \ \ \{}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Output\ only.\ The\ responses\ to\ the\ requests\ in\ the\ batch.}}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ std::vector<InlinedResponse>\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_inlined_responses_af450459fd7c4402527f6138f85f43b47}{inlinedResponses}};}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_inlined_responses}{InlinedResponses}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_inlined_responses_aea8b6744b17060238e1c0ad7ba217dd8}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_inlined_responses_ae7d8cb5dd01c6f9eef7ffa52353409fc}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00169\ \ \ \ \ \};}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \ \ \ \ \textcolor{comment}{//\ The\ output\ of\ a\ batch\ request.\ This\ is\ returned\ in\ the\ BatchGenerateContentResponse\ or\ the\ GenerateContentBatch.output\ field.}}
+\DoxyCodeLine{00172\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_batch_output}{GenerateContentBatchOutput}}\ :\ IJsonSerializable<GenerateContentBatchOutput>}
+\DoxyCodeLine{00173\ \ \ \ \ \{}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_batch_output_ab80c2e7f84308911987f905725cb1706}{OutputType}}\ =\ std::variant<}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \ \ \ \ std::monostate,}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Output\ only.\ The\ file\ ID\ of\ the\ file\ containing\ the\ responses.\ The\ file\ will\ be\ a\ JSONL\ file\ with\ a\ single\ response\ per\ line.}}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ responses\ will\ be\ GenerateContentResponse\ messages\ formatted\ as\ JSON.\ The\ responses\ will\ be\ written\ in\ the\ same\ order\ as\ the\ input\ requests.}}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \ \ \ \ std::string,}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Output\ only.\ The\ responses\ to\ the\ requests\ in\ the\ batch.\ Returned\ when\ the\ batch\ was}}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ built\ using\ inlined\ requests.\ The\ responses\ will\ be\ in\ the\ same\ order\ as\ the\ input\ requests.}}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_inlined_responses}{InlinedResponses}}}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ >;}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ output\ of\ the\ batch\ request.\ }}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_batch_output_ab80c2e7f84308911987f905725cb1706}{OutputType}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_batch_output_ab153087b0c0466dd7cd2a4a94a2aa58b}{output}};}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_batch_output}{GenerateContentBatchOutput}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_batch_output_aab4207815eb488b0f40c82ba6f3ec320}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_batch_output_a226965e8ed3e3d6b706babf1569f9154}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00189\ \ \ \ \ \};}
+\DoxyCodeLine{00190\ }
+\DoxyCodeLine{00191\ \ \ \ \ \textcolor{comment}{//\ The\ request\ to\ be\ processed\ in\ the\ batch.}}
+\DoxyCodeLine{00192\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_inlined_request}{InlinedRequest}}\ :\ IJsonSerializable<InlinedRequest>}
+\DoxyCodeLine{00193\ \ \ \ \ \{}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Required.\ The\ request\ to\ be\ processed\ in\ the\ batch.}}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_request_body}{GenerateContentRequestBody}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_inlined_request_a73bfbb932115f55b3b8c5b1b7db5403e}{request}};}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Optional.\ The\ metadata\ to\ be\ associated\ with\ the\ request.}}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ std::optional<nlohmann::json>\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_inlined_request_a417bcb6ad1dcfb65e3768f46738b667c}{metadata}};}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_inlined_request}{InlinedRequest}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_inlined_request_afeabb2dc9826e209c77250237d707362}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_inlined_request_ad029ded966b499ae1e63f46f9c62743b}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00201\ \ \ \ \ \};}
+\DoxyCodeLine{00202\ }
+\DoxyCodeLine{00203\ \ \ \ \ \textcolor{comment}{//\ The\ requests\ to\ be\ processed\ in\ the\ batch\ if\ provided\ as\ part\ of\ the\ batch\ creation\ request.}}
+\DoxyCodeLine{00204\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_inlined_requests}{InlinedRequests}}\ :\ IJsonSerializable<InlinedRequests>}
+\DoxyCodeLine{00205\ \ \ \ \ \{}
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Required.\ The\ requests\ to\ be\ processed\ in\ the\ batch.}}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ std::vector<InlinedRequest>\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_inlined_requests_ab01c762586e239c2c92718674940b5ea}{requests}};}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_inlined_requests}{InlinedRequests}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_inlined_requests_ab0ba8f10efb10053ac39c1a2400d096b}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_inlined_requests_aff484d67789a924cb09b03e72a7fcf2a}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00211\ \ \ \ \ \};}
+\DoxyCodeLine{00212\ }
+\DoxyCodeLine{00213\ \ \ \ \ \textcolor{comment}{//\ Configures\ the\ input\ to\ the\ batch\ request.}}
+\DoxyCodeLine{00214\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_input_config}{InputConfig}}\ :\ IJsonSerializable<InputConfig>}
+\DoxyCodeLine{00215\ \ \ \ \ \{}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_input_config_a2eb25d27d0d0e66b676bafc64ca75cb5}{SourceType}}\ =\ std::variant<}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \ \ \ \ std::monostate,}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ name\ of\ the\ File\ containing\ the\ input\ requests.}}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \ \ \ \ std::string,}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ requests\ to\ be\ processed\ in\ the\ batch.}}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_inlined_requests}{InlinedRequests}}}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ >;}
+\DoxyCodeLine{00223\ }
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Required.\ The\ source\ of\ the\ input.}}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_input_config_a2eb25d27d0d0e66b676bafc64ca75cb5}{SourceType}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_input_config_aef07201f0dd42965c89155eaf1a460bf}{source}};}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_input_config}{InputConfig}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_input_config_a2c5abe81d64a9449ace8a2fd33ee0f9e}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_input_config_a393ff4f5de5835b99e62af1594efc581}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00229\ \ \ \ \ \};}
+\DoxyCodeLine{00230\ }
+\DoxyCodeLine{00231\ \ \ \ \ \textcolor{comment}{//\ A\ resource\ representing\ a\ batch\ of\ GenerateContent\ requests.}}
+\DoxyCodeLine{00232\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_batch}{GenerateContentBatch}}\ :\ IJsonSerializable<GenerateContentBatch>}
+\DoxyCodeLine{00233\ \ \ \ \ \{}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Required.\ The\ name\ of\ the\ Model\ to\ use\ for\ generating\ the\ completion.\ Format:\ models/\{model\}.}}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_gemini_c_p_p_1_1_resource_name}{ResourceName}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_batch_a375065e04854f02f7e077c07b339af2e}{model}};}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Output\ only.\ Identifier.\ Resource\ name\ of\ the\ batch.\ Format:\ batches/\{batchId\}.}}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_gemini_c_p_p_1_1_resource_name}{ResourceName}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_batch_a0ba3ed2ce85436215618a7c02fc2798a}{name}};}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Required.\ The\ user-\/defined\ name\ of\ this\ batch.}}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ std::string\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_batch_a6d5b4b5c07e39a4a486f7f769b9d5616}{displayName}};}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Required.\ Input\ configuration\ of\ the\ instances\ on\ which\ batch\ processing\ are\ performed.}}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_input_config}{InputConfig}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_batch_ab03b6b9dc4fe780318b3089a0a8072a6}{inputConfig}};}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Output\ only.\ The\ output\ of\ the\ batch\ request.}}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_batch_output}{GenerateContentBatchOutput}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_batch_a7f4b028a0ab24f0963cc1aea0d8db17e}{output}};}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Output\ only.\ The\ time\ at\ which\ the\ batch\ was\ created.}}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_gemini_c_p_p_1_1_support_1_1_timestamp}{Support::Timestamp}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_batch_ac59fa13af53635fc1d5ece7f6daa47c6}{createTime}};}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Output\ only.\ The\ time\ at\ which\ the\ batch\ processing\ completed.}}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_gemini_c_p_p_1_1_support_1_1_timestamp}{Support::Timestamp}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_batch_ac23f8ce510bf4f85b1165153b31e71b8}{endTime}};}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Output\ only.\ The\ time\ at\ which\ the\ batch\ was\ last\ updated.}}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_gemini_c_p_p_1_1_support_1_1_timestamp}{Support::Timestamp}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_batch_a61d5f4f7effb0145e10e03d56daccf2a}{updateTime}};}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Output\ only.\ Stats\ about\ the\ batch.}}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batch_stats}{BatchStats}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_batch_a2d95892a91a3c489122e766ee72f691a}{batchStats}};}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Output\ only.\ The\ state\ of\ the\ batch.}}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ BatchState\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_batch_ad116f273678c3658267e42faa64aaa57}{state}};}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Optional.\ The\ priority\ of\ the\ batch.\ Batches\ with\ a\ higher\ priority\ value\ will\ be\ processed\ before}}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ batches\ with\ a\ lower\ priority\ value.\ Negative\ values\ are\ allowed.\ Default\ is\ 0.}}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ std::optional<int64\_t>\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_batch_a739820089eade8392184c376bae5027a}{priority}};\ }
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_batch}{GenerateContentBatch}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_batch_a9b06044e9cdc8ced1d5f7c4c9f1affc3}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_batch_ac00b5d159fc5541a9352362d97c2feb9}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00260\ \ \ \ \ \};}
+\DoxyCodeLine{00261\ }
+\DoxyCodeLine{00262\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_models_batch_generate_content_request_body}{ModelsBatchGenerateContentRequestBody}}\ :\ IJsonSerializable<ModelsBatchGenerateContentRequestBody>}
+\DoxyCodeLine{00263\ \ \ \ \ \{}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_batch}{GenerateContentBatch}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_models_batch_generate_content_request_body_ad60227ba40b623610377afdd702c1b83}{request}};}
+\DoxyCodeLine{00265\ }
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_models_batch_generate_content_request_body}{ModelsBatchGenerateContentRequestBody}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_models_batch_generate_content_request_body_a294fb377339c5291fff48a774cdab133}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_models_batch_generate_content_request_body_a7fc62ad255d90fb6146dd067d0909435}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00268\ \ \ \ \ \};}
+\DoxyCodeLine{00269\ }
+\DoxyCodeLine{00270\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_models_batch_generate_content_response_body}{ModelsBatchGenerateContentResponseBody}}\ :\ IJsonSerializable<ModelsBatchGenerateContentResponseBody>}
+\DoxyCodeLine{00271\ \ \ \ \ \{}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ Operation\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_models_batch_generate_content_response_body_aac60eca5f0829d38355cfdc054bd7950}{response}};}
+\DoxyCodeLine{00273\ }
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_models_batch_generate_content_response_body}{ModelsBatchGenerateContentResponseBody}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_models_batch_generate_content_response_body_adba55ac1b1f09761f4b2d8de12b3f08a}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_models_batch_generate_content_response_body_a1d80f1a8dbf69d2578a64e11f7714eb9}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00276\ \ \ \ \ \};}
+\DoxyCodeLine{00277\ }
+\DoxyCodeLine{00278\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_models_async_batch_generate_content_request_body}{ModelsAsyncBatchGenerateContentRequestBody}}\ :\ IJsonSerializable<ModelsAsyncBatchGenerateContentRequestBody>}
+\DoxyCodeLine{00279\ \ \ \ \ \{}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_batch}{GenerateContentBatch}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_models_async_batch_generate_content_request_body_a167f8566ed356b7e6b39c0c30edf12e5}{request}};}
+\DoxyCodeLine{00281\ }
+\DoxyCodeLine{00282\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_models_async_batch_generate_content_request_body}{ModelsAsyncBatchGenerateContentRequestBody}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_models_async_batch_generate_content_request_body_aa5e8bf43527be0690ff1bc06b1311662}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_models_async_batch_generate_content_request_body_ab7bfc45f6a7b5b19a8b24e2f6e65c240}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00284\ \ \ \ \ \};}
+\DoxyCodeLine{00285\ }
+\DoxyCodeLine{00286\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_models_async_batch_generate_content_response_body}{ModelsAsyncBatchGenerateContentResponseBody}}\ :\ IJsonSerializable<ModelsAsyncBatchGenerateContentResponseBody>}
+\DoxyCodeLine{00287\ \ \ \ \ \{}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ Operation\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_models_async_batch_generate_content_response_body_ad8f9040d296965917577a21185d6f0ae}{response}};}
+\DoxyCodeLine{00289\ }
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_models_async_batch_generate_content_response_body}{ModelsAsyncBatchGenerateContentResponseBody}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_models_async_batch_generate_content_response_body_a5cbf5a6ef5390077b7f6200b5c4e1d59}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_models_async_batch_generate_content_response_body_a04f8e9cb9ac3eb6fabdbb586a128a975}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00292\ \ \ \ \ \};}
+\DoxyCodeLine{00293\ }
+\DoxyCodeLine{00294\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_get_request_body}{BatchesGetRequestBody}}\ :\ IJsonSerializable<BatchesGetRequestBody>}
+\DoxyCodeLine{00295\ \ \ \ \ \{}
+\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_get_request_body}{BatchesGetRequestBody}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_get_request_body_a7d561553d89265171257a57984e4eab7}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_get_request_body_ad7dc7877aa758cda8ea2cfa3e39386d9}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00298\ \ \ \ \ \};}
+\DoxyCodeLine{00299\ }
+\DoxyCodeLine{00300\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_get_response_body}{BatchesGetResponseBody}}\ :\ IJsonSerializable<BatchesGetResponseBody>}
+\DoxyCodeLine{00301\ \ \ \ \ \{}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ Operation\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_get_response_body_afa75982cbc53c0ce1184978eb175d13d}{response}};}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_get_response_body}{BatchesGetResponseBody}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_get_response_body_a012bca0cbc5f103a7d019b99d85f2b9b}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_get_response_body_af67cf61a7d113b00312423eece0a4473}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00306\ \ \ \ \ \};}
+\DoxyCodeLine{00307\ \ \ \ \ }
+\DoxyCodeLine{00308\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_list_request_body}{BatchesListRequestBody}}\ :\ IJsonSerializable<BatchesListRequestBody>}
+\DoxyCodeLine{00309\ \ \ \ \ \{}
+\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_list_request_body}{BatchesListRequestBody}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_list_request_body_a206c4614a815fa3fb825e36d76853dd9}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_list_request_body_ab1341689efa660b67153a0cc9268c1a6}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00312\ \ \ \ \ \};}
+\DoxyCodeLine{00313\ }
+\DoxyCodeLine{00314\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_list_response_body}{BatchesListResponseBody}}\ :\ IJsonSerializable<BatchesListResponseBody>}
+\DoxyCodeLine{00315\ \ \ \ \ \{}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_list_operations_response}{ListOperationsResponse}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_list_response_body_a33c8f3cdd4aafd01d7afa21ac3578fff}{response}};}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_list_response_body}{BatchesListResponseBody}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_list_response_body_a1eec1997642c96b3e1534b055136ddfd}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_list_response_body_a947cf43b3be5e0b12df644cba852b07b}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00320\ \ \ \ \ \};}
+\DoxyCodeLine{00321\ }
+\DoxyCodeLine{00322\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_cancel_request_body}{BatchesCancelRequestBody}}\ :\ IJsonSerializable<BatchesCancelRequestBody>}
+\DoxyCodeLine{00323\ \ \ \ \ \{}
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_cancel_request_body}{BatchesCancelRequestBody}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_cancel_request_body_a6f718c932d67eea049cfd800a9ce4ed9}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_cancel_request_body_aced9921de68f7394eef1ddac4565f637}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00326\ \ \ \ \ \};}
+\DoxyCodeLine{00327\ }
+\DoxyCodeLine{00328\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_cancel_response_body}{BatchesCancelResponseBody}}\ :\ IJsonSerializable<BatchesCancelResponseBody>}
+\DoxyCodeLine{00329\ \ \ \ \ \{}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_cancel_response_body}{BatchesCancelResponseBody}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_cancel_response_body_aff2c59d48e833782d6f3350e63c03e62}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_cancel_response_body_a3e13b5bdc0dae443d20dcd74085d5e10}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00332\ \ \ \ \ \};}
+\DoxyCodeLine{00333\ }
+\DoxyCodeLine{00334\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_delete_request_body}{BatchesDeleteRequestBody}}\ :\ IJsonSerializable<BatchesDeleteRequestBody>}
+\DoxyCodeLine{00335\ \ \ \ \ \{}
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_delete_request_body}{BatchesDeleteRequestBody}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_delete_request_body_a1ae47460864b7c2c9f31c061397bf954}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_delete_request_body_a328152de012da3b74476c4c994d8d593}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00338\ \ \ \ \ \};}
+\DoxyCodeLine{00339\ }
+\DoxyCodeLine{00340\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_delete_response_body}{BatchesDeleteResponseBody}}\ :\ IJsonSerializable<BatchesDeleteResponseBody>}
+\DoxyCodeLine{00341\ \ \ \ \ \{}
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_delete_response_body}{BatchesDeleteResponseBody}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_delete_response_body_ad13e1a0a97467e2e8bce7c5602a1c0e8}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_delete_response_body_a227901da234aa89a593c3730ac1406f7}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00344\ \ \ \ \ \};}
+\DoxyCodeLine{00345\ }
+\DoxyCodeLine{00346\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_update_embed_content_batch_query_parameters}{BatchesUpdateEmbedContentBatchQueryParameters}}\ :\ IJsonSerializable<BatchesUpdateEmbedContentBatchQueryParameters>}
+\DoxyCodeLine{00347\ \ \ \ \ \{}
+\DoxyCodeLine{00348\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Optional.\ The\ list\ of\ fields\ to\ update.\ This\ is\ a\ comma-\/separated\ list\ of\ fully\ qualified\ names\ of\ fields.\ Example:\ "{}user.displayName,photo"{}.}}
+\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_gemini_c_p_p_1_1_support_1_1_field_mask}{Support::FieldMask}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_update_embed_content_batch_query_parameters_a443c7bccfee2aca6928070110536a708}{updateMask}};}
+\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_update_embed_content_batch_query_parameters}{BatchesUpdateEmbedContentBatchQueryParameters}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_update_embed_content_batch_query_parameters_a240c03e78ba55ee9231ae87b599eae5c}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_update_embed_content_batch_query_parameters_aba423b1f81dc168f520f62f0fc705886}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00353\ \ \ \ \ \};}
+\DoxyCodeLine{00354\ }
+\DoxyCodeLine{00355\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_update_embed_content_batch_request_body}{BatchesUpdateEmbedContentBatchRequestBody}}\ :\ IJsonSerializable<BatchesUpdateEmbedContentBatchRequestBody>}
+\DoxyCodeLine{00356\ \ \ \ \ \{}
+\DoxyCodeLine{00357\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO:}}
+\DoxyCodeLine{00358\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00359\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_update_embed_content_batch_request_body}{BatchesUpdateEmbedContentBatchRequestBody}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_update_embed_content_batch_request_body_a3b29697439de5e9dca20d9fa432c365e}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00360\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_batches_update_embed_content_batch_request_body_abde0bac6d18b961797b30a4316d403a7}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00361\ \ \ \ \ \};}
+\DoxyCodeLine{00362\ \}}
+\DoxyCodeLine{00363\ }
+\DoxyCodeLine{00364\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GEMINI\_BATCH\_API\_TYPES\_H}}
+
+\end{DoxyCode}

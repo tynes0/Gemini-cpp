@@ -1,0 +1,163 @@
+\doxysection{Gemini\+CPP\+::Usage\+Metadata Struct Reference}
+\hypertarget{struct_gemini_c_p_p_1_1_usage_metadata}{}\label{struct_gemini_c_p_p_1_1_usage_metadata}\index{GeminiCPP::UsageMetadata@{GeminiCPP::UsageMetadata}}
+
+
+{\ttfamily \#include $<$generating\+\_\+content\+\_\+api\+\_\+types.\+h$>$}
+
+Inheritance diagram for Gemini\+CPP\+::Usage\+Metadata\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{struct_gemini_c_p_p_1_1_usage_metadata}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+nlohmann\+::json \mbox{\hyperlink{struct_gemini_c_p_p_1_1_usage_metadata_a33e5291b75d990b4166819a21fa75269}{to\+Json}} () const override
+\begin{DoxyCompactList}\small\item\em Serializes the object to a JSON object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable}{Gemini\+CPP\+::\+IJson\+Serializable$<$ Usage\+Metadata $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_a9290639730d57a664f234d0e22663445}{\texorpdfstring{$\sim$}{\string~}\+IJson\+Serializable}} () override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base}{Gemini\+CPP\+::\+IJson\+Serializable\+Base}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_a33a5e14171e7ac30e7a60c08e4b3ff56}{IJson\+Serializable\+Base}} ()=default
+\item 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_a12c497695248fc4982d27a892bd39413}{IJson\+Serializable\+Base}} (const IJson\+Serializable\+Base \&)=default
+\item 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_a33a5e14171e7ac30e7a60c08e4b3ff56}{IJson\+Serializable\+Base}} \& \mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_aa632ce755a4b188693385bf976cf8ed6}{operator=}} (const \mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_a33a5e14171e7ac30e7a60c08e4b3ff56}{IJson\+Serializable\+Base}} \&)=default
+\item 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_a670261cbf43f27e63e3453ba575b48bf}{IJson\+Serializable\+Base}} (IJson\+Serializable\+Base \&\&)=default
+\item 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_a33a5e14171e7ac30e7a60c08e4b3ff56}{IJson\+Serializable\+Base}} \& \mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_af1491b2b2a4836f8013f3c0ce2f9cc05}{operator=}} (\mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_a33a5e14171e7ac30e7a60c08e4b3ff56}{IJson\+Serializable\+Base}} \&\&)=default
+\item 
+virtual \mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_af8f2d3e3039b9797b62e7792cab5c93c}{\texorpdfstring{$\sim$}{\string~}\+IJson\+Serializable\+Base}} ()=default
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{struct_gemini_c_p_p_1_1_usage_metadata}{Usage\+Metadata}} \mbox{\hyperlink{struct_gemini_c_p_p_1_1_usage_metadata_a817d3898559351da684d1a1d5eb5e989}{from\+Json}} (const nlohmann\+::json \&j)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{struct_gemini_c_p_p_1_1_usage_metadata_abd25065e8644e3f8ebdaf4d0e36c51fa}{prompt\+Token\+Count}} = 0
+\item 
+int \mbox{\hyperlink{struct_gemini_c_p_p_1_1_usage_metadata_a6bf6402d31cfb46e457010dc47de8f5e}{cached\+Content\+Token\+Count}} = 0
+\item 
+int \mbox{\hyperlink{struct_gemini_c_p_p_1_1_usage_metadata_a8e57e24fccdbf80958f4e9c1d875b640}{candidates\+Token\+Count}} = 0
+\item 
+int \mbox{\hyperlink{struct_gemini_c_p_p_1_1_usage_metadata_a411ee286f990322909d3658d070f5ac5}{tool\+Use\+Prompt\+Token\+Count}} = 0
+\item 
+int \mbox{\hyperlink{struct_gemini_c_p_p_1_1_usage_metadata_a0a8845efa65585c999fd5cf455e2be75}{thoughts\+Token\+Count}} = 0
+\item 
+int \mbox{\hyperlink{struct_gemini_c_p_p_1_1_usage_metadata_a27a276cefaa446d6217a9d5648be0cb1}{total\+Token\+Count}} = 0
+\item 
+std\+::vector$<$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_modality_token_count}{Modality\+Token\+Count}} $>$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_usage_metadata_aa2414e2c3d3ebb1cb04c37b3f2d17ae8}{prompt\+Tokens\+Details}}
+\item 
+std\+::vector$<$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_modality_token_count}{Modality\+Token\+Count}} $>$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_usage_metadata_a8bf2c07848a3835d431128a0b3ffceb5}{cache\+Tokens\+Details}}
+\item 
+std\+::vector$<$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_modality_token_count}{Modality\+Token\+Count}} $>$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_usage_metadata_aedb6e7fd6d6740765a51623fa5818072}{candidates\+Tokens\+Details}}
+\item 
+std\+::vector$<$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_modality_token_count}{Modality\+Token\+Count}} $>$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_usage_metadata_aa023dad29e0f2f36db586bce0743ad46}{tool\+Use\+Prompt\+Tokens\+Details}}
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{struct_gemini_c_p_p_1_1_usage_metadata_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{struct_gemini_c_p_p_1_1_usage_metadata_a817d3898559351da684d1a1d5eb5e989}\index{GeminiCPP::UsageMetadata@{GeminiCPP::UsageMetadata}!fromJson@{fromJson}}
+\index{fromJson@{fromJson}!GeminiCPP::UsageMetadata@{GeminiCPP::UsageMetadata}}
+\doxysubsubsection{\texorpdfstring{fromJson()}{fromJson()}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_usage_metadata_a817d3898559351da684d1a1d5eb5e989} 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_usage_metadata}{Usage\+Metadata}} Gemini\+CPP\+::\+Usage\+Metadata\+::from\+Json (\begin{DoxyParamCaption}\item[{const nlohmann\+::json \&}]{j}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_usage_metadata_a33e5291b75d990b4166819a21fa75269}\index{GeminiCPP::UsageMetadata@{GeminiCPP::UsageMetadata}!toJson@{toJson}}
+\index{toJson@{toJson}!GeminiCPP::UsageMetadata@{GeminiCPP::UsageMetadata}}
+\doxysubsubsection{\texorpdfstring{toJson()}{toJson()}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_usage_metadata_a33e5291b75d990b4166819a21fa75269} 
+nlohmann\+::json Gemini\+CPP\+::\+Usage\+Metadata\+::to\+Json (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Serializes the object to a JSON object. 
+
+\begin{DoxyReturn}{Returns}
+nlohmann\+::json representation of the object. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_ae730d0a60d1b1566ef6b283ab19aae56}{Gemini\+CPP\+::\+IJson\+Serializable\+Base}}.
+
+
+
+\label{doc-variable-members}
+\Hypertarget{struct_gemini_c_p_p_1_1_usage_metadata_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_gemini_c_p_p_1_1_usage_metadata_a6bf6402d31cfb46e457010dc47de8f5e}\index{GeminiCPP::UsageMetadata@{GeminiCPP::UsageMetadata}!cachedContentTokenCount@{cachedContentTokenCount}}
+\index{cachedContentTokenCount@{cachedContentTokenCount}!GeminiCPP::UsageMetadata@{GeminiCPP::UsageMetadata}}
+\doxysubsubsection{\texorpdfstring{cachedContentTokenCount}{cachedContentTokenCount}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_usage_metadata_a6bf6402d31cfb46e457010dc47de8f5e} 
+int Gemini\+CPP\+::\+Usage\+Metadata\+::cached\+Content\+Token\+Count = 0}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_usage_metadata_a8bf2c07848a3835d431128a0b3ffceb5}\index{GeminiCPP::UsageMetadata@{GeminiCPP::UsageMetadata}!cacheTokensDetails@{cacheTokensDetails}}
+\index{cacheTokensDetails@{cacheTokensDetails}!GeminiCPP::UsageMetadata@{GeminiCPP::UsageMetadata}}
+\doxysubsubsection{\texorpdfstring{cacheTokensDetails}{cacheTokensDetails}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_usage_metadata_a8bf2c07848a3835d431128a0b3ffceb5} 
+std\+::vector$<$\mbox{\hyperlink{struct_gemini_c_p_p_1_1_modality_token_count}{Modality\+Token\+Count}}$>$ Gemini\+CPP\+::\+Usage\+Metadata\+::cache\+Tokens\+Details}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_usage_metadata_a8e57e24fccdbf80958f4e9c1d875b640}\index{GeminiCPP::UsageMetadata@{GeminiCPP::UsageMetadata}!candidatesTokenCount@{candidatesTokenCount}}
+\index{candidatesTokenCount@{candidatesTokenCount}!GeminiCPP::UsageMetadata@{GeminiCPP::UsageMetadata}}
+\doxysubsubsection{\texorpdfstring{candidatesTokenCount}{candidatesTokenCount}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_usage_metadata_a8e57e24fccdbf80958f4e9c1d875b640} 
+int Gemini\+CPP\+::\+Usage\+Metadata\+::candidates\+Token\+Count = 0}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_usage_metadata_aedb6e7fd6d6740765a51623fa5818072}\index{GeminiCPP::UsageMetadata@{GeminiCPP::UsageMetadata}!candidatesTokensDetails@{candidatesTokensDetails}}
+\index{candidatesTokensDetails@{candidatesTokensDetails}!GeminiCPP::UsageMetadata@{GeminiCPP::UsageMetadata}}
+\doxysubsubsection{\texorpdfstring{candidatesTokensDetails}{candidatesTokensDetails}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_usage_metadata_aedb6e7fd6d6740765a51623fa5818072} 
+std\+::vector$<$\mbox{\hyperlink{struct_gemini_c_p_p_1_1_modality_token_count}{Modality\+Token\+Count}}$>$ Gemini\+CPP\+::\+Usage\+Metadata\+::candidates\+Tokens\+Details}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_usage_metadata_abd25065e8644e3f8ebdaf4d0e36c51fa}\index{GeminiCPP::UsageMetadata@{GeminiCPP::UsageMetadata}!promptTokenCount@{promptTokenCount}}
+\index{promptTokenCount@{promptTokenCount}!GeminiCPP::UsageMetadata@{GeminiCPP::UsageMetadata}}
+\doxysubsubsection{\texorpdfstring{promptTokenCount}{promptTokenCount}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_usage_metadata_abd25065e8644e3f8ebdaf4d0e36c51fa} 
+int Gemini\+CPP\+::\+Usage\+Metadata\+::prompt\+Token\+Count = 0}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_usage_metadata_aa2414e2c3d3ebb1cb04c37b3f2d17ae8}\index{GeminiCPP::UsageMetadata@{GeminiCPP::UsageMetadata}!promptTokensDetails@{promptTokensDetails}}
+\index{promptTokensDetails@{promptTokensDetails}!GeminiCPP::UsageMetadata@{GeminiCPP::UsageMetadata}}
+\doxysubsubsection{\texorpdfstring{promptTokensDetails}{promptTokensDetails}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_usage_metadata_aa2414e2c3d3ebb1cb04c37b3f2d17ae8} 
+std\+::vector$<$\mbox{\hyperlink{struct_gemini_c_p_p_1_1_modality_token_count}{Modality\+Token\+Count}}$>$ Gemini\+CPP\+::\+Usage\+Metadata\+::prompt\+Tokens\+Details}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_usage_metadata_a0a8845efa65585c999fd5cf455e2be75}\index{GeminiCPP::UsageMetadata@{GeminiCPP::UsageMetadata}!thoughtsTokenCount@{thoughtsTokenCount}}
+\index{thoughtsTokenCount@{thoughtsTokenCount}!GeminiCPP::UsageMetadata@{GeminiCPP::UsageMetadata}}
+\doxysubsubsection{\texorpdfstring{thoughtsTokenCount}{thoughtsTokenCount}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_usage_metadata_a0a8845efa65585c999fd5cf455e2be75} 
+int Gemini\+CPP\+::\+Usage\+Metadata\+::thoughts\+Token\+Count = 0}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_usage_metadata_a411ee286f990322909d3658d070f5ac5}\index{GeminiCPP::UsageMetadata@{GeminiCPP::UsageMetadata}!toolUsePromptTokenCount@{toolUsePromptTokenCount}}
+\index{toolUsePromptTokenCount@{toolUsePromptTokenCount}!GeminiCPP::UsageMetadata@{GeminiCPP::UsageMetadata}}
+\doxysubsubsection{\texorpdfstring{toolUsePromptTokenCount}{toolUsePromptTokenCount}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_usage_metadata_a411ee286f990322909d3658d070f5ac5} 
+int Gemini\+CPP\+::\+Usage\+Metadata\+::tool\+Use\+Prompt\+Token\+Count = 0}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_usage_metadata_aa023dad29e0f2f36db586bce0743ad46}\index{GeminiCPP::UsageMetadata@{GeminiCPP::UsageMetadata}!toolUsePromptTokensDetails@{toolUsePromptTokensDetails}}
+\index{toolUsePromptTokensDetails@{toolUsePromptTokensDetails}!GeminiCPP::UsageMetadata@{GeminiCPP::UsageMetadata}}
+\doxysubsubsection{\texorpdfstring{toolUsePromptTokensDetails}{toolUsePromptTokensDetails}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_usage_metadata_aa023dad29e0f2f36db586bce0743ad46} 
+std\+::vector$<$\mbox{\hyperlink{struct_gemini_c_p_p_1_1_modality_token_count}{Modality\+Token\+Count}}$>$ Gemini\+CPP\+::\+Usage\+Metadata\+::tool\+Use\+Prompt\+Tokens\+Details}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_usage_metadata_a27a276cefaa446d6217a9d5648be0cb1}\index{GeminiCPP::UsageMetadata@{GeminiCPP::UsageMetadata}!totalTokenCount@{totalTokenCount}}
+\index{totalTokenCount@{totalTokenCount}!GeminiCPP::UsageMetadata@{GeminiCPP::UsageMetadata}}
+\doxysubsubsection{\texorpdfstring{totalTokenCount}{totalTokenCount}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_usage_metadata_a27a276cefaa446d6217a9d5648be0cb1} 
+int Gemini\+CPP\+::\+Usage\+Metadata\+::total\+Token\+Count = 0}
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+gemini/types/\mbox{\hyperlink{generating__content__api__types_8h}{generating\+\_\+content\+\_\+api\+\_\+types.\+h}}\end{DoxyCompactItemize}

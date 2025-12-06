@@ -1,0 +1,34 @@
+\doxysection{models.\+h}
+\hypertarget{models_8h_source}{}\label{models_8h_source}\index{gemini/apis/models.h@{gemini/apis/models.h}}
+\mbox{\hyperlink{models_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#ifndef\ GEMINI\_APIS\_MODELS\_H}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#define\ GEMINI\_APIS\_MODELS\_H}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{response_8h}{gemini/response.h}}"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{models__api__types_8h}{gemini/types/models\_api\_types.h}}"{}}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_gemini_c_p_p}{GeminiCPP}}}
+\DoxyCodeLine{00011\ \{}
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keyword}{class\ }Client;}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_gemini_c_p_p_1_1_models_a39a23fba901d145cd0bbff9203d66c1f}{Models}}}
+\DoxyCodeLine{00020\ \ \ \ \ \{}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_models_a39a23fba901d145cd0bbff9203d66c1f}{Models}}(\mbox{\hyperlink{class_gemini_c_p_p_1_1_client}{Client}}*\ client);}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_result}{Result<ModelInfo>}}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_models_ad979ab0611e5a6c436c934ad9043b21f}{get}}(\textcolor{keyword}{const}\ std::string\&\ name);}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_result}{Result<ModelsListResponseBody>}}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_models_a7160386f69a9e95552b57055bb200bf1}{list}}(\textcolor{keywordtype}{int}\ pageSize\ =\ 50,\ \textcolor{keyword}{const}\ std::string\&\ pageToken\ =\ \textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client}{Client}}*\ client\_;}
+\DoxyCodeLine{00045\ \ \ \ \ \};}
+\DoxyCodeLine{00046\ \}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GEMINI\_APIS\_MODELS\_H}}
+
+\end{DoxyCode}

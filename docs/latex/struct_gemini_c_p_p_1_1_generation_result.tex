@@ -1,0 +1,214 @@
+\doxysection{Gemini\+CPP\+::Generation\+Result Struct Reference}
+\hypertarget{struct_gemini_c_p_p_1_1_generation_result}{}\label{struct_gemini_c_p_p_1_1_generation_result}\index{GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}}
+
+
+Represents the result of a content generation request.  
+
+
+
+
+{\ttfamily \#include $<$response.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::string \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result_adec6f39e3e13a185d6b6074bd38d0e35}{text}} () const
+\begin{DoxyCompactList}\small\item\em Helper to extract all text parts from the content as a single string. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result_acb4e6969b39b7318d4c81590008ac2a2}{save\+File}} (const std\+::string \&filepath, size\+\_\+t blob\+Index=0) const
+\begin{DoxyCompactList}\small\item\em Saves a binary blob (e.\+g. image) from the response to a file. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result_a901f2595cbfd694e905e275cb0d0a541}{save\+All\+Files}} (const std\+::string \&directory, const std\+::string \&prefix="{}output"{}) const
+\begin{DoxyCompactList}\small\item\em Saves all binary blobs in the response to a directory. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result_a47b1a632f3352beaa0d4b86c62aec347}{operator bool}} () const
+\item 
+std\+::optional$<$ nlohmann\+::json $>$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result_aa7a0cf396820d01d419154c61d1ab9fd}{as\+Json}} () const
+\begin{DoxyCompactList}\small\item\em Tries to parse the text response as JSON. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result}{Generation\+Result}} \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result_af03ca07359f7aedc5f949eceba163963}{Success}} (\mbox{\hyperlink{struct_gemini_c_p_p_1_1_content}{Content}} c, int code=frenum\+::value(Http\+Mapped\+Status\+Code\+::\+OK), int in\+Tok=0, int out\+Tok=0, \mbox{\hyperlink{namespace_gemini_c_p_p_ab0640c43614ccb6bb1944a0d6f7f7d16}{Finish\+Reason}} reason=Finish\+Reason\+::\+STOP, std\+::optional$<$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_grounding_metadata}{Grounding\+Metadata}} $>$ metadata=std\+::nullopt)
+\item 
+static \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result}{Generation\+Result}} \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result_aa4885ed8dd4068cb3905e2aff9b1db4e}{Failure}} (std\+::string err, int code=frenum\+::value(Http\+Mapped\+Status\+Code\+::\+STATUS\+\_\+\+CODE\+\_\+\+UNSPECIFIED), \mbox{\hyperlink{namespace_gemini_c_p_p_ab0640c43614ccb6bb1944a0d6f7f7d16}{Finish\+Reason}} reason=Finish\+Reason\+::\+OTHER)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result_aac8c2b0a105131ef5d8575b9e317f819}{success}} = false
+\item 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_content}{Content}} \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result_aa6cb0737fbbc8c4ef9c1b0fe319f5f29}{content}}
+\begin{DoxyCompactList}\small\item\em The generated content (text, blobs, function calls). \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result_a3df617ef768a4ad2299cd90ab121b988}{error\+Message}}
+\item 
+Http\+Mapped\+Status\+Code \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result_a6834ce64aa6402448caacf296943d64f}{status\+Code}} = Http\+Mapped\+Status\+Code\+::\+STATUS\+\_\+\+CODE\+\_\+\+UNSPECIFIED
+\item 
+\mbox{\hyperlink{namespace_gemini_c_p_p_ab0640c43614ccb6bb1944a0d6f7f7d16}{Finish\+Reason}} \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result_a59a3c2c74d17215996a197cfe77e064a}{finish\+Reason}} = Finish\+Reason\+::\+FINISH\+\_\+\+REASON\+\_\+\+UNSPECIFIED
+\item 
+int \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result_a9f9f1318e3263a6463b5607272ba71bd}{input\+Tokens}} = 0
+\item 
+int \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result_a72bd84c457bab239212ffece7eefa5ad}{output\+Tokens}} = 0
+\item 
+int \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result_ab77ccbdb75700e38f19a095a29b1f686}{total\+Tokens}} = 0
+\item 
+std\+::optional$<$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_grounding_metadata}{Grounding\+Metadata}} $>$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result_aa19fc3fc2ce5d215c97725901cf702a2}{grounding\+Metadata}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents the result of a content generation request. 
+
+
+\begin{DoxyItemize}
+\item Contains the generated content, usage metadata, and helper methods to extract text or save binary blobs (like images/audio). 
+\end{DoxyItemize}
+
+\label{doc-func-members}
+\Hypertarget{struct_gemini_c_p_p_1_1_generation_result_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{struct_gemini_c_p_p_1_1_generation_result_aa7a0cf396820d01d419154c61d1ab9fd}\index{GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}!asJson@{asJson}}
+\index{asJson@{asJson}!GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}}
+\doxysubsubsection{\texorpdfstring{asJson()}{asJson()}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_generation_result_aa7a0cf396820d01d419154c61d1ab9fd} 
+std\+::optional$<$ nlohmann\+::json $>$ Gemini\+CPP\+::\+Generation\+Result\+::as\+Json (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Tries to parse the text response as JSON. 
+
+Attempts to find JSON objects/arrays even if surrounded by markdown. \Hypertarget{struct_gemini_c_p_p_1_1_generation_result_aa4885ed8dd4068cb3905e2aff9b1db4e}\index{GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}!Failure@{Failure}}
+\index{Failure@{Failure}!GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}}
+\doxysubsubsection{\texorpdfstring{Failure()}{Failure()}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_generation_result_aa4885ed8dd4068cb3905e2aff9b1db4e} 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result}{Generation\+Result}} Gemini\+CPP\+::\+Generation\+Result\+::\+Failure (\begin{DoxyParamCaption}\item[{std\+::string}]{err}{, }\item[{int}]{code}{ = {\ttfamily frenum\+:\+:value(HttpMappedStatusCode\+:\+:STATUS\+\_\+CODE\+\_\+UNSPECIFIED)}, }\item[{\mbox{\hyperlink{namespace_gemini_c_p_p_ab0640c43614ccb6bb1944a0d6f7f7d16}{Finish\+Reason}}}]{reason}{ = {\ttfamily FinishReason\+:\+:OTHER}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_generation_result_a47b1a632f3352beaa0d4b86c62aec347}\index{GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}!operator bool@{operator bool}}
+\index{operator bool@{operator bool}!GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}}
+\doxysubsubsection{\texorpdfstring{operator bool()}{operator bool()}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_generation_result_a47b1a632f3352beaa0d4b86c62aec347} 
+Gemini\+CPP\+::\+Generation\+Result\+::operator bool (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}, {\ttfamily [nodiscard]}}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_generation_result_a901f2595cbfd694e905e275cb0d0a541}\index{GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}!saveAllFiles@{saveAllFiles}}
+\index{saveAllFiles@{saveAllFiles}!GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}}
+\doxysubsubsection{\texorpdfstring{saveAllFiles()}{saveAllFiles()}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_generation_result_a901f2595cbfd694e905e275cb0d0a541} 
+int Gemini\+CPP\+::\+Generation\+Result\+::save\+All\+Files (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{directory}{, }\item[{const std\+::string \&}]{prefix}{ = {\ttfamily "{}output"{}}}\end{DoxyParamCaption}) const}
+
+
+
+Saves all binary blobs in the response to a directory. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em directory} & The target directory. \\
+\hline
+{\em prefix} & Filename prefix (e.\+g., "{}output"{} -\/\texorpdfstring{$>$}{>} "{}output\+\_\+0.\+png"{}). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Number of files saved. 
+\end{DoxyReturn}
+\Hypertarget{struct_gemini_c_p_p_1_1_generation_result_acb4e6969b39b7318d4c81590008ac2a2}\index{GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}!saveFile@{saveFile}}
+\index{saveFile@{saveFile}!GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}}
+\doxysubsubsection{\texorpdfstring{saveFile()}{saveFile()}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_generation_result_acb4e6969b39b7318d4c81590008ac2a2} 
+bool Gemini\+CPP\+::\+Generation\+Result\+::save\+File (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{filepath}{, }\item[{size\+\_\+t}]{blob\+Index}{ = {\ttfamily 0}}\end{DoxyParamCaption}) const}
+
+
+
+Saves a binary blob (e.\+g. image) from the response to a file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em filepath} & The path to save the file. \\
+\hline
+{\em blob\+Index} & The index of the blob if multiple are present (default 0). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if successful. 
+\end{DoxyReturn}
+\Hypertarget{struct_gemini_c_p_p_1_1_generation_result_af03ca07359f7aedc5f949eceba163963}\index{GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}!Success@{Success}}
+\index{Success@{Success}!GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}}
+\doxysubsubsection{\texorpdfstring{Success()}{Success()}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_generation_result_af03ca07359f7aedc5f949eceba163963} 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result}{Generation\+Result}} Gemini\+CPP\+::\+Generation\+Result\+::\+Success (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_gemini_c_p_p_1_1_content}{Content}}}]{c}{, }\item[{int}]{code}{ = {\ttfamily frenum\+:\+:value(HttpMappedStatusCode\+:\+:OK)}, }\item[{int}]{in\+Tok}{ = {\ttfamily 0}, }\item[{int}]{out\+Tok}{ = {\ttfamily 0}, }\item[{\mbox{\hyperlink{namespace_gemini_c_p_p_ab0640c43614ccb6bb1944a0d6f7f7d16}{Finish\+Reason}}}]{reason}{ = {\ttfamily FinishReason\+:\+:STOP}, }\item[{std\+::optional$<$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_grounding_metadata}{Grounding\+Metadata}} $>$}]{metadata}{ = {\ttfamily std\+:\+:nullopt}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_generation_result_adec6f39e3e13a185d6b6074bd38d0e35}\index{GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}!text@{text}}
+\index{text@{text}!GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}}
+\doxysubsubsection{\texorpdfstring{text()}{text()}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_generation_result_adec6f39e3e13a185d6b6074bd38d0e35} 
+std\+::string Gemini\+CPP\+::\+Generation\+Result\+::text (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+Helper to extract all text parts from the content as a single string. 
+
+\begin{DoxyReturn}{Returns}
+Concatenated text from the response. 
+\end{DoxyReturn}
+
+
+\label{doc-variable-members}
+\Hypertarget{struct_gemini_c_p_p_1_1_generation_result_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_gemini_c_p_p_1_1_generation_result_aa6cb0737fbbc8c4ef9c1b0fe319f5f29}\index{GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}!content@{content}}
+\index{content@{content}!GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}}
+\doxysubsubsection{\texorpdfstring{content}{content}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_generation_result_aa6cb0737fbbc8c4ef9c1b0fe319f5f29} 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_content}{Content}} Gemini\+CPP\+::\+Generation\+Result\+::content}
+
+
+
+The generated content (text, blobs, function calls). 
+
+\Hypertarget{struct_gemini_c_p_p_1_1_generation_result_a3df617ef768a4ad2299cd90ab121b988}\index{GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}!errorMessage@{errorMessage}}
+\index{errorMessage@{errorMessage}!GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}}
+\doxysubsubsection{\texorpdfstring{errorMessage}{errorMessage}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_generation_result_a3df617ef768a4ad2299cd90ab121b988} 
+std\+::string Gemini\+CPP\+::\+Generation\+Result\+::error\+Message}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_generation_result_a59a3c2c74d17215996a197cfe77e064a}\index{GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}!finishReason@{finishReason}}
+\index{finishReason@{finishReason}!GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}}
+\doxysubsubsection{\texorpdfstring{finishReason}{finishReason}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_generation_result_a59a3c2c74d17215996a197cfe77e064a} 
+\mbox{\hyperlink{namespace_gemini_c_p_p_ab0640c43614ccb6bb1944a0d6f7f7d16}{Finish\+Reason}} Gemini\+CPP\+::\+Generation\+Result\+::finish\+Reason = Finish\+Reason\+::\+FINISH\+\_\+\+REASON\+\_\+\+UNSPECIFIED}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_generation_result_aa19fc3fc2ce5d215c97725901cf702a2}\index{GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}!groundingMetadata@{groundingMetadata}}
+\index{groundingMetadata@{groundingMetadata}!GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}}
+\doxysubsubsection{\texorpdfstring{groundingMetadata}{groundingMetadata}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_generation_result_aa19fc3fc2ce5d215c97725901cf702a2} 
+std\+::optional$<$\mbox{\hyperlink{struct_gemini_c_p_p_1_1_grounding_metadata}{Grounding\+Metadata}}$>$ Gemini\+CPP\+::\+Generation\+Result\+::grounding\+Metadata}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_generation_result_a9f9f1318e3263a6463b5607272ba71bd}\index{GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}!inputTokens@{inputTokens}}
+\index{inputTokens@{inputTokens}!GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}}
+\doxysubsubsection{\texorpdfstring{inputTokens}{inputTokens}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_generation_result_a9f9f1318e3263a6463b5607272ba71bd} 
+int Gemini\+CPP\+::\+Generation\+Result\+::input\+Tokens = 0}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_generation_result_a72bd84c457bab239212ffece7eefa5ad}\index{GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}!outputTokens@{outputTokens}}
+\index{outputTokens@{outputTokens}!GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}}
+\doxysubsubsection{\texorpdfstring{outputTokens}{outputTokens}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_generation_result_a72bd84c457bab239212ffece7eefa5ad} 
+int Gemini\+CPP\+::\+Generation\+Result\+::output\+Tokens = 0}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_generation_result_a6834ce64aa6402448caacf296943d64f}\index{GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}!statusCode@{statusCode}}
+\index{statusCode@{statusCode}!GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}}
+\doxysubsubsection{\texorpdfstring{statusCode}{statusCode}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_generation_result_a6834ce64aa6402448caacf296943d64f} 
+Http\+Mapped\+Status\+Code Gemini\+CPP\+::\+Generation\+Result\+::status\+Code = Http\+Mapped\+Status\+Code\+::\+STATUS\+\_\+\+CODE\+\_\+\+UNSPECIFIED}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_generation_result_aac8c2b0a105131ef5d8575b9e317f819}\index{GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}!success@{success}}
+\index{success@{success}!GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}}
+\doxysubsubsection{\texorpdfstring{success}{success}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_generation_result_aac8c2b0a105131ef5d8575b9e317f819} 
+bool Gemini\+CPP\+::\+Generation\+Result\+::success = false}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_generation_result_ab77ccbdb75700e38f19a095a29b1f686}\index{GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}!totalTokens@{totalTokens}}
+\index{totalTokens@{totalTokens}!GeminiCPP::GenerationResult@{GeminiCPP::GenerationResult}}
+\doxysubsubsection{\texorpdfstring{totalTokens}{totalTokens}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_generation_result_ab77ccbdb75700e38f19a095a29b1f686} 
+int Gemini\+CPP\+::\+Generation\+Result\+::total\+Tokens = 0}
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+gemini/\mbox{\hyperlink{response_8h}{response.\+h}}\end{DoxyCompactItemize}

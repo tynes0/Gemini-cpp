@@ -1,0 +1,43 @@
+\doxysection{logger.\+h}
+\hypertarget{logger_8h_source}{}\label{logger_8h_source}\index{gemini/logger.h@{gemini/logger.h}}
+\mbox{\hyperlink{logger_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#ifndef\ GEMINI\_LOGGER\_H}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#define\ GEMINI\_LOGGER\_H}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}dtlog.h"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_gemini_c_p_p}{GeminiCPP}}}
+\DoxyCodeLine{00010\ \{}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_gemini_c_p_p_1_1_log}{Log}}}
+\DoxyCodeLine{00016\ \ \ \ \ \{}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_log_a12f90d890a262f2c813ed6aa1108674c}{init}}();}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::shared\_ptr<dtlog::logger<>>\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_log_a398f1257f2c399d46920d2b8e04bfd4e}{getLogger}}();}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Singleton\ instance}}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ std::shared\_ptr<dtlog::logger<>>\ logger\_;}
+\DoxyCodeLine{00033\ \ \ \ \ \};}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \}\ \textcolor{comment}{//\ namespace\ GeminiCPP}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#define\ GEMINI\_TRACE(...)\ \ \ \ ::GeminiCPP::Log::getLogger()-\/>trace(\_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00045\ \textcolor{preprocessor}{\#define\ GEMINI\_INFO(...)\ \ \ \ \ ::GeminiCPP::Log::getLogger()-\/>info(\_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00050\ \textcolor{preprocessor}{\#define\ GEMINI\_DEBUG(...)\ \ \ ::GeminiCPP::Log::getLogger()-\/>debug(\_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#define\ GEMINI\_WARN(...)\ \ \ \ \ ::GeminiCPP::Log::getLogger()-\/>warning(\_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#define\ GEMINI\_ERROR(...)\ \ \ \ ::GeminiCPP::Log::getLogger()-\/>error(\_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#define\ GEMINI\_CRITICAL(...)\ ::GeminiCPP::Log::getLogger()-\/>critical(\_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GEMINI\_LOGGER\_H}}
+
+\end{DoxyCode}

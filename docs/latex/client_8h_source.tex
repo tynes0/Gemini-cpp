@@ -1,0 +1,181 @@
+\doxysection{client.\+h}
+\hypertarget{client_8h_source}{}\label{client_8h_source}\index{gemini/client.h@{gemini/client.h}}
+\mbox{\hyperlink{client_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#ifndef\ GEMINI\_CLIENT\_H}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#define\ GEMINI\_CLIENT\_H}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <future>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{generation__method_8h}{generation\_method.h}}"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{response_8h}{response.h}}"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{url_8h}{url.h}}"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{support_8h}{support.h}}"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{utils_8h}{utils.h}}"{}}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{generating__content__api__types_8h}{types/generating\_content\_api\_types.h}}"{}}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{comment}{//\ API\ Modules}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{files_8h}{apis/files.h}}"{}}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{models_8h}{apis/models.h}}"{}}}
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{tokens_8h}{apis/tokens.h}}"{}}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_gemini_c_p_p}{GeminiCPP}}}
+\DoxyCodeLine{00023\ \{}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{class\ }RequestBuilder;\ }
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keyword}{class\ }ChatSession;}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_gemini_c_p_p_1_1_client_af22128f17fb6641d9bfd62b24def3711}{Client}}}
+\DoxyCodeLine{00034\ \ \ \ \ \{}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_af22128f17fb6641d9bfd62b24def3711}{Client}}(std::string\ api\_key);}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_a9d1e2478b5e9663ce8f345ad2828b33b}{Client}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_af22128f17fb6641d9bfd62b24def3711}{Client}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_af22128f17fb6641d9bfd62b24def3711}{Client}}\&\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_aaed77ddf1449cc324d82b66a44a335d2}{operator=}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_af22128f17fb6641d9bfd62b24def3711}{Client}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_a6520b5c816abe79870f1aabb3dbfa351}{Client}}(\mbox{\hyperlink{class_gemini_c_p_p_1_1_client_af22128f17fb6641d9bfd62b24def3711}{Client}}\&\&)\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_af22128f17fb6641d9bfd62b24def3711}{Client}}\&\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_aee1ee090945e481da5ae4898c2e5ba85}{operator=}}(\mbox{\hyperlink{class_gemini_c_p_p_1_1_client_af22128f17fb6641d9bfd62b24def3711}{Client}}\&\&)\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_a9417de81fe46d94b44122f7140c108f3}{\string~Client}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/\ API\ MODULES\ -\/-\/-\/}}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_gemini_c_p_p_1_1_files}{Files}}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_a9aaa9daf69751b7cfc44df82a1c983c5}{files}};}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_gemini_c_p_p_1_1_models}{Models}}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_a4daedd83ad71bc602df083e4cb664f62}{models}};}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_gemini_c_p_p_1_1_tokens}{Tokens}}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_a7eb928c17c117091eef51c16252407c1}{tokens}};}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/\ CORE\ GENERATION\ METHODS\ -\/-\/-\/}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result}{GenerationResult}}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_a9657018673e7a3d74047c5771fa4cf4b}{generateContent}}(\textcolor{keyword}{const}\ std::string\&\ model,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_request_body}{GenerateContentRequestBody}}\&\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_af3e1814c26bd4880f4ff857d8aec58ba}{request}});}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result}{GenerationResult}}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_afa7ca4a39df2e677c0501f69fd3dcaf1}{streamGenerateContent}}(\textcolor{keyword}{const}\ std::string\&\ model,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_stream_generate_content_request_body}{StreamGenerateContentRequestBody}}\&\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_af3e1814c26bd4880f4ff857d8aec58ba}{request}},\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespace_gemini_c_p_p_a299d3ceda8e3174a4e47607e0d9fc920}{StreamCallback}}\&\ callback);}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/\ CONVENIENCE\ OVERLOADS\ -\/-\/-\/}}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result}{GenerationResult}}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_a01ba717ad4317323762cf770103af1a2}{generateContent}}(\textcolor{keyword}{const}\ std::string\&\ prompt,\ \textcolor{keyword}{const}\ std::string\&\ model\ =\ \textcolor{stringliteral}{"{}gemini-\/2.0-\/flash"{}});}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result}{GenerationResult}}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_aa81e894508ebb6d35a0e3913aa7c94fb}{streamGenerateContent}}(\textcolor{keyword}{const}\ std::string\&\ prompt,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespace_gemini_c_p_p_a299d3ceda8e3174a4e47607e0d9fc920}{StreamCallback}}\&\ callback,\ \textcolor{keyword}{const}\ std::string\&\ model\ =\ \textcolor{stringliteral}{"{}gemini-\/2.0-\/flash"{}});}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/\ ASYNC\ METHODS\ -\/-\/-\/}}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ [[nodiscard]]\ std::future<GenerationResult>\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_a20c488c9722df8a2641ca533bf6b3797}{generateContentAsync}}(std::string\ model,\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generate_content_request_body}{GenerateContentRequestBody}}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_af3e1814c26bd4880f4ff857d8aec58ba}{request}});}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ [[nodiscard]]\ std::future<GenerationResult>\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_ae456044ec2113fe708d94c779693c0af}{streamGenerateContentAsync}}(std::string\ model,\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_stream_generate_content_request_body}{StreamGenerateContentRequestBody}}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_af3e1814c26bd4880f4ff857d8aec58ba}{request}},\ \mbox{\hyperlink{namespace_gemini_c_p_p_a299d3ceda8e3174a4e47607e0d9fc920}{StreamCallback}}\ callback);}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/\ UTILITIES\ -\/-\/-\/}}
+\DoxyCodeLine{00125\ }
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_support_1_1_api_validation_result}{Support::ApiValidationResult}}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_a12ba4280b71d5256dfbb7318019c984b}{verifyApiKey}}();}
+\DoxyCodeLine{00131\ }
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_ad90bb9cc844aa5cea62adafbb0a0d1e5}{setRetryConfig}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_support_1_1_retry_config}{Support::RetryConfig}}\&\ config);}
+\DoxyCodeLine{00137\ }
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{const}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_support_1_1_retry_config}{Support::RetryConfig}}\&\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_aedc23e53a30a768715540708c1268fbc}{getRetryConfig}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_request_builder}{RequestBuilder}}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_af3e1814c26bd4880f4ff857d8aec58ba}{request}}();}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_chat_session}{ChatSession}}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_a9db787b9ecde112b40d1a3eabecb452b}{startChat}}(\textcolor{keyword}{const}\ std::string\&\ model,\ std::string\ sessionName\ =\ \textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00157\ }
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/\ HTTP\ ENGINE\ (Public\ for\ Modules)\ -\/-\/-\/}}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <JsonSerializable\ ResponseType>}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_result}{Result<ResponseType>}}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_abe95449d0ecb7e672d36ca0ad83cc99b}{post}}(\textcolor{keyword}{const}\ std::string\&\ url,\ \textcolor{keyword}{const}\ nlohmann::json\&\ payload);}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <JsonSerializable\ ResponseType>}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_result}{Result<ResponseType>}}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_aaae383b90eaba04fb1bbd9a1e0b2845a}{get}}(\textcolor{keyword}{const}\ std::string\&\ url,\ \textcolor{keyword}{const}\ std::map<std::string,\ std::string>\&\ params\ =\ \{\});}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <JsonSerializable\ ResponseType>}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_result}{Result<ResponseType>}}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_abf80a88c45f9f7a328efb20c3919865e}{postMultipart}}(\textcolor{keyword}{const}\ std::string\&\ endpoint,\ \textcolor{keyword}{const}\ std::string\&\ filePath,\ \textcolor{keyword}{const}\ std::string\&\ mimeType,\ \textcolor{keyword}{const}\ nlohmann::json\&\ metadata);}
+\DoxyCodeLine{00191\ }
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_result}{Result<bool>}}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_aa50e6425278d7f065ac14f7eedd27565}{deleteResource}}(\textcolor{keyword}{const}\ std::string\&\ url);}
+\DoxyCodeLine{00198\ }
+\DoxyCodeLine{00199\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result}{GenerationResult}}\ submitRequest(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_url}{Url}}\&\ url,\ \textcolor{keyword}{const}\ nlohmann::json\&\ payload);}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_generation_result}{GenerationResult}}\ submitStreamRequest(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_url}{Url}}\&\ url,\ \textcolor{keyword}{const}\ nlohmann::json\&\ payload,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{namespace_gemini_c_p_p_a299d3ceda8e3174a4e47607e0d9fc920}{StreamCallback}}\&\ callback);}
+\DoxyCodeLine{00202\ }
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ postHelper(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_url}{Url}}\&\ url,\ \textcolor{keyword}{const}\ nlohmann::json\&\ payload,\ std::string\&\ text,\ \textcolor{keywordtype}{long}\&\ statusCode);}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ getHelper(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_url}{Url}}\&\ url,\ \textcolor{keyword}{const}\ std::map<std::string,\ std::string>\&\ params,\ std::string\&\ text,\ \textcolor{keywordtype}{long}\&\ statusCode);}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ multipartHelper(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_url}{Url}}\&\ url,\ \textcolor{keyword}{const}\ std::string\&\ filePath,\ \textcolor{keyword}{const}\ std::string\&\ mimeType,\ \textcolor{keyword}{const}\ nlohmann::json\&\ metadata,\ std::string\&\ text,\ \textcolor{keywordtype}{long}\&\ statusCode);}
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ std::string\ api\_key\_;}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_support_1_1_retry_config}{Support::RetryConfig}}\ retryConfig\_;}
+\DoxyCodeLine{00209\ \ \ \ \ \};}
+\DoxyCodeLine{00210\ }
+\DoxyCodeLine{00211\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/\ GENERIC\ HTTP\ IMPLEMENTATION\ -\/-\/-\/}}
+\DoxyCodeLine{00212\ \ \ \ \ }
+\DoxyCodeLine{00213\ \ \ \ \ \textcolor{keyword}{template}\ <JsonSerializable\ ResponseType>}
+\DoxyCodeLine{00214\ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_result}{Result<ResponseType>}}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_abe95449d0ecb7e672d36ca0ad83cc99b}{Client::post}}(\textcolor{keyword}{const}\ std::string\&\ urlStr,\ \textcolor{keyword}{const}\ nlohmann::json\&\ payload)}
+\DoxyCodeLine{00215\ \ \ \ \ \{}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_gemini_c_p_p_1_1_url}{Url}}\ url(urlStr);}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ statusCode;}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ std::string\ text;}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ postHelper(url,\ payload,\ text,\ statusCode);}
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{class_gemini_c_p_p_1_1_http_mapped_status_code_helper_a4ed10d06c37b464ae232ec12580c4037}{HttpMappedStatusCodeHelper::isSuccess}}(statusCode))}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_result_a3f77bf7c198e7aadd6d041d631bcfac6}{Result<ResponseType>::Failure}}(\mbox{\hyperlink{class_gemini_c_p_p_1_1_utils_a5dd043603de964b040fd3badd5d3f351}{Utils::parseErrorMessage}}(text),\ statusCode);}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_result_a191b0fd3edafc41331f628b297d8d2dc}{Result<ResponseType>::Success}}(ResponseType::fromJson(nlohmann::json::parse(text)),\ statusCode);}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{catch}\ (\textcolor{keyword}{const}\ std::exception\&\ e)}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ namespace\ }std::string\_literals;}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_result_a3f77bf7c198e7aadd6d041d631bcfac6}{Result<ResponseType>::Failure}}(\textcolor{stringliteral}{"{}Parse\ Error:\ "{}}s\ +\ e.what(),\ statusCode);}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00234\ \ \ \ \ \}}
+\DoxyCodeLine{00235\ }
+\DoxyCodeLine{00236\ \ \ \ \ \textcolor{keyword}{template}\ <JsonSerializable\ ResponseType>}
+\DoxyCodeLine{00237\ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_result}{Result<ResponseType>}}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_aaae383b90eaba04fb1bbd9a1e0b2845a}{Client::get}}(\textcolor{keyword}{const}\ std::string\&\ urlStr,\ \textcolor{keyword}{const}\ std::map<std::string,\ std::string>\&\ params)}
+\DoxyCodeLine{00238\ \ \ \ \ \{}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_gemini_c_p_p_1_1_url}{Url}}\ url(urlStr);}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ statusCode;}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ std::string\ text;}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ getHelper(url,\ params,\ text,\ statusCode);}
+\DoxyCodeLine{00243\ }
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{class_gemini_c_p_p_1_1_http_mapped_status_code_helper_a4ed10d06c37b464ae232ec12580c4037}{HttpMappedStatusCodeHelper::isSuccess}}(statusCode))}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_result_a3f77bf7c198e7aadd6d041d631bcfac6}{Result<ResponseType>::Failure}}(\mbox{\hyperlink{class_gemini_c_p_p_1_1_utils_a5dd043603de964b040fd3badd5d3f351}{Utils::parseErrorMessage}}(text),\ statusCode);}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_result_a191b0fd3edafc41331f628b297d8d2dc}{Result<ResponseType>::Success}}(ResponseType::fromJson(nlohmann::json::parse(text)),\ statusCode);}
+\DoxyCodeLine{00251\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{catch}\ (\textcolor{keyword}{const}\ std::exception\&\ e)}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ namespace\ }std::string\_literals;}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_result_a3f77bf7c198e7aadd6d041d631bcfac6}{Result<ResponseType>::Failure}}(\textcolor{stringliteral}{"{}Parse\ Error:\ "{}}s\ +\ e.what(),\ statusCode);}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00257\ \ \ \ \ \}}
+\DoxyCodeLine{00258\ }
+\DoxyCodeLine{00259\ \ \ \ \ \textcolor{keyword}{template}\ <JsonSerializable\ ResponseType>}
+\DoxyCodeLine{00260\ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_result}{Result<ResponseType>}}\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_client_abf80a88c45f9f7a328efb20c3919865e}{Client::postMultipart}}(\textcolor{keyword}{const}\ std::string\&\ endpoint,\ \textcolor{keyword}{const}\ std::string\&\ filePath,\ \textcolor{keyword}{const}\ std::string\&\ mimeType,\ \textcolor{keyword}{const}\ nlohmann::json\&\ metadata)}
+\DoxyCodeLine{00261\ \ \ \ \ \{}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_gemini_c_p_p_1_1_url}{Url}}\ url(endpoint,\ EndpointType::UPLOAD);}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ statusCode;}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ std::string\ text;}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ multipartHelper(url,\ filePath,\ mimeType,\ metadata,\ text,\ statusCode);}
+\DoxyCodeLine{00267\ }
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!\mbox{\hyperlink{class_gemini_c_p_p_1_1_http_mapped_status_code_helper_a4ed10d06c37b464ae232ec12580c4037}{HttpMappedStatusCodeHelper::isSuccess}}(statusCode))}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00270\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_result_a3f77bf7c198e7aadd6d041d631bcfac6}{Result<ResponseType>::Failure}}(\mbox{\hyperlink{class_gemini_c_p_p_1_1_utils_a5dd043603de964b040fd3badd5d3f351}{Utils::parseErrorMessage}}(text),\ statusCode);}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00274\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ json\ =\ nlohmann::json::parse(text);}
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_result_a191b0fd3edafc41331f628b297d8d2dc}{Result<ResponseType>::Success}}(ResponseType::fromJson(json),\ statusCode);}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{catch}\ (\textcolor{keyword}{const}\ std::exception\&\ e)}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00279\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ namespace\ }std::string\_literals;}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_result_a3f77bf7c198e7aadd6d041d631bcfac6}{Result<ResponseType>::Failure}}(\textcolor{stringliteral}{"{}Parse\ Error:\ "{}}s\ +\ e.what(),\ statusCode);}
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00282\ \ \ \ \ \}}
+\DoxyCodeLine{00283\ \}}
+\DoxyCodeLine{00284\ }
+\DoxyCodeLine{00285\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GEMINI\_CLIENT\_H}}
+
+\end{DoxyCode}

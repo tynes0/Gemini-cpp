@@ -1,0 +1,132 @@
+\doxysection{gemini/logger.h File Reference}
+\hypertarget{logger_8h}{}\label{logger_8h}\index{gemini/logger.h@{gemini/logger.h}}
+{\ttfamily \#include $<$memory$>$}\newline
+{\ttfamily \#include "{}dtlog.\+h"{}}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_gemini_c_p_p_1_1_log}{Gemini\+CPP\+::\+Log}}
+\begin{DoxyCompactList}\small\item\em Singleton wrapper for the internal logging system (dtlog). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespace_gemini_c_p_p}{Gemini\+CPP}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{logger_8h_a169643907df36c509511f099f110698b}{GEMINI\+\_\+\+LOGGER\+\_\+H}}
+\item 
+\#define \mbox{\hyperlink{logger_8h_ab954dd0b6caf6e96c481844cfead091d}{GEMINI\+\_\+\+TRACE}}(...)
+\begin{DoxyCompactList}\small\item\em Log a trace message. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{logger_8h_affa0edd6de77a8fbdb7e5c56ad52a243}{GEMINI\+\_\+\+INFO}}(...)
+\begin{DoxyCompactList}\small\item\em Log an informational message. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{logger_8h_a5ce075fcdad90c2163c2b1ccb2368f6e}{GEMINI\+\_\+\+DEBUG}}(...)
+\begin{DoxyCompactList}\small\item\em Log a debug message. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{logger_8h_a9777096b0edb6b520fb317f3841abd5e}{GEMINI\+\_\+\+WARN}}(...)
+\begin{DoxyCompactList}\small\item\em Log a warning message. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{logger_8h_a857d902dd053d59ff9f012bb0ee1362b}{GEMINI\+\_\+\+ERROR}}(...)
+\begin{DoxyCompactList}\small\item\em Log an error message. \end{DoxyCompactList}\item 
+\#define \mbox{\hyperlink{logger_8h_a8562f1b257cc03e79deb4e7244357262}{GEMINI\+\_\+\+CRITICAL}}(...)
+\begin{DoxyCompactList}\small\item\em Log a critical error message. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{doc-define-members}
+\Hypertarget{logger_8h_doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{logger_8h_a8562f1b257cc03e79deb4e7244357262}\index{logger.h@{logger.h}!GEMINI\_CRITICAL@{GEMINI\_CRITICAL}}
+\index{GEMINI\_CRITICAL@{GEMINI\_CRITICAL}!logger.h@{logger.h}}
+\doxysubsubsection{\texorpdfstring{GEMINI\_CRITICAL}{GEMINI\_CRITICAL}}
+{\footnotesize\ttfamily \label{logger_8h_a8562f1b257cc03e79deb4e7244357262} 
+\#define GEMINI\+\_\+\+CRITICAL(\begin{DoxyParamCaption}\item[{}]{}...{}\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\mbox{\hyperlink{class_gemini_c_p_p_1_1_log_a398f1257f2c399d46920d2b8e04bfd4e}{::GeminiCPP::Log::getLogger}}()-\/>critical(\_\_VA\_ARGS\_\_)}
+
+\end{DoxyCode}
+
+
+Log a critical error message. 
+
+\Hypertarget{logger_8h_a5ce075fcdad90c2163c2b1ccb2368f6e}\index{logger.h@{logger.h}!GEMINI\_DEBUG@{GEMINI\_DEBUG}}
+\index{GEMINI\_DEBUG@{GEMINI\_DEBUG}!logger.h@{logger.h}}
+\doxysubsubsection{\texorpdfstring{GEMINI\_DEBUG}{GEMINI\_DEBUG}}
+{\footnotesize\ttfamily \label{logger_8h_a5ce075fcdad90c2163c2b1ccb2368f6e} 
+\#define GEMINI\+\_\+\+DEBUG(\begin{DoxyParamCaption}\item[{}]{}...{}\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\mbox{\hyperlink{class_gemini_c_p_p_1_1_log_a398f1257f2c399d46920d2b8e04bfd4e}{::GeminiCPP::Log::getLogger}}()-\/>debug(\_\_VA\_ARGS\_\_)}
+
+\end{DoxyCode}
+
+
+Log a debug message. 
+
+\Hypertarget{logger_8h_a857d902dd053d59ff9f012bb0ee1362b}\index{logger.h@{logger.h}!GEMINI\_ERROR@{GEMINI\_ERROR}}
+\index{GEMINI\_ERROR@{GEMINI\_ERROR}!logger.h@{logger.h}}
+\doxysubsubsection{\texorpdfstring{GEMINI\_ERROR}{GEMINI\_ERROR}}
+{\footnotesize\ttfamily \label{logger_8h_a857d902dd053d59ff9f012bb0ee1362b} 
+\#define GEMINI\+\_\+\+ERROR(\begin{DoxyParamCaption}\item[{}]{}...{}\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\mbox{\hyperlink{class_gemini_c_p_p_1_1_log_a398f1257f2c399d46920d2b8e04bfd4e}{::GeminiCPP::Log::getLogger}}()-\/>error(\_\_VA\_ARGS\_\_)}
+
+\end{DoxyCode}
+
+
+Log an error message. 
+
+\Hypertarget{logger_8h_affa0edd6de77a8fbdb7e5c56ad52a243}\index{logger.h@{logger.h}!GEMINI\_INFO@{GEMINI\_INFO}}
+\index{GEMINI\_INFO@{GEMINI\_INFO}!logger.h@{logger.h}}
+\doxysubsubsection{\texorpdfstring{GEMINI\_INFO}{GEMINI\_INFO}}
+{\footnotesize\ttfamily \label{logger_8h_affa0edd6de77a8fbdb7e5c56ad52a243} 
+\#define GEMINI\+\_\+\+INFO(\begin{DoxyParamCaption}\item[{}]{}...{}\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\mbox{\hyperlink{class_gemini_c_p_p_1_1_log_a398f1257f2c399d46920d2b8e04bfd4e}{::GeminiCPP::Log::getLogger}}()-\/>info(\_\_VA\_ARGS\_\_)}
+
+\end{DoxyCode}
+
+
+Log an informational message. 
+
+\Hypertarget{logger_8h_a169643907df36c509511f099f110698b}\index{logger.h@{logger.h}!GEMINI\_LOGGER\_H@{GEMINI\_LOGGER\_H}}
+\index{GEMINI\_LOGGER\_H@{GEMINI\_LOGGER\_H}!logger.h@{logger.h}}
+\doxysubsubsection{\texorpdfstring{GEMINI\_LOGGER\_H}{GEMINI\_LOGGER\_H}}
+{\footnotesize\ttfamily \label{logger_8h_a169643907df36c509511f099f110698b} 
+\#define GEMINI\+\_\+\+LOGGER\+\_\+H}
+
+\Hypertarget{logger_8h_ab954dd0b6caf6e96c481844cfead091d}\index{logger.h@{logger.h}!GEMINI\_TRACE@{GEMINI\_TRACE}}
+\index{GEMINI\_TRACE@{GEMINI\_TRACE}!logger.h@{logger.h}}
+\doxysubsubsection{\texorpdfstring{GEMINI\_TRACE}{GEMINI\_TRACE}}
+{\footnotesize\ttfamily \label{logger_8h_ab954dd0b6caf6e96c481844cfead091d} 
+\#define GEMINI\+\_\+\+TRACE(\begin{DoxyParamCaption}\item[{}]{}...{}\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\mbox{\hyperlink{class_gemini_c_p_p_1_1_log_a398f1257f2c399d46920d2b8e04bfd4e}{::GeminiCPP::Log::getLogger}}()-\/>trace(\_\_VA\_ARGS\_\_)}
+
+\end{DoxyCode}
+
+
+Log a trace message. 
+
+\Hypertarget{logger_8h_a9777096b0edb6b520fb317f3841abd5e}\index{logger.h@{logger.h}!GEMINI\_WARN@{GEMINI\_WARN}}
+\index{GEMINI\_WARN@{GEMINI\_WARN}!logger.h@{logger.h}}
+\doxysubsubsection{\texorpdfstring{GEMINI\_WARN}{GEMINI\_WARN}}
+{\footnotesize\ttfamily \label{logger_8h_a9777096b0edb6b520fb317f3841abd5e} 
+\#define GEMINI\+\_\+\+WARN(\begin{DoxyParamCaption}\item[{}]{}...{}\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\mbox{\hyperlink{class_gemini_c_p_p_1_1_log_a398f1257f2c399d46920d2b8e04bfd4e}{::GeminiCPP::Log::getLogger}}()-\/>warning(\_\_VA\_ARGS\_\_)}
+
+\end{DoxyCode}
+
+
+Log a warning message. 
+

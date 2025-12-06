@@ -1,0 +1,72 @@
+\doxysection{types\+\_\+base.\+h}
+\hypertarget{types__base_8h_source}{}\label{types__base_8h_source}\index{gemini/types\_base.h@{gemini/types\_base.h}}
+\mbox{\hyperlink{types__base_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#ifndef\ GEMINI\_TYPES\_H}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#define\ GEMINI\_TYPES\_H}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <nlohmann/json.hpp>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <type\_traits>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <utility>}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_gemini_c_p_p}{GeminiCPP}}}
+\DoxyCodeLine{00012\ \{}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_a33a5e14171e7ac30e7a60c08e4b3ff56}{IJsonSerializableBase}}}
+\DoxyCodeLine{00018\ \ \ \ \ \{}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_a33a5e14171e7ac30e7a60c08e4b3ff56}{IJsonSerializableBase}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_a12c497695248fc4982d27a892bd39413}{IJsonSerializableBase}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_a33a5e14171e7ac30e7a60c08e4b3ff56}{IJsonSerializableBase}}\&)\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_a33a5e14171e7ac30e7a60c08e4b3ff56}{IJsonSerializableBase}}\&\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_aa632ce755a4b188693385bf976cf8ed6}{operator=}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_a33a5e14171e7ac30e7a60c08e4b3ff56}{IJsonSerializableBase}}\&)\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_a670261cbf43f27e63e3453ba575b48bf}{IJsonSerializableBase}}(\mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_a33a5e14171e7ac30e7a60c08e4b3ff56}{IJsonSerializableBase}}\&\&)\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_a33a5e14171e7ac30e7a60c08e4b3ff56}{IJsonSerializableBase}}\&\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_af1491b2b2a4836f8013f3c0ce2f9cc05}{operator=}}(\mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_a33a5e14171e7ac30e7a60c08e4b3ff56}{IJsonSerializableBase}}\&\&)\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_af8f2d3e3039b9797b62e7792cab5c93c}{\string~IJsonSerializableBase}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{virtual}\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_ae730d0a60d1b1566ef6b283ab19aae56}{toJson}}()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00032\ \ \ \ \ \};}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{comment}{//\ Meta-\/programming\ helper\ to\ check\ for\ 'fromJson'\ existence}}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ =\ \textcolor{keywordtype}{void}>}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_has__from_json}{Has\_fromJson}}\ :\ std::false\_type\ \{\};}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_has__from_json}{Has\_fromJson}}<T,\ std::void\_t<decltype(T::fromJson(std::declval<const\ nlohmann::json\&>()))>>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{struct\ }IJsonSerializable\ :\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_a33a5e14171e7ac30e7a60c08e4b3ff56}{IJsonSerializableBase}}}
+\DoxyCodeLine{00048\ \ \ \ \ \{}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keyword}{friend}\ T;}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ IJsonSerializable()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ IJsonSerializable(\textcolor{keyword}{const}\ IJsonSerializable\&)\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ IJsonSerializable\&\ operator=(\textcolor{keyword}{const}\ IJsonSerializable\&)\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ IJsonSerializable(IJsonSerializable\&\&)\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ IJsonSerializable\&\ operator=(IJsonSerializable\&\&)\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ NOLINTNEXTLINE(portability-\/template-\/virtual-\/member-\/function)}}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_a9290639730d57a664f234d0e22663445}{\string~IJsonSerializable}}()\textcolor{keyword}{\ override}}
+\DoxyCodeLine{00061\ \textcolor{keyword}{\ \ \ \ \ \ \ \ }\{}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static\_assert}(\mbox{\hyperlink{struct_gemini_c_p_p_1_1_has__from_json}{Has\_fromJson<T>::value}},}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}CRTP\ ERROR:\ Derived\ class\ must\ implement\ 'static\ T\ fromJson(const\ nlohmann::json\&)'."{}});}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00065\ \ \ \ \ \};}
+\DoxyCodeLine{00066\ \ \ \ \ }
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{comment}{//\ Concept\ helpers\ to\ restrict\ templates\ to\ Serializable\ types}}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ =\ \textcolor{keywordtype}{void}>}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_is_json_serializable}{IsJsonSerializable}}\ :\ std::false\_type\ \{\};}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_is_json_serializable}{IsJsonSerializable}}<T,\ std::enable\_if\_t<std::is\_base\_of\_v<IJsonSerializable<T>,\ T>>>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keyword}{concept\ }\mbox{\hyperlink{concept_gemini_c_p_p_1_1_json_serializable}{JsonSerializable}}\ =\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_is_json_serializable}{IsJsonSerializable<T>::value}};}
+\DoxyCodeLine{00079\ \ \ \ \ }
+\DoxyCodeLine{00080\ \}\ \textcolor{comment}{//\ namespace\ GeminiCPP}}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GEMINI\_TYPES\_H}}
+
+\end{DoxyCode}
