@@ -1,0 +1,202 @@
+\doxysection{files\+\_\+api\+\_\+types.\+h}
+\hypertarget{files__api__types_8h_source}{}\label{files__api__types_8h_source}\index{gemini/types/files\_api\_types.h@{gemini/types/files\_api\_types.h}}
+\mbox{\hyperlink{files__api__types_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#ifndef\ GEMINI\_FILES\_API\_TYPES\_H}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#define\ GEMINI\_FILES\_API\_TYPES\_H}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <optional>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <variant>}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}frenum.h"{}}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{types__base_8h}{gemini/types\_base.h}}"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{duration_8h}{gemini/duration.h}}"{}}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{support_8h}{gemini/support.h}}"{}}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{url_8h}{gemini/url.h}}"{}}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \textcolor{comment}{//\ Windows\ headers\ (windows.h,\ etc.)\ can\ define\ these\ names\ as\ macros.}}
+\DoxyCodeLine{00019\ \textcolor{comment}{//\ These\ macros\ corrupt\ our\ enum\ definitions,\ so\ we're\ deleting\ them.}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#ifdef\ FAILED}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#undef\ FAILED}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#ifdef\ REGISTERED}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#undef\ REGISTERED}}
+\DoxyCodeLine{00027\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{preprocessor}{\#ifdef\ UPLOADED}}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#undef\ UPLOADED}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_gemini_c_p_p}{GeminiCPP}}}
+\DoxyCodeLine{00034\ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \mbox{\hyperlink{namespace_gemini_c_p_p_ad92ca6fc4845021d21cae8b6dd9a3d96}{FrenumClassInNamespace}}(\mbox{\hyperlink{namespace_gemini_c_p_p}{GeminiCPP}},\ Source,\ \mbox{\hyperlink{namespace_gemini_c_p_p_a67b60949cc5e2c9c29ae5f9f4c669513}{uint8\_t}},}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ SOURCE\_UNSPECIFIED,}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ UPLOADED,\ \ \ \textcolor{comment}{//\ Indicates\ the\ file\ is\ uploaded\ by\ the\ user.}}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ GENERATED,\ \ \textcolor{comment}{//\ Indicates\ the\ file\ is\ generated\ by\ Google.}}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ REGISTERED\ \ \textcolor{comment}{//\ Indicates\ the\ file\ is\ a\ registered,\ i.e.\ a\ Google\ Cloud\ Storage\ file.}}
+\DoxyCodeLine{00043\ \ \ \ \ )}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \ }
+\DoxyCodeLine{00048\ \ \ \ \ \mbox{\hyperlink{namespace_gemini_c_p_p_ad92ca6fc4845021d21cae8b6dd9a3d96}{FrenumClassInNamespace}}(\mbox{\hyperlink{namespace_gemini_c_p_p}{GeminiCPP}},\ \mbox{\hyperlink{namespace_gemini_c_p_p_a39e93bcd2dfc4d0c90a0e124d0bb7811}{FileState}},\ \mbox{\hyperlink{namespace_gemini_c_p_p_a67b60949cc5e2c9c29ae5f9f4c669513}{uint8\_t}},}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespace_gemini_c_p_p_ae477a4d921b68b252255b65a795445b4}{STATE\_UNSPECIFIED}},}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespace_gemini_c_p_p_a4f01d80ffacbdc347b7c5973cea583dc}{PROCESSING}},\ \textcolor{comment}{//\ Processing\ file\ (Not\ immediately\ available)}}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespace_gemini_c_p_p_a2ba464f4095d7126cc46d5efae985f4d}{ACTIVE}},\ \ \ \ \ \textcolor{comment}{//\ Ready\ to\ use}}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ FAILED\ \ \ \ \ \ \textcolor{comment}{//\ Processing\ error}}
+\DoxyCodeLine{00053\ \ \ \ \ )}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{comment}{//\ The\ Status\ type\ defines\ a\ logical\ error\ model\ that\ is\ suitable\ for\ different\ programming\ environments,}}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{comment}{//\ including\ REST\ APIs\ and\ RPC\ APIs.\ It\ is\ used\ by\ gRPC.\ Each\ Status\ message\ contains\ three\ pieces\ of\ data:}}
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{comment}{//\ error\ code,\ error\ message,\ and\ error\ details.}}
+\DoxyCodeLine{00058\ \ \ \ \ struct\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_status}{Status}}\ :\ IJsonSerializable<\mbox{\hyperlink{struct_gemini_c_p_p_1_1_status}{Status}}>}
+\DoxyCodeLine{00059\ \ \ \ \ \{}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ status\ code,\ which\ should\ be\ an\ enum\ value\ of\ google.rpc.Code.}}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ HttpMappedStatusCode\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_status_a59586ba51e2979bf63e5756dd372f667}{code}}\ =\ HttpMappedStatusCode::STATUS\_CODE\_UNSPECIFIED;}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ developer-\/facing\ error\ message,\ which\ should\ be\ in\ English.\ Any\ user-\/facing\ error\ message\ should\ be}}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ localized\ and\ sent\ in\ the\ Status.details\ field,\ or\ localized\ by\ the\ client.}}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ std::string\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_status_a982785ac45baed98ea31469d7b61cb8a}{message}};}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ list\ of\ messages\ that\ carry\ the\ error\ details.\ There\ is\ a\ common\ set\ of\ message\ types\ for\ APIs\ to\ use.}}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ An\ object\ containing\ fields\ of\ an\ arbitrary\ type.\ An\ additional\ field\ "{}@type"{}\ contains\ a\ URI\ identifying\ the\ type.}}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Example:\ \{\ "{}id"{}:\ 1234,\ "{}@type"{}:\ "{}types.example.com/standard/id"{}\ \}.}}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ std::vector<nlohmann::json>\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_status_ac91b7e1cb99ab35bfd7bf7f9a6ccdf38}{details}};}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_status}{Status}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_status_ad51fa572de354788a6418ab0174f6418}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_status_a406f896d85d4cc4eb4991533a735c879}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00072\ \ \ \ \ \};}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{comment}{//\ Metadata\ for\ a\ video\ File.}}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_video_file_metadata}{VideoFileMetadata}}\ :\ IJsonSerializable<VideoFileMetadata>}
+\DoxyCodeLine{00076\ \ \ \ \ \{}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Duration\ of\ the\ video.\ A\ duration\ in\ seconds\ with\ up\ to\ nine\ fractional\ digits,\ ending\ with\ 's'.\ Example:\ "{}3.5s"{}.}}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_duration}{Duration}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_video_file_metadata_a00597aa9ffe9d5ca0bb297987fdaf13d}{videoDuration}};}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_video_file_metadata}{VideoFileMetadata}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_video_file_metadata_a961ebd54921fa7a500151d0605186b94}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_video_file_metadata_a765f96967bf3893aaefec41f20b5c828}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00082\ \ \ \ \ \};}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{comment}{//\ A\ file\ uploaded\ to\ the\ API.\ Next\ ID:\ 15}}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_file}{File}}\ :\ IJsonSerializable<File>}
+\DoxyCodeLine{00086\ \ \ \ \ \{}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_file_a0f48dfdda209a56e45b5873805497335}{MetadataType}}\ =\ std::variant<}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ std::monostate,}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_video_file_metadata}{VideoFileMetadata}}\ \textcolor{comment}{//\ Output\ only.\ Metadata\ for\ a\ video.}}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ >;}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Immutable.\ Identifier.\ The\ File\ resource\ name.\ The\ ID\ (name\ excluding\ the\ "{}files/"{}\ prefix)\ can\ contain\ up}}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ to\ 40\ characters\ that\ are\ lowercase\ alphanumeric\ or\ dashes\ (-\/).\ The\ ID\ cannot\ start\ or\ end\ with\ a\ dash.}}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ If\ the\ name\ is\ empty\ on\ create,\ a\ unique\ name\ will\ be\ generated.\ Example:\ files/123-\/456}}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_gemini_c_p_p_1_1_resource_name}{ResourceName}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_file_a4b602a174a172e2941408dc9e144797b}{name}};}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Optional.\ The\ human-\/readable\ display\ name\ for\ the\ File.\ The\ display\ name\ must\ be\ no\ more}}
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ than\ 512\ characters\ in\ length,\ including\ spaces.\ Example:\ "{}Welcome\ Image"{}}}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ std::optional<std::string>\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_file_af6c0359c6e06f03328fd53e304a1aed3}{displayName}};}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Output\ only.\ MIME\ type\ of\ the\ file.}}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ std::string\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_file_af5cd3723d2c5471e87e042774a66923d}{mimeType}};}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Output\ only.\ Size\ of\ the\ file\ in\ bytes.}}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ int64\_t\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_file_a32a7d8059a35c560c2c6de141b10efc5}{sizeBytes}}\ =\ 0;}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Output\ only.\ The\ timestamp\ of\ when\ the\ File\ was\ created.}}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_gemini_c_p_p_1_1_support_1_1_timestamp}{Support::Timestamp}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_file_a7d99e5ccf65e84638c3b5f7f6c80c291}{createTime}};}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Output\ only.\ The\ timestamp\ of\ when\ the\ File\ was\ last\ updated.}}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_gemini_c_p_p_1_1_support_1_1_timestamp}{Support::Timestamp}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_file_ab6c73896f6cb40bed61b1068493f7618}{updateTime}};}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Output\ only.\ The\ timestamp\ of\ when\ the\ File\ will\ be\ deleted.\ Only\ set\ if\ the\ File\ is\ scheduled\ to\ expire.}}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_gemini_c_p_p_1_1_support_1_1_timestamp}{Support::Timestamp}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_file_aeafb54d0ead5157939e89629953ad85a}{expirationTime}};}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Output\ only.\ SHA-\/256\ hash\ of\ the\ uploaded\ bytes.}}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_gemini_c_p_p_1_1_support_1_1_base64_string}{Support::Base64String}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_file_abf9dea583ba4bcf2f241a73e6ac9410d}{sha256Hash}};}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Output\ only.\ The\ uri\ of\ the\ File.}}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ std::string\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_file_a6d184b19c1d95dbf92e8112562a5b776}{uri}};}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Output\ only.\ The\ download\ uri\ of\ the\ File.}}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ std::string\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_file_a2e2241bc8629ca85a548ac2146210393}{downloadUri}};}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Output\ only.\ The\ download\ uri\ of\ the\ File.}}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespace_gemini_c_p_p_a39e93bcd2dfc4d0c90a0e124d0bb7811}{FileState}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_file_a201b26cc0871d1448e792ba59d38ebb3}{state}}\ =\ FileState::STATE\_UNSPECIFIED;}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Source\ of\ the\ File.}}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ Source\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_file_a6453d5defbe86cd32fabe5c27ab22027}{source}}\ =\ Source::SOURCE\_UNSPECIFIED;}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Output\ only.\ Error\ status\ if\ File\ processing\ failed.}}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_status}{Status}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_file_a91b244365295aa411dba244d3d63901f}{error}};}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Metadata\ for\ the\ File.}}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_file_a0f48dfdda209a56e45b5873805497335}{MetadataType}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_file_a178a3034efcf938e1bf758f7c20d29bc}{metadata}};}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_file}{File}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_file_a11a88a8d71ac077fbb3bbe8f6da3f48b}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ json);}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_file_a575a2a6fb8d449e2d7ece2258727d217}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00126\ \ \ \ \ \};}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00128\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_media_upload_request_body}{MediaUploadRequestBody}}\ :\ IJsonSerializable<MediaUploadRequestBody>}
+\DoxyCodeLine{00129\ \ \ \ \ \{}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Optional.\ Metadata\ for\ the\ file\ to\ create.}}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ std::optional<File>\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_media_upload_request_body_a2e2d2dddcfa8cffd4ff3cbfeaf32fd9d}{file}};}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_media_upload_request_body}{MediaUploadRequestBody}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_media_upload_request_body_a2512f3e97e637d6c19b7d90580aa3f89}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_media_upload_request_body_aa9ee28add0a5bd1c03cd5cfc1266123b}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00135\ \ \ \ \ \};}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_media_upload_response_body}{MediaUploadResponseBody}}\ :\ IJsonSerializable<MediaUploadResponseBody>}
+\DoxyCodeLine{00138\ \ \ \ \ \{}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Metadata\ for\ the\ created\ file.}}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_file}{File}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_media_upload_response_body_a0fa04ede59dab3857d3394a6587190f4}{file}};}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_media_upload_response_body}{MediaUploadResponseBody}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_media_upload_response_body_a6e34c79fcf71246ad7d9d969e3fed01e}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_media_upload_response_body_a74ef3f61c6d9c0ed61d635c847e8dd66}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00144\ \ \ \ \ \};}
+\DoxyCodeLine{00145\ }
+\DoxyCodeLine{00146\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_get_request_body}{FilesGetRequestBody}}\ :\ IJsonSerializable<FilesGetRequestBody>}
+\DoxyCodeLine{00147\ \ \ \ \ \{}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_get_request_body}{FilesGetRequestBody}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_get_request_body_a373bad57f1c7dbbe1cab0cbcced89a45}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_get_request_body_aeb7586936f72df4fe60a21a66ea0bbe6}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00150\ \ \ \ \ \};}
+\DoxyCodeLine{00151\ }
+\DoxyCodeLine{00152\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_get_response_body}{FilesGetResponseBody}}\ :\ IJsonSerializable<FilesGetResponseBody>}
+\DoxyCodeLine{00153\ \ \ \ \ \{}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_file}{File}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_get_response_body_aa95d4c5dfb9915b12be56304a808db34}{response}};}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_get_response_body}{FilesGetResponseBody}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_get_response_body_a6dff54c08efe72d469dfbab69b25720e}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_get_response_body_a62a69d46f2b667f39d3f33eedf9d4745}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00158\ \ \ \ \ \};}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_list_query_parameters}{FilesListQueryParameters}}\ :\ IJsonSerializable<FilesListQueryParameters>}
+\DoxyCodeLine{00161\ \ \ \ \ \{}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Optional.\ Maximum\ number\ of\ Files\ to\ return\ per\ page.\ If\ unspecified,\ defaults\ to\ 10.\ Maximum\ pageSize\ is\ 100.}}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ std::optional<int>\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_list_query_parameters_ae63a9ed27e61a02d956f0bedcd1d187a}{pageSize}};}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Optional.\ A\ page\ token\ from\ a\ previous\ files.list\ call.}}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ std::optional<std::string>\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_list_query_parameters_ac056960afd1ba05abb053cba4750034d}{pageToken}};}
+\DoxyCodeLine{00166\ }
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_list_query_parameters}{FilesListQueryParameters}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_list_query_parameters_a688e48df4297c181536b32775925cc6b}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_list_query_parameters_a671e444460e972e0f04f86947bda6a30}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00169\ \ \ \ \ \};}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_list_request_body}{FilesListRequestBody}}\ :\ IJsonSerializable<FilesListRequestBody>}
+\DoxyCodeLine{00172\ \ \ \ \ \{}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_list_request_body}{FilesListRequestBody}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_list_request_body_a891079fa9ce62fbb59e7a27a480ba73c}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_list_request_body_a5901ec9a525de72d46ea580dfcb1056f}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00175\ \ \ \ \ \};}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_list_response_body}{FilesListResponseBody}}\ :\ IJsonSerializable<FilesListResponseBody>}
+\DoxyCodeLine{00178\ \ \ \ \ \{}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ The\ list\ of\ Files.}}
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ std::vector<File>\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_list_response_body_aec6364c3d129873c3a95235353a6c9ca}{files}};}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ token\ that\ can\ be\ sent\ as\ a\ pageToken\ into\ a\ subsequent\ files.list\ call.}}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ std::string\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_list_response_body_af9de65a8e425080885da02945eb1f8f4}{nextPageToken}};}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_list_response_body}{FilesListResponseBody}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_list_response_body_a266ca401253303279f274056e95c9f20}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_list_response_body_a26cdfa17cc406faa1af39b7003b65a16}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00186\ \ \ \ \ \};}
+\DoxyCodeLine{00187\ }
+\DoxyCodeLine{00188\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_delete_request_body}{FilesDeleteRequestBody}}\ :\ IJsonSerializable<FilesDeleteRequestBody>}
+\DoxyCodeLine{00189\ \ \ \ \ \{}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_delete_request_body}{FilesDeleteRequestBody}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_delete_request_body_a57e159b015184871ab9513cc47e6c89f}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_delete_request_body_aad430413d2236cd91347edd4ad9b30a3}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00192\ \ \ \ \ \};}
+\DoxyCodeLine{00193\ }
+\DoxyCodeLine{00194\ \ \ \ \ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_delete_response_body}{FilesDeleteResponseBody}}\ :\ IJsonSerializable<FilesDeleteResponseBody>}
+\DoxyCodeLine{00195\ \ \ \ \ \{}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_delete_response_body}{FilesDeleteResponseBody}}\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_delete_response_body_a92e2c95085cd256165fdc286afb57a1d}{fromJson}}(\textcolor{keyword}{const}\ nlohmann::json\&\ j);}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ [[nodiscard]]\ nlohmann::json\ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_files_delete_response_body_a7c9080f4c63a10a231d1508abcff9daf}{toJson}}()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00198\ \ \ \ \ \};}
+\DoxyCodeLine{00199\ \}}
+\DoxyCodeLine{00200\ }
+\DoxyCodeLine{00201\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{//\ GEMINI\_FILES\_API\_TYPES\_H}}
+
+\end{DoxyCode}

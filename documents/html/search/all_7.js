@@ -1,0 +1,26 @@
+var searchData=
+[
+  ['harm_5fcategory_5fdangerous_0',['HARM_CATEGORY_DANGEROUS',['../namespace_gemini_c_p_p.html#ab87106fc78852302e6462fb377d0cefb',1,'GeminiCPP']]],
+  ['harm_5fcategory_5fdangerous_5fcontent_1',['HARM_CATEGORY_DANGEROUS_CONTENT',['../namespace_gemini_c_p_p.html#aa8e9b1fbb15efed7cf377d007ae028c3',1,'GeminiCPP']]],
+  ['harm_5fcategory_5fderogatory_2',['HARM_CATEGORY_DEROGATORY',['../namespace_gemini_c_p_p.html#a956df9368dfa4b2a8809c4e9c64612e6',1,'GeminiCPP']]],
+  ['harm_5fcategory_5fharassment_3',['HARM_CATEGORY_HARASSMENT',['../namespace_gemini_c_p_p.html#a495baac00dda6cae6befb6d476ee9ccc',1,'GeminiCPP']]],
+  ['harm_5fcategory_5fhate_5fspeech_4',['HARM_CATEGORY_HATE_SPEECH',['../namespace_gemini_c_p_p.html#a20d41f2dbdbe862f4a7a48a1c6f136f8',1,'GeminiCPP']]],
+  ['harm_5fcategory_5fimage_5fdangerous_5fcontent_5',['HARM_CATEGORY_IMAGE_DANGEROUS_CONTENT',['../namespace_gemini_c_p_p.html#ad9d008f73bca9f16c91e91d3aab7824d',1,'GeminiCPP']]],
+  ['harm_5fcategory_5fimage_5fharassment_6',['HARM_CATEGORY_IMAGE_HARASSMENT',['../namespace_gemini_c_p_p.html#ae62fdd6a65d07016bd13dd30556081d1',1,'GeminiCPP']]],
+  ['harm_5fcategory_5fimage_5fhate_7',['HARM_CATEGORY_IMAGE_HATE',['../namespace_gemini_c_p_p.html#ab264c77925e4074aa1504030b93277f1',1,'GeminiCPP']]],
+  ['harm_5fcategory_5fimage_5fsexually_5fexplicit_8',['HARM_CATEGORY_IMAGE_SEXUALLY_EXPLICIT',['../namespace_gemini_c_p_p.html#ac3c9d76cd471d1167c73825a7ba5675f',1,'GeminiCPP']]],
+  ['harm_5fcategory_5fmedical_9',['HARM_CATEGORY_MEDICAL',['../namespace_gemini_c_p_p.html#a127af134af9d1aeb68b18b0e0343fa00',1,'GeminiCPP']]],
+  ['harm_5fcategory_5fsexual_10',['HARM_CATEGORY_SEXUAL',['../namespace_gemini_c_p_p.html#a1e5ecd98b31c1c4e99b9adeb16aea76c',1,'GeminiCPP']]],
+  ['harm_5fcategory_5fsexually_5fexplicit_11',['HARM_CATEGORY_SEXUALLY_EXPLICIT',['../namespace_gemini_c_p_p.html#a1c4723ae59a39263f031b05ca0aec40f',1,'GeminiCPP']]],
+  ['harm_5fcategory_5ftoxicity_12',['HARM_CATEGORY_TOXICITY',['../namespace_gemini_c_p_p.html#ac7ba5fb513c7cbd0e256d4f151c39256',1,'GeminiCPP']]],
+  ['harm_5fcategory_5funspecified_13',['HARM_CATEGORY_UNSPECIFIED',['../namespace_gemini_c_p_p.html#aed01b8225bab686d812a44daf3a5aa4e',1,'GeminiCPP']]],
+  ['harm_5fcategory_5fviolence_14',['HARM_CATEGORY_VIOLENCE',['../namespace_gemini_c_p_p.html#a1a6b56b94294de12bc41c660c99a4711',1,'GeminiCPP']]],
+  ['harm_5fprobability_5funspecified_15',['HARM_PROBABILITY_UNSPECIFIED',['../namespace_gemini_c_p_p.html#ab98b7f14982d3de7825bbb936bd763ee',1,'GeminiCPP']]],
+  ['harmcategory_16',['HarmCategory',['../namespace_gemini_c_p_p.html#a1f59a22bd8c42ca01cd92776458d027d',1,'GeminiCPP']]],
+  ['harmprobability_17',['HarmProbability',['../namespace_gemini_c_p_p.html#afdcb25f95f26fc0634d1d26ee4787baa',1,'GeminiCPP']]],
+  ['has_5ffromjson_18',['Has_fromJson',['../struct_gemini_c_p_p_1_1_has__from_json.html',1,'GeminiCPP']]],
+  ['has_5ffromjson_3c_20t_2c_20std_3a_3avoid_5ft_3c_20decltype_28t_3a_3afromjson_28std_3a_3adeclval_3c_20const_20nlohmann_3a_3ajson_20_26_20_3e_28_29_29_29_3e_20_3e_19',['Has_fromJson&lt; T, std::void_t&lt; decltype(T::fromJson(std::declval&lt; const nlohmann::json &amp; &gt;()))&gt; &gt;',['../struct_gemini_c_p_p_1_1_has__from_json_3_01_t_00_01std_1_1void__t_3_01decltype_07_t_1_1from_json85acf026d4bc2af93f1a22b2379275aa.html',1,'GeminiCPP']]],
+  ['history_20',['history',['../class_gemini_c_p_p_1_1_chat_session.html#a75ad6626629b6cf88af7c0da35119409',1,'GeminiCPP::ChatSession']]],
+  ['http_5fmapped_5fstatus_5fcode_2eh_21',['http_mapped_status_code.h',['../http__mapped__status__code_8h.html',1,'']]],
+  ['httpmappedstatuscodehelper_22',['HttpMappedStatusCodeHelper',['../class_gemini_c_p_p_1_1_http_mapped_status_code_helper.html',1,'GeminiCPP']]]
+];

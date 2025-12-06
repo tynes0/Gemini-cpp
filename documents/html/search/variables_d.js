@@ -1,0 +1,22 @@
+var searchData=
+[
+  ['pagesize_0',['pageSize',['../struct_gemini_c_p_p_1_1_list_operations_request.html#ab90f4721d57ccc745747001854d92a9c',1,'GeminiCPP::ListOperationsRequest::pageSize'],['../struct_gemini_c_p_p_1_1_files_list_query_parameters.html#ae63a9ed27e61a02d956f0bedcd1d187a',1,'GeminiCPP::FilesListQueryParameters::pageSize'],['../struct_gemini_c_p_p_1_1_models_list_query_parameters.html#ad90fde0cfee92a2426c877d3103de205',1,'GeminiCPP::ModelsListQueryParameters::pageSize']]],
+  ['pagetoken_1',['pageToken',['../struct_gemini_c_p_p_1_1_list_operations_request.html#aa49bb2a717ae4d4ba9c4b0045f59c570',1,'GeminiCPP::ListOperationsRequest::pageToken'],['../struct_gemini_c_p_p_1_1_files_list_query_parameters.html#ac056960afd1ba05abb053cba4750034d',1,'GeminiCPP::FilesListQueryParameters::pageToken'],['../struct_gemini_c_p_p_1_1_models_list_query_parameters.html#afb877ca364aaebf3371c993227ce06b4',1,'GeminiCPP::ModelsListQueryParameters::pageToken']]],
+  ['parameters_2',['parameters',['../struct_gemini_c_p_p_1_1_function_declaration.html#ac37057aac42eaaf758504b2baa358c14',1,'GeminiCPP::FunctionDeclaration::parameters'],['../struct_gemini_c_p_p_1_1_models_predict_request_body.html#ab1ee43d7fdcbd1a8fdecef2bf85ebbf2',1,'GeminiCPP::ModelsPredictRequestBody::parameters'],['../struct_gemini_c_p_p_1_1_models_predict_long_running_request_body.html#a0f6abca661aa55576460b6f25adf3385',1,'GeminiCPP::ModelsPredictLongRunningRequestBody::parameters']]],
+  ['partindex_3',['partIndex',['../struct_gemini_c_p_p_1_1_segment.html#a6ed7ad0ab9aaef447ac96fe3a5a9d671',1,'GeminiCPP::Segment::partIndex'],['../struct_gemini_c_p_p_1_1_grounding_passage_id.html#a14cd714c00dd01edde5a8f672be1439a',1,'GeminiCPP::GroundingPassageId::partIndex']]],
+  ['partmetadata_4',['partMetadata',['../struct_gemini_c_p_p_1_1_part.html#a18d56d2dbc186780370532472b565140',1,'GeminiCPP::Part']]],
+  ['parts_5',['parts',['../struct_gemini_c_p_p_1_1_function_response.html#ac17c02edd819674619de3fac50d35c3c',1,'GeminiCPP::FunctionResponse::parts'],['../struct_gemini_c_p_p_1_1_content.html#a0beb1855531056e523b67a299c00659d',1,'GeminiCPP::Content::parts']]],
+  ['passageid_6',['passageId',['../struct_gemini_c_p_p_1_1_grounding_passage_id.html#aa8667913795187b72665a079077d6e2c',1,'GeminiCPP::GroundingPassageId']]],
+  ['pendingrequestcount_7',['pendingRequestCount',['../struct_gemini_c_p_p_1_1_batch_stats.html#a4392f5802aa523ca5f465a826a11fac8',1,'GeminiCPP::BatchStats']]],
+  ['placeanswersources_8',['placeAnswerSources',['../struct_gemini_c_p_p_1_1_maps.html#a284850adcab301e999f12e80d38fd416',1,'GeminiCPP::Maps']]],
+  ['placeid_9',['placeId',['../struct_gemini_c_p_p_1_1_maps.html#afdd24f444766f2f2957047d3acac8c70',1,'GeminiCPP::Maps']]],
+  ['predictions_10',['predictions',['../struct_gemini_c_p_p_1_1_models_predict_response_body.html#afe0e25cca1ad43654aca109c4329b671',1,'GeminiCPP::ModelsPredictResponseBody']]],
+  ['presencepenalty_11',['presencePenalty',['../struct_gemini_c_p_p_1_1_generation_config.html#a04f7e685eeee68bf31523cb114b8ce19',1,'GeminiCPP::GenerationConfig']]],
+  ['priority_12',['priority',['../struct_gemini_c_p_p_1_1_generate_content_batch.html#a739820089eade8392184c376bae5027a',1,'GeminiCPP::GenerateContentBatch']]],
+  ['probability_13',['probability',['../struct_gemini_c_p_p_1_1_safety_rating.html#a8bc8ddc6dee4c223982f98c3560e3f0d',1,'GeminiCPP::SafetyRating']]],
+  ['processing_14',['PROCESSING',['../namespace_gemini_c_p_p.html#a4f01d80ffacbdc347b7c5973cea583dc',1,'GeminiCPP']]],
+  ['prohibited_5fcontent_15',['PROHIBITED_CONTENT',['../namespace_gemini_c_p_p.html#aa8165b7dff6a9cc79834d5cb8bf22a79',1,'GeminiCPP']]],
+  ['promptfeedback_16',['promptFeedback',['../struct_gemini_c_p_p_1_1_generate_content_response_body.html#aaa1fc78f4ceae2cc46fb6acd630846e9',1,'GeminiCPP::GenerateContentResponseBody']]],
+  ['prompttokencount_17',['promptTokenCount',['../struct_gemini_c_p_p_1_1_usage_metadata.html#abd25065e8644e3f8ebdaf4d0e36c51fa',1,'GeminiCPP::UsageMetadata']]],
+  ['prompttokensdetails_18',['promptTokensDetails',['../struct_gemini_c_p_p_1_1_usage_metadata.html#aa2414e2c3d3ebb1cb04c37b3f2d17ae8',1,'GeminiCPP::UsageMetadata::promptTokensDetails'],['../struct_gemini_c_p_p_1_1_count_tokens_response_body.html#a7747446e4485b2bc300b654744c92cc5',1,'GeminiCPP::CountTokensResponseBody::promptTokensDetails']]]
+];

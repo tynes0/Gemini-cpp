@@ -1,0 +1,53 @@
+\doxysection{gemini/internal/function\+\_\+utils.h File Reference}
+\hypertarget{function__utils_8h}{}\label{function__utils_8h}\index{gemini/internal/function\_utils.h@{gemini/internal/function\_utils.h}}
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$tuple$>$}\newline
+{\ttfamily \#include $<$type\+\_\+traits$>$}\newline
+{\ttfamily \#include $<$nlohmann/json.\+hpp$>$}\newline
+{\ttfamily \#include "{}frenum.\+h"{}}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_internal_1_1_json_type_traits_3_01std_1_1string_01_4}{Gemini\+CPP\+::\+Internal\+::\+Json\+Type\+Traits$<$ std\+::string $>$}}
+\begin{DoxyCompactList}\small\item\em Specialization for std\+::string. \doxylink{struct_gemini_c_p_p_1_1_maps}{Maps} to \{"{}type"{}\+: "{}string"{}\}. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_internal_1_1_json_type_traits_3_01const_01char_01_5_01_4}{Gemini\+CPP\+::\+Internal\+::\+Json\+Type\+Traits$<$ const char \texorpdfstring{$\ast$}{*} $>$}}
+\begin{DoxyCompactList}\small\item\em Specialization for C-\/strings. \doxylink{struct_gemini_c_p_p_1_1_maps}{Maps} to \{"{}type"{}\+: "{}string"{}\}. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_internal_1_1_json_type_traits_3_01_t_01_4}{Gemini\+CPP\+::\+Internal\+::\+Json\+Type\+Traits$<$ T $>$}}
+\begin{DoxyCompactList}\small\item\em Specialization for integral types (excluding bool). \doxylink{struct_gemini_c_p_p_1_1_maps}{Maps} to \{"{}type"{}\+: "{}integer"{}\}. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_internal_1_1_json_type_traits_3_01bool_01_4}{Gemini\+CPP\+::\+Internal\+::\+Json\+Type\+Traits$<$ bool $>$}}
+\begin{DoxyCompactList}\small\item\em Specialization for boolean. \doxylink{struct_gemini_c_p_p_1_1_maps}{Maps} to \{"{}type"{}\+: "{}boolean"{}\}. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_internal_1_1_json_type_traits_3_01std_1_1vector_3_01_t_01_4_01_4}{Gemini\+CPP\+::\+Internal\+::\+Json\+Type\+Traits$<$ std\+::vector$<$ T $>$ $>$}}
+\begin{DoxyCompactList}\small\item\em Specialization for std\+::vector (arrays). \doxylink{struct_gemini_c_p_p_1_1_maps}{Maps} to \{"{}type"{}\+: "{}array"{}, "{}items"{}\+: ...\}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespace_gemini_c_p_p}{Gemini\+CPP}}
+\item 
+namespace \mbox{\hyperlink{namespace_gemini_c_p_p_1_1_internal}{Gemini\+CPP\+::\+Internal}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{function__utils_8h_ab4ad2ab096b1d9ef3f05c22bb78e9f9e}{GEMINI\+\_\+\+FUNCTION\+\_\+\+UTILS\+\_\+H}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename T$>$ }\\T \mbox{\hyperlink{namespace_gemini_c_p_p_1_1_internal_a630c86201e2a08af5618454ab087bdd2}{Gemini\+CPP\+::\+Internal\+::parse\+Arg}} (const nlohmann\+::json \&j, const std\+::string \&name)
+\begin{DoxyCompactList}\small\item\em Parses a named argument from a JSON object into type T. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Tuple\+Type, std\+::size\+\_\+t... Is$>$ }\\Tuple\+Type \mbox{\hyperlink{namespace_gemini_c_p_p_1_1_internal_a5f6026e2e675dfced9232e108e8048f3}{Gemini\+CPP\+::\+Internal\+::json\+To\+Tuple\+Impl}} (const nlohmann\+::json \&j, const std\+::vector$<$ std\+::string $>$ \&arg\+Names, std\+::index\+\_\+sequence$<$ Is... $>$)
+\item 
+{\footnotesize template$<$typename Tuple\+Type$>$ }\\Tuple\+Type \mbox{\hyperlink{namespace_gemini_c_p_p_1_1_internal_a943063159a5c8a1ba7b272dd3aa0563e}{Gemini\+CPP\+::\+Internal\+::json\+To\+Tuple}} (const nlohmann\+::json \&j, const std\+::vector$<$ std\+::string $>$ \&arg\+Names)
+\begin{DoxyCompactList}\small\item\em Converts a JSON object of arguments into a std\+::tuple matching function signature. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\label{doc-define-members}
+\Hypertarget{function__utils_8h_doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{function__utils_8h_ab4ad2ab096b1d9ef3f05c22bb78e9f9e}\index{function\_utils.h@{function\_utils.h}!GEMINI\_FUNCTION\_UTILS\_H@{GEMINI\_FUNCTION\_UTILS\_H}}
+\index{GEMINI\_FUNCTION\_UTILS\_H@{GEMINI\_FUNCTION\_UTILS\_H}!function\_utils.h@{function\_utils.h}}
+\doxysubsubsection{\texorpdfstring{GEMINI\_FUNCTION\_UTILS\_H}{GEMINI\_FUNCTION\_UTILS\_H}}
+{\footnotesize\ttfamily \label{function__utils_8h_ab4ad2ab096b1d9ef3f05c22bb78e9f9e} 
+\#define GEMINI\+\_\+\+FUNCTION\+\_\+\+UTILS\+\_\+H}
+

@@ -1,0 +1,107 @@
+\doxysection{Gemini\+CPP\+::Cached\+Item\+Info Struct Reference}
+\hypertarget{struct_gemini_c_p_p_1_1_cached_item_info}{}\label{struct_gemini_c_p_p_1_1_cached_item_info}\index{GeminiCPP::CachedItemInfo@{GeminiCPP::CachedItemInfo}}
+
+
+Stores metadata about a cached content item.  
+
+
+
+
+{\ttfamily \#include $<$cache\+\_\+registry.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+nlohmann\+::json \mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_item_info_a4f81bbaba6dcc0824e2fd47c45691172}{to\+Json}} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_item_info}{Cached\+Item\+Info}} \mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_item_info_a4ce3bf45497342027a94b86622b2ca28}{from\+Json}} (const nlohmann\+::json \&j)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::string \mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_item_info_a9979eda0eced875efd361ef2992f71c2}{id}}
+\begin{DoxyCompactList}\small\item\em The unique resource ID (e.\+g., "{}cached\+Contents/xyz"{}). \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_item_info_aef46ce9abb2172e2c89f35cf895e22db}{alias}}
+\begin{DoxyCompactList}\small\item\em User-\/defined friendly name (e.\+g., "{}\+Holiday\+Video"{}). \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_item_info_a42905e33abdcaf9e7122674efb80ddf6}{model}}
+\begin{DoxyCompactList}\small\item\em The model this cache is compatible with. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_item_info_a7f0bb31a72df2372768c30a9d836c951}{expire\+Time}}
+\begin{DoxyCompactList}\small\item\em Expiration timestamp. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Stores metadata about a cached content item. 
+
+
+\begin{DoxyItemize}
+\item This structure is used by the \doxylink{class_gemini_c_p_p_1_1_cache_registry}{Cache\+Registry} to track locally known caches. 
+\end{DoxyItemize}
+
+\label{doc-func-members}
+\Hypertarget{struct_gemini_c_p_p_1_1_cached_item_info_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{struct_gemini_c_p_p_1_1_cached_item_info_a4ce3bf45497342027a94b86622b2ca28}\index{GeminiCPP::CachedItemInfo@{GeminiCPP::CachedItemInfo}!fromJson@{fromJson}}
+\index{fromJson@{fromJson}!GeminiCPP::CachedItemInfo@{GeminiCPP::CachedItemInfo}}
+\doxysubsubsection{\texorpdfstring{fromJson()}{fromJson()}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_cached_item_info_a4ce3bf45497342027a94b86622b2ca28} 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_cached_item_info}{Cached\+Item\+Info}} Gemini\+CPP\+::\+Cached\+Item\+Info\+::from\+Json (\begin{DoxyParamCaption}\item[{const nlohmann\+::json \&}]{j}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_cached_item_info_a4f81bbaba6dcc0824e2fd47c45691172}\index{GeminiCPP::CachedItemInfo@{GeminiCPP::CachedItemInfo}!toJson@{toJson}}
+\index{toJson@{toJson}!GeminiCPP::CachedItemInfo@{GeminiCPP::CachedItemInfo}}
+\doxysubsubsection{\texorpdfstring{toJson()}{toJson()}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_cached_item_info_a4f81bbaba6dcc0824e2fd47c45691172} 
+nlohmann\+::json Gemini\+CPP\+::\+Cached\+Item\+Info\+::to\+Json (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+
+
+\label{doc-variable-members}
+\Hypertarget{struct_gemini_c_p_p_1_1_cached_item_info_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_gemini_c_p_p_1_1_cached_item_info_aef46ce9abb2172e2c89f35cf895e22db}\index{GeminiCPP::CachedItemInfo@{GeminiCPP::CachedItemInfo}!alias@{alias}}
+\index{alias@{alias}!GeminiCPP::CachedItemInfo@{GeminiCPP::CachedItemInfo}}
+\doxysubsubsection{\texorpdfstring{alias}{alias}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_cached_item_info_aef46ce9abb2172e2c89f35cf895e22db} 
+std\+::string Gemini\+CPP\+::\+Cached\+Item\+Info\+::alias}
+
+
+
+User-\/defined friendly name (e.\+g., "{}\+Holiday\+Video"{}). 
+
+\Hypertarget{struct_gemini_c_p_p_1_1_cached_item_info_a7f0bb31a72df2372768c30a9d836c951}\index{GeminiCPP::CachedItemInfo@{GeminiCPP::CachedItemInfo}!expireTime@{expireTime}}
+\index{expireTime@{expireTime}!GeminiCPP::CachedItemInfo@{GeminiCPP::CachedItemInfo}}
+\doxysubsubsection{\texorpdfstring{expireTime}{expireTime}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_cached_item_info_a7f0bb31a72df2372768c30a9d836c951} 
+std\+::string Gemini\+CPP\+::\+Cached\+Item\+Info\+::expire\+Time}
+
+
+
+Expiration timestamp. 
+
+\Hypertarget{struct_gemini_c_p_p_1_1_cached_item_info_a9979eda0eced875efd361ef2992f71c2}\index{GeminiCPP::CachedItemInfo@{GeminiCPP::CachedItemInfo}!id@{id}}
+\index{id@{id}!GeminiCPP::CachedItemInfo@{GeminiCPP::CachedItemInfo}}
+\doxysubsubsection{\texorpdfstring{id}{id}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_cached_item_info_a9979eda0eced875efd361ef2992f71c2} 
+std\+::string Gemini\+CPP\+::\+Cached\+Item\+Info\+::id}
+
+
+
+The unique resource ID (e.\+g., "{}cached\+Contents/xyz"{}). 
+
+\Hypertarget{struct_gemini_c_p_p_1_1_cached_item_info_a42905e33abdcaf9e7122674efb80ddf6}\index{GeminiCPP::CachedItemInfo@{GeminiCPP::CachedItemInfo}!model@{model}}
+\index{model@{model}!GeminiCPP::CachedItemInfo@{GeminiCPP::CachedItemInfo}}
+\doxysubsubsection{\texorpdfstring{model}{model}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_cached_item_info_a42905e33abdcaf9e7122674efb80ddf6} 
+std\+::string Gemini\+CPP\+::\+Cached\+Item\+Info\+::model}
+
+
+
+The model this cache is compatible with. 
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+gemini/\mbox{\hyperlink{cache__registry_8h}{cache\+\_\+registry.\+h}}\end{DoxyCompactItemize}

@@ -1,0 +1,46 @@
+\doxysection{gemini/types\+\_\+base.h File Reference}
+\hypertarget{types__base_8h}{}\label{types__base_8h}\index{gemini/types\_base.h@{gemini/types\_base.h}}
+{\ttfamily \#include $<$nlohmann/json.\+hpp$>$}\newline
+{\ttfamily \#include $<$type\+\_\+traits$>$}\newline
+{\ttfamily \#include $<$utility$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base}{Gemini\+CPP\+::\+IJson\+Serializable\+Base}}
+\begin{DoxyCompactList}\small\item\em Base interface for JSON serialization. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_has__from_json}{Gemini\+CPP\+::\+Has\+\_\+from\+Json$<$ T, typename $>$}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_has__from_json_3_01_t_00_01std_1_1void__t_3_01decltype_07_t_1_1from_json85acf026d4bc2af93f1a22b2379275aa}{Gemini\+CPP\+::\+Has\+\_\+from\+Json$<$ T, std\+::void\+\_\+t$<$ decltype(\+T\+::from\+Json(std\+::declval$<$ const nlohmann\+::json \& $>$()))$>$ $>$}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable}{Gemini\+CPP\+::\+IJson\+Serializable$<$ T $>$}}
+\begin{DoxyCompactList}\small\item\em CRTP (Curiously Recurring Template Pattern) base for JSON serializable types. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_is_json_serializable}{Gemini\+CPP\+::\+Is\+Json\+Serializable$<$ T, typename $>$}}
+\item 
+struct \mbox{\hyperlink{struct_gemini_c_p_p_1_1_is_json_serializable_3_01_t_00_01std_1_1enable__if__t_3_01std_1_1is__bas80aa3d5ec55c2bad7bffa06d0994fb65}{Gemini\+CPP\+::\+Is\+Json\+Serializable$<$ T, std\+::enable\+\_\+if\+\_\+t$<$ std\+::is\+\_\+base\+\_\+of\+\_\+v$<$ IJson\+Serializable$<$ T $>$, T $>$ $>$ $>$}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespace_gemini_c_p_p}{Gemini\+CPP}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Concepts}
+\begin{DoxyCompactItemize}
+\item 
+concept \mbox{\hyperlink{concept_gemini_c_p_p_1_1_json_serializable}{Gemini\+CPP\+::\+Json\+Serializable}}
+\begin{DoxyCompactList}\small\item\em Concept ensuring T inherits from IJson\+Serializable$<$\+T$>$. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{types__base_8h_ac362a3c0e1846b6b3e171e6aeb997c7a}{GEMINI\+\_\+\+TYPES\+\_\+H}}
+\end{DoxyCompactItemize}
+
+
+\label{doc-define-members}
+\Hypertarget{types__base_8h_doc-define-members}
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{types__base_8h_ac362a3c0e1846b6b3e171e6aeb997c7a}\index{types\_base.h@{types\_base.h}!GEMINI\_TYPES\_H@{GEMINI\_TYPES\_H}}
+\index{GEMINI\_TYPES\_H@{GEMINI\_TYPES\_H}!types\_base.h@{types\_base.h}}
+\doxysubsubsection{\texorpdfstring{GEMINI\_TYPES\_H}{GEMINI\_TYPES\_H}}
+{\footnotesize\ttfamily \label{types__base_8h_ac362a3c0e1846b6b3e171e6aeb997c7a} 
+\#define GEMINI\+\_\+\+TYPES\+\_\+H}
+

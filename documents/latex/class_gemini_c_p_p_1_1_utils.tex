@@ -1,0 +1,131 @@
+\doxysection{Gemini\+CPP\+::Utils Class Reference}
+\hypertarget{class_gemini_c_p_p_1_1_utils}{}\label{class_gemini_c_p_p_1_1_utils}\index{GeminiCPP::Utils@{GeminiCPP::Utils}}
+
+
+General utility functions for the library.  
+
+
+
+
+{\ttfamily \#include $<$utils.\+h$>$}
+
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static std\+::string \mbox{\hyperlink{class_gemini_c_p_p_1_1_utils_ab9563766f8caffdb5d12b33d4ab0ba64}{file\+To\+Base64}} (const std\+::string \&filepath)
+\begin{DoxyCompactList}\small\item\em Reads a file and converts its content to a Base64 string. \end{DoxyCompactList}\item 
+static std\+::string \mbox{\hyperlink{class_gemini_c_p_p_1_1_utils_a26366998579d2ae037c1e41eabd0d93a}{get\+Mime\+Type}} (const std\+::string \&filepath)
+\begin{DoxyCompactList}\small\item\em Guesses the MIME type based on file extension. \end{DoxyCompactList}\item 
+static std\+::vector$<$ unsigned char $>$ \mbox{\hyperlink{class_gemini_c_p_p_1_1_utils_ae6a890c8e566753f0ca99dfe1b4e1a9f}{base64\+Decode}} (const std\+::string \&encoded\+\_\+string)
+\begin{DoxyCompactList}\small\item\em Decodes a Base64 string into raw bytes. \end{DoxyCompactList}\item 
+static std\+::string \mbox{\hyperlink{class_gemini_c_p_p_1_1_utils_a88efc9dde1aa225720d5cad24035f88a}{mime\+To\+Extension}} (const std\+::string \&mime\+Type)
+\begin{DoxyCompactList}\small\item\em \doxylink{struct_gemini_c_p_p_1_1_maps}{Maps} a MIME type to a common file extension. \end{DoxyCompactList}\item 
+static std\+::string \mbox{\hyperlink{class_gemini_c_p_p_1_1_utils_a5dd043603de964b040fd3badd5d3f351}{parse\+Error\+Message}} (const std\+::string \&raw\+Json)
+\begin{DoxyCompactList}\small\item\em Parses a JSON error response to extract the user-\/facing message. \end{DoxyCompactList}\item 
+static std\+::string \mbox{\hyperlink{class_gemini_c_p_p_1_1_utils_ac358101de680d4351f6c688d74dc6788}{base64\+Encode}} (const std\+::vector$<$ unsigned char $>$ \&data)
+\begin{DoxyCompactList}\small\item\em Encodes raw bytes into a Base64 string. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+General utility functions for the library. 
+
+\label{doc-func-members}
+\Hypertarget{class_gemini_c_p_p_1_1_utils_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_gemini_c_p_p_1_1_utils_ae6a890c8e566753f0ca99dfe1b4e1a9f}\index{GeminiCPP::Utils@{GeminiCPP::Utils}!base64Decode@{base64Decode}}
+\index{base64Decode@{base64Decode}!GeminiCPP::Utils@{GeminiCPP::Utils}}
+\doxysubsubsection{\texorpdfstring{base64Decode()}{base64Decode()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_utils_ae6a890c8e566753f0ca99dfe1b4e1a9f} 
+std\+::vector$<$ unsigned char $>$ Gemini\+CPP\+::\+Utils\+::base64\+Decode (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{encoded\+\_\+string}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+
+
+Decodes a Base64 string into raw bytes. 
+
+\Hypertarget{class_gemini_c_p_p_1_1_utils_ac358101de680d4351f6c688d74dc6788}\index{GeminiCPP::Utils@{GeminiCPP::Utils}!base64Encode@{base64Encode}}
+\index{base64Encode@{base64Encode}!GeminiCPP::Utils@{GeminiCPP::Utils}}
+\doxysubsubsection{\texorpdfstring{base64Encode()}{base64Encode()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_utils_ac358101de680d4351f6c688d74dc6788} 
+std\+::string Gemini\+CPP\+::\+Utils\+::base64\+Encode (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ unsigned char $>$ \&}]{data}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+
+
+Encodes raw bytes into a Base64 string. 
+
+\Hypertarget{class_gemini_c_p_p_1_1_utils_ab9563766f8caffdb5d12b33d4ab0ba64}\index{GeminiCPP::Utils@{GeminiCPP::Utils}!fileToBase64@{fileToBase64}}
+\index{fileToBase64@{fileToBase64}!GeminiCPP::Utils@{GeminiCPP::Utils}}
+\doxysubsubsection{\texorpdfstring{fileToBase64()}{fileToBase64()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_utils_ab9563766f8caffdb5d12b33d4ab0ba64} 
+std\+::string Gemini\+CPP\+::\+Utils\+::file\+To\+Base64 (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{filepath}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+
+
+Reads a file and converts its content to a Base64 string. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em filepath} & Path to the file. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Base64 encoded string of the file content. 
+\end{DoxyReturn}
+\Hypertarget{class_gemini_c_p_p_1_1_utils_a26366998579d2ae037c1e41eabd0d93a}\index{GeminiCPP::Utils@{GeminiCPP::Utils}!getMimeType@{getMimeType}}
+\index{getMimeType@{getMimeType}!GeminiCPP::Utils@{GeminiCPP::Utils}}
+\doxysubsubsection{\texorpdfstring{getMimeType()}{getMimeType()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_utils_a26366998579d2ae037c1e41eabd0d93a} 
+std\+::string Gemini\+CPP\+::\+Utils\+::get\+Mime\+Type (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{filepath}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+
+
+Guesses the MIME type based on file extension. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em filepath} & Path to the file. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+MIME type string (e.\+g., "{}image/jpeg"{}). Defaults to "{}image/jpeg"{} if unknown. 
+\end{DoxyReturn}
+\Hypertarget{class_gemini_c_p_p_1_1_utils_a88efc9dde1aa225720d5cad24035f88a}\index{GeminiCPP::Utils@{GeminiCPP::Utils}!mimeToExtension@{mimeToExtension}}
+\index{mimeToExtension@{mimeToExtension}!GeminiCPP::Utils@{GeminiCPP::Utils}}
+\doxysubsubsection{\texorpdfstring{mimeToExtension()}{mimeToExtension()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_utils_a88efc9dde1aa225720d5cad24035f88a} 
+std\+::string Gemini\+CPP\+::\+Utils\+::mime\+To\+Extension (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{mime\+Type}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+
+
+\doxylink{struct_gemini_c_p_p_1_1_maps}{Maps} a MIME type to a common file extension. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em mime\+Type} & The MIME type (e.\+g., "{}application/pdf"{}). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\doxylink{struct_gemini_c_p_p_1_1_file}{File} extension including dot (e.\+g., "{}.\+pdf"{}). 
+\end{DoxyReturn}
+\Hypertarget{class_gemini_c_p_p_1_1_utils_a5dd043603de964b040fd3badd5d3f351}\index{GeminiCPP::Utils@{GeminiCPP::Utils}!parseErrorMessage@{parseErrorMessage}}
+\index{parseErrorMessage@{parseErrorMessage}!GeminiCPP::Utils@{GeminiCPP::Utils}}
+\doxysubsubsection{\texorpdfstring{parseErrorMessage()}{parseErrorMessage()}}
+{\footnotesize\ttfamily \label{class_gemini_c_p_p_1_1_utils_a5dd043603de964b040fd3badd5d3f351} 
+std\+::string Gemini\+CPP\+::\+Utils\+::parse\+Error\+Message (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{raw\+Json}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+
+
+Parses a JSON error response to extract the user-\/facing message. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em raw\+Json} & The raw JSON response string. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Extracted error message or the raw JSON if parsing fails. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+gemini/\mbox{\hyperlink{utils_8h}{utils.\+h}}\end{DoxyCompactItemize}

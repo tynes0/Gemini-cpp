@@ -1,0 +1,639 @@
+%!PS-Adobe-2.0 EPSF-2.0
+%%Title: ClassName
+%%Creator: Doxygen
+%%CreationDate: Time
+%%For: 
+%Magnification: 1.00
+%%Orientation: Portrait
+%%BoundingBox: 0 0 500 1778.656128
+%%Pages: 0
+%%BeginSetup
+%%EndSetup
+%%EndComments
+
+% ----- variables -----
+
+/boxwidth 0 def
+/boxheight 40 def
+/fontheight 24 def
+/marginwidth 10 def
+/distx 20 def
+/disty 40 def
+/boundaspect 0.281111 def  % aspect ratio of the BoundingBox (width/height)
+/boundx 500 def
+/boundy boundx boundaspect div def
+/xspacing 0 def
+/yspacing 0 def
+/rows 90 def
+/cols 2 def
+/scalefactor 0 def
+/boxfont /Times-Roman findfont fontheight scalefont def
+
+% ----- procedures -----
+
+/dotted { [1 4] 0 setdash } def
+/dashed { [5] 0 setdash } def
+/solid  { [] 0 setdash } def
+
+/max % result = MAX(arg1,arg2)
+{
+  /a exch def
+  /b exch def
+  a b gt {a} {b} ifelse
+} def
+
+/xoffset % result = MAX(0,(scalefactor-(boxwidth*cols+distx*(cols-1)))/2)
+{
+  0 scalefactor boxwidth cols mul distx cols 1 sub mul add sub 2 div max
+} def
+
+/cw % boxwidth = MAX(boxwidth, stringwidth(arg1))
+{
+  /str exch def
+  /boxwidth boxwidth str stringwidth pop max def
+} def
+
+/box % draws a box with text 'arg1' at grid pos (arg2,arg3)
+{ gsave
+  2 setlinewidth
+  newpath
+  exch xspacing mul xoffset add
+  exch yspacing mul
+  moveto
+  boxwidth 0 rlineto 
+  0 boxheight rlineto 
+  boxwidth neg 0 rlineto 
+  0 boxheight neg rlineto 
+  closepath
+  dup stringwidth pop neg boxwidth add 2 div
+  boxheight fontheight 2 div sub 2 div
+  rmoveto show stroke
+  grestore
+} def  
+
+/mark
+{ newpath
+  exch xspacing mul xoffset add boxwidth add
+  exch yspacing mul
+  moveto
+  0 boxheight 4 div rlineto
+  boxheight neg 4 div boxheight neg 4 div rlineto
+  closepath
+  eofill
+  stroke
+} def
+
+/arrow
+{ newpath
+  moveto
+  3 -8 rlineto
+  -6 0 rlineto
+  3 8 rlineto
+  closepath
+  eofill
+  stroke
+} def
+
+/out % draws an output connector for the block at (arg1,arg2)
+{
+  newpath
+  exch xspacing mul xoffset add boxwidth 2 div add
+  exch yspacing mul boxheight add
+  /y exch def
+  /x exch def
+  x y moveto
+  0 disty 2 div rlineto 
+  stroke
+  1 eq { x y disty 2 div add arrow } if
+} def
+
+/in % draws an input connector for the block at (arg1,arg2)
+{
+  newpath
+  exch xspacing mul xoffset add boxwidth 2 div add
+  exch yspacing mul disty 2 div sub
+  /y exch def
+  /x exch def
+  x y moveto
+  0 disty 2 div rlineto
+  stroke
+  1 eq { x y disty 2 div add arrow } if
+} def
+
+/hedge
+{
+  exch xspacing mul xoffset add boxwidth 2 div add
+  exch yspacing mul boxheight 2 div sub
+  /y exch def
+  /x exch def
+  newpath
+  x y moveto
+  boxwidth 2 div distx add 0 rlineto
+  stroke
+  1 eq
+  { newpath x boxwidth 2 div distx add add y moveto
+    -8 3 rlineto
+    0 -6 rlineto
+    8 3 rlineto
+    closepath
+    eofill
+    stroke
+  } if
+} def
+
+/vedge
+{
+  /ye exch def
+  /ys exch def
+  /xs exch def
+  newpath
+  xs xspacing mul xoffset add boxwidth 2 div add dup
+  ys yspacing mul boxheight 2 div sub
+  moveto
+  ye yspacing mul boxheight 2 div sub
+  lineto
+  stroke
+} def
+
+/conn % connections the blocks from col 'arg1' to 'arg2' of row 'arg3'
+{
+  /ys exch def
+  /xe exch def
+  /xs exch def
+  newpath
+  xs xspacing mul xoffset add boxwidth 2 div add
+  ys yspacing mul disty 2 div sub
+  moveto
+  xspacing xe xs sub mul 0
+  rlineto
+  stroke
+} def
+
+% ----- main ------
+
+boxfont setfont
+1 boundaspect scale
+(GeminiCPP::IJsonSerializableBase) cw
+(GeminiCPP::IJsonSerializable< AttributionSourceId >) cw
+(GeminiCPP::IJsonSerializable< BatchStats >) cw
+(GeminiCPP::IJsonSerializable< BatchesCancelRequestBody >) cw
+(GeminiCPP::IJsonSerializable< BatchesCancelResponseBody >) cw
+(GeminiCPP::IJsonSerializable< BatchesDeleteRequestBody >) cw
+(GeminiCPP::IJsonSerializable< BatchesDeleteResponseBody >) cw
+(GeminiCPP::IJsonSerializable< BatchesGetRequestBody >) cw
+(GeminiCPP::IJsonSerializable< BatchesGetResponseBody >) cw
+(GeminiCPP::IJsonSerializable< BatchesListRequestBody >) cw
+(GeminiCPP::IJsonSerializable< BatchesListResponseBody >) cw
+(GeminiCPP::IJsonSerializable< BatchesUpdateEmbedContentBatchQueryParameters >) cw
+(GeminiCPP::IJsonSerializable< BatchesUpdateEmbedContentBatchRequestBody >) cw
+(GeminiCPP::IJsonSerializable< CitationMetadata >) cw
+(GeminiCPP::IJsonSerializable< CitationSource >) cw
+(GeminiCPP::IJsonSerializable< CountTokensRequestBody >) cw
+(GeminiCPP::IJsonSerializable< CountTokensResponseBody >) cw
+(GeminiCPP::IJsonSerializable< EmbedContentRequest >) cw
+(GeminiCPP::IJsonSerializable< File >) cw
+(GeminiCPP::IJsonSerializable< FilesDeleteRequestBody >) cw
+(GeminiCPP::IJsonSerializable< FilesDeleteResponseBody >) cw
+(GeminiCPP::IJsonSerializable< FilesGetRequestBody >) cw
+(GeminiCPP::IJsonSerializable< FilesGetResponseBody >) cw
+(GeminiCPP::IJsonSerializable< FilesListQueryParameters >) cw
+(GeminiCPP::IJsonSerializable< FilesListRequestBody >) cw
+(GeminiCPP::IJsonSerializable< FilesListResponseBody >) cw
+(GeminiCPP::IJsonSerializable< GenerateContentBatch >) cw
+(GeminiCPP::IJsonSerializable< GenerateContentBatchOutput >) cw
+(GeminiCPP::IJsonSerializable< GenerateContentRequestBody >) cw
+(GeminiCPP::IJsonSerializable< GenerateContentResponseBody >) cw
+(GeminiCPP::IJsonSerializable< GenerationConfig >) cw
+(GeminiCPP::IJsonSerializable< GroundingAttribution >) cw
+(GeminiCPP::IJsonSerializable< GroundingChunk >) cw
+(GeminiCPP::IJsonSerializable< GroundingMetadata >) cw
+(GeminiCPP::IJsonSerializable< GroundingPassageId >) cw
+(GeminiCPP::IJsonSerializable< GroundingSupport >) cw
+(GeminiCPP::IJsonSerializable< ImageConfig >) cw
+(GeminiCPP::IJsonSerializable< InlinedRequest >) cw
+(GeminiCPP::IJsonSerializable< InlinedRequests >) cw
+(GeminiCPP::IJsonSerializable< InlinedResponse >) cw
+(GeminiCPP::IJsonSerializable< InlinedResponses >) cw
+(GeminiCPP::IJsonSerializable< InputConfig >) cw
+(GeminiCPP::IJsonSerializable< ListOperationsRequest >) cw
+(GeminiCPP::IJsonSerializable< ListOperationsResponse >) cw
+(GeminiCPP::IJsonSerializable< LogprobsCandidate >) cw
+(GeminiCPP::IJsonSerializable< LogprobsResult >) cw
+(GeminiCPP::IJsonSerializable< Maps >) cw
+(GeminiCPP::IJsonSerializable< MediaUploadRequestBody >) cw
+(GeminiCPP::IJsonSerializable< MediaUploadResponseBody >) cw
+(GeminiCPP::IJsonSerializable< ModalityTokenCount >) cw
+(GeminiCPP::IJsonSerializable< ModelInfo >) cw
+(GeminiCPP::IJsonSerializable< ModelsAsyncBatchGenerateContentRequestBody >) cw
+(GeminiCPP::IJsonSerializable< ModelsAsyncBatchGenerateContentResponseBody >) cw
+(GeminiCPP::IJsonSerializable< ModelsBatchGenerateContentRequestBody >) cw
+(GeminiCPP::IJsonSerializable< ModelsBatchGenerateContentResponseBody >) cw
+(GeminiCPP::IJsonSerializable< ModelsGetRequestBody >) cw
+(GeminiCPP::IJsonSerializable< ModelsGetResponseBody >) cw
+(GeminiCPP::IJsonSerializable< ModelsListQueryParameters >) cw
+(GeminiCPP::IJsonSerializable< ModelsListRequestBody >) cw
+(GeminiCPP::IJsonSerializable< ModelsListResponseBody >) cw
+(GeminiCPP::IJsonSerializable< ModelsPredictLongRunningRequestBody >) cw
+(GeminiCPP::IJsonSerializable< ModelsPredictLongRunningResponseBody >) cw
+(GeminiCPP::IJsonSerializable< ModelsPredictRequestBody >) cw
+(GeminiCPP::IJsonSerializable< ModelsPredictResponseBody >) cw
+(GeminiCPP::IJsonSerializable< MultiSpeakerVoiceConfig >) cw
+(GeminiCPP::IJsonSerializable< PlaceAnswerSources >) cw
+(GeminiCPP::IJsonSerializable< PrebuiltVoiceConfig >) cw
+(GeminiCPP::IJsonSerializable< PromptFeedback >) cw
+(GeminiCPP::IJsonSerializable< ResponseCandidate >) cw
+(GeminiCPP::IJsonSerializable< RetrievalMetadata >) cw
+(GeminiCPP::IJsonSerializable< RetrievedContext >) cw
+(GeminiCPP::IJsonSerializable< ReviewSnippet >) cw
+(GeminiCPP::IJsonSerializable< SafetyRating >) cw
+(GeminiCPP::IJsonSerializable< SearchEntryPoint >) cw
+(GeminiCPP::IJsonSerializable< Segment >) cw
+(GeminiCPP::IJsonSerializable< SemanticRetrieverChunk >) cw
+(GeminiCPP::IJsonSerializable< SpeakerVoiceConfig >) cw
+(GeminiCPP::IJsonSerializable< SpeechConfig >) cw
+(GeminiCPP::IJsonSerializable< Status >) cw
+(GeminiCPP::IJsonSerializable< StreamGenerateContentRequestBody >) cw
+(GeminiCPP::IJsonSerializable< StreamGenerateContentResponseBody >) cw
+(GeminiCPP::IJsonSerializable< ThinkingConfig >) cw
+(GeminiCPP::IJsonSerializable< TopLogprobsCandidates >) cw
+(GeminiCPP::IJsonSerializable< UrlContextMetadata >) cw
+(GeminiCPP::IJsonSerializable< UrlMetadata >) cw
+(GeminiCPP::IJsonSerializable< UsageMetadata >) cw
+(GeminiCPP::IJsonSerializable< VideoFileMetadata >) cw
+(GeminiCPP::IJsonSerializable< VoiceConfig >) cw
+(GeminiCPP::IJsonSerializable< Web >) cw
+(GeminiCPP::IJsonSerializable< T >) cw
+/boxwidth boxwidth marginwidth 2 mul add def
+/xspacing boxwidth distx add def
+/yspacing boxheight disty add def
+/scalefactor 
+  boxwidth cols mul distx cols 1 sub mul add
+  boxheight rows mul disty rows 1 sub mul add boundaspect mul 
+  max def
+boundx scalefactor div boundy scalefactor div scale
+
+% ----- classes -----
+
+ (GeminiCPP::IJsonSerializableBase) 0.000000 89.000000 box
+ (GeminiCPP::IJsonSerializable< AttributionSourceId >) 1.000000 88.000000 box
+1.000000 88.000000 mark
+ (GeminiCPP::IJsonSerializable< BatchStats >) 1.000000 87.000000 box
+1.000000 87.000000 mark
+ (GeminiCPP::IJsonSerializable< BatchesCancelRequestBody >) 1.000000 86.000000 box
+1.000000 86.000000 mark
+ (GeminiCPP::IJsonSerializable< BatchesCancelResponseBody >) 1.000000 85.000000 box
+1.000000 85.000000 mark
+ (GeminiCPP::IJsonSerializable< BatchesDeleteRequestBody >) 1.000000 84.000000 box
+1.000000 84.000000 mark
+ (GeminiCPP::IJsonSerializable< BatchesDeleteResponseBody >) 1.000000 83.000000 box
+1.000000 83.000000 mark
+ (GeminiCPP::IJsonSerializable< BatchesGetRequestBody >) 1.000000 82.000000 box
+1.000000 82.000000 mark
+ (GeminiCPP::IJsonSerializable< BatchesGetResponseBody >) 1.000000 81.000000 box
+1.000000 81.000000 mark
+ (GeminiCPP::IJsonSerializable< BatchesListRequestBody >) 1.000000 80.000000 box
+1.000000 80.000000 mark
+ (GeminiCPP::IJsonSerializable< BatchesListResponseBody >) 1.000000 79.000000 box
+1.000000 79.000000 mark
+ (GeminiCPP::IJsonSerializable< BatchesUpdateEmbedContentBatchQueryParameters >) 1.000000 78.000000 box
+1.000000 78.000000 mark
+ (GeminiCPP::IJsonSerializable< BatchesUpdateEmbedContentBatchRequestBody >) 1.000000 77.000000 box
+1.000000 77.000000 mark
+ (GeminiCPP::IJsonSerializable< CitationMetadata >) 1.000000 76.000000 box
+1.000000 76.000000 mark
+ (GeminiCPP::IJsonSerializable< CitationSource >) 1.000000 75.000000 box
+1.000000 75.000000 mark
+ (GeminiCPP::IJsonSerializable< CountTokensRequestBody >) 1.000000 74.000000 box
+1.000000 74.000000 mark
+ (GeminiCPP::IJsonSerializable< CountTokensResponseBody >) 1.000000 73.000000 box
+1.000000 73.000000 mark
+ (GeminiCPP::IJsonSerializable< EmbedContentRequest >) 1.000000 72.000000 box
+1.000000 72.000000 mark
+ (GeminiCPP::IJsonSerializable< File >) 1.000000 71.000000 box
+1.000000 71.000000 mark
+ (GeminiCPP::IJsonSerializable< FilesDeleteRequestBody >) 1.000000 70.000000 box
+1.000000 70.000000 mark
+ (GeminiCPP::IJsonSerializable< FilesDeleteResponseBody >) 1.000000 69.000000 box
+1.000000 69.000000 mark
+ (GeminiCPP::IJsonSerializable< FilesGetRequestBody >) 1.000000 68.000000 box
+1.000000 68.000000 mark
+ (GeminiCPP::IJsonSerializable< FilesGetResponseBody >) 1.000000 67.000000 box
+1.000000 67.000000 mark
+ (GeminiCPP::IJsonSerializable< FilesListQueryParameters >) 1.000000 66.000000 box
+1.000000 66.000000 mark
+ (GeminiCPP::IJsonSerializable< FilesListRequestBody >) 1.000000 65.000000 box
+1.000000 65.000000 mark
+ (GeminiCPP::IJsonSerializable< FilesListResponseBody >) 1.000000 64.000000 box
+1.000000 64.000000 mark
+ (GeminiCPP::IJsonSerializable< GenerateContentBatch >) 1.000000 63.000000 box
+1.000000 63.000000 mark
+ (GeminiCPP::IJsonSerializable< GenerateContentBatchOutput >) 1.000000 62.000000 box
+1.000000 62.000000 mark
+ (GeminiCPP::IJsonSerializable< GenerateContentRequestBody >) 1.000000 61.000000 box
+1.000000 61.000000 mark
+ (GeminiCPP::IJsonSerializable< GenerateContentResponseBody >) 1.000000 60.000000 box
+1.000000 60.000000 mark
+ (GeminiCPP::IJsonSerializable< GenerationConfig >) 1.000000 59.000000 box
+1.000000 59.000000 mark
+ (GeminiCPP::IJsonSerializable< GroundingAttribution >) 1.000000 58.000000 box
+1.000000 58.000000 mark
+ (GeminiCPP::IJsonSerializable< GroundingChunk >) 1.000000 57.000000 box
+1.000000 57.000000 mark
+ (GeminiCPP::IJsonSerializable< GroundingMetadata >) 1.000000 56.000000 box
+1.000000 56.000000 mark
+ (GeminiCPP::IJsonSerializable< GroundingPassageId >) 1.000000 55.000000 box
+1.000000 55.000000 mark
+ (GeminiCPP::IJsonSerializable< GroundingSupport >) 1.000000 54.000000 box
+1.000000 54.000000 mark
+ (GeminiCPP::IJsonSerializable< ImageConfig >) 1.000000 53.000000 box
+1.000000 53.000000 mark
+ (GeminiCPP::IJsonSerializable< InlinedRequest >) 1.000000 52.000000 box
+1.000000 52.000000 mark
+ (GeminiCPP::IJsonSerializable< InlinedRequests >) 1.000000 51.000000 box
+1.000000 51.000000 mark
+ (GeminiCPP::IJsonSerializable< InlinedResponse >) 1.000000 50.000000 box
+1.000000 50.000000 mark
+ (GeminiCPP::IJsonSerializable< InlinedResponses >) 1.000000 49.000000 box
+1.000000 49.000000 mark
+ (GeminiCPP::IJsonSerializable< InputConfig >) 1.000000 48.000000 box
+1.000000 48.000000 mark
+ (GeminiCPP::IJsonSerializable< ListOperationsRequest >) 1.000000 47.000000 box
+1.000000 47.000000 mark
+ (GeminiCPP::IJsonSerializable< ListOperationsResponse >) 1.000000 46.000000 box
+1.000000 46.000000 mark
+ (GeminiCPP::IJsonSerializable< LogprobsCandidate >) 1.000000 45.000000 box
+1.000000 45.000000 mark
+ (GeminiCPP::IJsonSerializable< LogprobsResult >) 1.000000 44.000000 box
+1.000000 44.000000 mark
+ (GeminiCPP::IJsonSerializable< Maps >) 1.000000 43.000000 box
+1.000000 43.000000 mark
+ (GeminiCPP::IJsonSerializable< MediaUploadRequestBody >) 1.000000 42.000000 box
+1.000000 42.000000 mark
+ (GeminiCPP::IJsonSerializable< MediaUploadResponseBody >) 1.000000 41.000000 box
+1.000000 41.000000 mark
+ (GeminiCPP::IJsonSerializable< ModalityTokenCount >) 1.000000 40.000000 box
+1.000000 40.000000 mark
+ (GeminiCPP::IJsonSerializable< ModelInfo >) 1.000000 39.000000 box
+1.000000 39.000000 mark
+ (GeminiCPP::IJsonSerializable< ModelsAsyncBatchGenerateContentRequestBody >) 1.000000 38.000000 box
+1.000000 38.000000 mark
+ (GeminiCPP::IJsonSerializable< ModelsAsyncBatchGenerateContentResponseBody >) 1.000000 37.000000 box
+1.000000 37.000000 mark
+ (GeminiCPP::IJsonSerializable< ModelsBatchGenerateContentRequestBody >) 1.000000 36.000000 box
+1.000000 36.000000 mark
+ (GeminiCPP::IJsonSerializable< ModelsBatchGenerateContentResponseBody >) 1.000000 35.000000 box
+1.000000 35.000000 mark
+ (GeminiCPP::IJsonSerializable< ModelsGetRequestBody >) 1.000000 34.000000 box
+1.000000 34.000000 mark
+ (GeminiCPP::IJsonSerializable< ModelsGetResponseBody >) 1.000000 33.000000 box
+1.000000 33.000000 mark
+ (GeminiCPP::IJsonSerializable< ModelsListQueryParameters >) 1.000000 32.000000 box
+1.000000 32.000000 mark
+ (GeminiCPP::IJsonSerializable< ModelsListRequestBody >) 1.000000 31.000000 box
+1.000000 31.000000 mark
+ (GeminiCPP::IJsonSerializable< ModelsListResponseBody >) 1.000000 30.000000 box
+1.000000 30.000000 mark
+ (GeminiCPP::IJsonSerializable< ModelsPredictLongRunningRequestBody >) 1.000000 29.000000 box
+1.000000 29.000000 mark
+ (GeminiCPP::IJsonSerializable< ModelsPredictLongRunningResponseBody >) 1.000000 28.000000 box
+1.000000 28.000000 mark
+ (GeminiCPP::IJsonSerializable< ModelsPredictRequestBody >) 1.000000 27.000000 box
+1.000000 27.000000 mark
+ (GeminiCPP::IJsonSerializable< ModelsPredictResponseBody >) 1.000000 26.000000 box
+1.000000 26.000000 mark
+ (GeminiCPP::IJsonSerializable< MultiSpeakerVoiceConfig >) 1.000000 25.000000 box
+1.000000 25.000000 mark
+ (GeminiCPP::IJsonSerializable< PlaceAnswerSources >) 1.000000 24.000000 box
+1.000000 24.000000 mark
+ (GeminiCPP::IJsonSerializable< PrebuiltVoiceConfig >) 1.000000 23.000000 box
+1.000000 23.000000 mark
+ (GeminiCPP::IJsonSerializable< PromptFeedback >) 1.000000 22.000000 box
+1.000000 22.000000 mark
+ (GeminiCPP::IJsonSerializable< ResponseCandidate >) 1.000000 21.000000 box
+1.000000 21.000000 mark
+ (GeminiCPP::IJsonSerializable< RetrievalMetadata >) 1.000000 20.000000 box
+1.000000 20.000000 mark
+ (GeminiCPP::IJsonSerializable< RetrievedContext >) 1.000000 19.000000 box
+1.000000 19.000000 mark
+ (GeminiCPP::IJsonSerializable< ReviewSnippet >) 1.000000 18.000000 box
+1.000000 18.000000 mark
+ (GeminiCPP::IJsonSerializable< SafetyRating >) 1.000000 17.000000 box
+1.000000 17.000000 mark
+ (GeminiCPP::IJsonSerializable< SearchEntryPoint >) 1.000000 16.000000 box
+1.000000 16.000000 mark
+ (GeminiCPP::IJsonSerializable< Segment >) 1.000000 15.000000 box
+1.000000 15.000000 mark
+ (GeminiCPP::IJsonSerializable< SemanticRetrieverChunk >) 1.000000 14.000000 box
+1.000000 14.000000 mark
+ (GeminiCPP::IJsonSerializable< SpeakerVoiceConfig >) 1.000000 13.000000 box
+1.000000 13.000000 mark
+ (GeminiCPP::IJsonSerializable< SpeechConfig >) 1.000000 12.000000 box
+1.000000 12.000000 mark
+ (GeminiCPP::IJsonSerializable< Status >) 1.000000 11.000000 box
+1.000000 11.000000 mark
+ (GeminiCPP::IJsonSerializable< StreamGenerateContentRequestBody >) 1.000000 10.000000 box
+1.000000 10.000000 mark
+ (GeminiCPP::IJsonSerializable< StreamGenerateContentResponseBody >) 1.000000 9.000000 box
+1.000000 9.000000 mark
+ (GeminiCPP::IJsonSerializable< ThinkingConfig >) 1.000000 8.000000 box
+1.000000 8.000000 mark
+ (GeminiCPP::IJsonSerializable< TopLogprobsCandidates >) 1.000000 7.000000 box
+1.000000 7.000000 mark
+ (GeminiCPP::IJsonSerializable< UrlContextMetadata >) 1.000000 6.000000 box
+1.000000 6.000000 mark
+ (GeminiCPP::IJsonSerializable< UrlMetadata >) 1.000000 5.000000 box
+1.000000 5.000000 mark
+ (GeminiCPP::IJsonSerializable< UsageMetadata >) 1.000000 4.000000 box
+1.000000 4.000000 mark
+ (GeminiCPP::IJsonSerializable< VideoFileMetadata >) 1.000000 3.000000 box
+1.000000 3.000000 mark
+ (GeminiCPP::IJsonSerializable< VoiceConfig >) 1.000000 2.000000 box
+1.000000 2.000000 mark
+ (GeminiCPP::IJsonSerializable< Web >) 1.000000 1.000000 box
+1.000000 1.000000 mark
+ (GeminiCPP::IJsonSerializable< T >) 1.000000 0.000000 box
+
+% ----- relations -----
+
+solid
+1 0.000000 88.250000 out
+solid
+0 0.000000 88.500000 hedge
+solid
+0 0.000000 87.500000 hedge
+solid
+0 0.000000 86.500000 hedge
+solid
+0 0.000000 85.500000 hedge
+solid
+0 0.000000 84.500000 hedge
+solid
+0 0.000000 83.500000 hedge
+solid
+0 0.000000 82.500000 hedge
+solid
+0 0.000000 81.500000 hedge
+solid
+0 0.000000 80.500000 hedge
+solid
+0 0.000000 79.500000 hedge
+solid
+0 0.000000 78.500000 hedge
+solid
+0 0.000000 77.500000 hedge
+solid
+0 0.000000 76.500000 hedge
+solid
+0 0.000000 75.500000 hedge
+solid
+0 0.000000 74.500000 hedge
+solid
+0 0.000000 73.500000 hedge
+solid
+0 0.000000 72.500000 hedge
+solid
+0 0.000000 71.500000 hedge
+solid
+0 0.000000 70.500000 hedge
+solid
+0 0.000000 69.500000 hedge
+solid
+0 0.000000 68.500000 hedge
+solid
+0 0.000000 67.500000 hedge
+solid
+0 0.000000 66.500000 hedge
+solid
+0 0.000000 65.500000 hedge
+solid
+0 0.000000 64.500000 hedge
+solid
+0 0.000000 63.500000 hedge
+solid
+0 0.000000 62.500000 hedge
+solid
+0 0.000000 61.500000 hedge
+solid
+0 0.000000 60.500000 hedge
+solid
+0 0.000000 59.500000 hedge
+solid
+0 0.000000 58.500000 hedge
+solid
+0 0.000000 57.500000 hedge
+solid
+0 0.000000 56.500000 hedge
+solid
+0 0.000000 55.500000 hedge
+solid
+0 0.000000 54.500000 hedge
+solid
+0 0.000000 53.500000 hedge
+solid
+0 0.000000 52.500000 hedge
+solid
+0 0.000000 51.500000 hedge
+solid
+0 0.000000 50.500000 hedge
+solid
+0 0.000000 49.500000 hedge
+solid
+0 0.000000 48.500000 hedge
+solid
+0 0.000000 47.500000 hedge
+solid
+0 0.000000 46.500000 hedge
+solid
+0 0.000000 45.500000 hedge
+solid
+0 0.000000 44.500000 hedge
+solid
+0 0.000000 43.500000 hedge
+solid
+0 0.000000 42.500000 hedge
+solid
+0 0.000000 41.500000 hedge
+solid
+0 0.000000 40.500000 hedge
+solid
+0 0.000000 39.500000 hedge
+solid
+0 0.000000 38.500000 hedge
+solid
+0 0.000000 37.500000 hedge
+solid
+0 0.000000 36.500000 hedge
+solid
+0 0.000000 35.500000 hedge
+solid
+0 0.000000 34.500000 hedge
+solid
+0 0.000000 33.500000 hedge
+solid
+0 0.000000 32.500000 hedge
+solid
+0 0.000000 31.500000 hedge
+solid
+0 0.000000 30.500000 hedge
+solid
+0 0.000000 29.500000 hedge
+solid
+0 0.000000 28.500000 hedge
+solid
+0 0.000000 27.500000 hedge
+solid
+0 0.000000 26.500000 hedge
+solid
+0 0.000000 25.500000 hedge
+solid
+0 0.000000 24.500000 hedge
+solid
+0 0.000000 23.500000 hedge
+solid
+0 0.000000 22.500000 hedge
+solid
+0 0.000000 21.500000 hedge
+solid
+0 0.000000 20.500000 hedge
+solid
+0 0.000000 19.500000 hedge
+solid
+0 0.000000 18.500000 hedge
+solid
+0 0.000000 17.500000 hedge
+solid
+0 0.000000 16.500000 hedge
+solid
+0 0.000000 15.500000 hedge
+solid
+0 0.000000 14.500000 hedge
+solid
+0 0.000000 13.500000 hedge
+solid
+0 0.000000 12.500000 hedge
+solid
+0 0.000000 11.500000 hedge
+solid
+0 0.000000 10.500000 hedge
+solid
+0 0.000000 9.500000 hedge
+solid
+0 0.000000 8.500000 hedge
+solid
+0 0.000000 7.500000 hedge
+solid
+0 0.000000 6.500000 hedge
+solid
+0 0.000000 5.500000 hedge
+solid
+0 0.000000 4.500000 hedge
+solid
+0 0.000000 3.500000 hedge
+solid
+0 0.000000 2.500000 hedge
+solid
+0 0.000000 1.500000 hedge
+solid
+0 0.000000 0.500000 hedge
+solid
+0.000000 89.000000 0.500000 vedge

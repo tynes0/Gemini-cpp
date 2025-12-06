@@ -1,0 +1,107 @@
+\doxysection{Gemini\+CPP\+::Grounding\+Support Struct Reference}
+\hypertarget{struct_gemini_c_p_p_1_1_grounding_support}{}\label{struct_gemini_c_p_p_1_1_grounding_support}\index{GeminiCPP::GroundingSupport@{GeminiCPP::GroundingSupport}}
+
+
+{\ttfamily \#include $<$generating\+\_\+content\+\_\+api\+\_\+types.\+h$>$}
+
+Inheritance diagram for Gemini\+CPP\+::Grounding\+Support\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{struct_gemini_c_p_p_1_1_grounding_support}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+nlohmann\+::json \mbox{\hyperlink{struct_gemini_c_p_p_1_1_grounding_support_a3890fc5bd96d679673df66d8ed09ae8e}{to\+Json}} () const override
+\begin{DoxyCompactList}\small\item\em Serializes the object to a JSON object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable}{Gemini\+CPP\+::\+IJson\+Serializable$<$ Grounding\+Support $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_a9290639730d57a664f234d0e22663445}{\texorpdfstring{$\sim$}{\string~}\+IJson\+Serializable}} () override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base}{Gemini\+CPP\+::\+IJson\+Serializable\+Base}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_a33a5e14171e7ac30e7a60c08e4b3ff56}{IJson\+Serializable\+Base}} ()=default
+\item 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_a12c497695248fc4982d27a892bd39413}{IJson\+Serializable\+Base}} (const IJson\+Serializable\+Base \&)=default
+\item 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_a33a5e14171e7ac30e7a60c08e4b3ff56}{IJson\+Serializable\+Base}} \& \mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_aa632ce755a4b188693385bf976cf8ed6}{operator=}} (const \mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_a33a5e14171e7ac30e7a60c08e4b3ff56}{IJson\+Serializable\+Base}} \&)=default
+\item 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_a670261cbf43f27e63e3453ba575b48bf}{IJson\+Serializable\+Base}} (IJson\+Serializable\+Base \&\&)=default
+\item 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_a33a5e14171e7ac30e7a60c08e4b3ff56}{IJson\+Serializable\+Base}} \& \mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_af1491b2b2a4836f8013f3c0ce2f9cc05}{operator=}} (\mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_a33a5e14171e7ac30e7a60c08e4b3ff56}{IJson\+Serializable\+Base}} \&\&)=default
+\item 
+virtual \mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_af8f2d3e3039b9797b62e7792cab5c93c}{\texorpdfstring{$\sim$}{\string~}\+IJson\+Serializable\+Base}} ()=default
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{struct_gemini_c_p_p_1_1_grounding_support}{Grounding\+Support}} \mbox{\hyperlink{struct_gemini_c_p_p_1_1_grounding_support_a8474cfb5fc7190e2cf74545a44942fa1}{from\+Json}} (const nlohmann\+::json \&j)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ int $>$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_grounding_support_a2f7ac50b68e44e7861a3772fb36ce24a}{grounding\+Chunk\+Indices}}
+\item 
+std\+::vector$<$ float $>$ \mbox{\hyperlink{struct_gemini_c_p_p_1_1_grounding_support_a92ece45bcfb41312f4653bd0abd46cbf}{confidence\+Scores}}
+\item 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_segment}{Segment}} \mbox{\hyperlink{struct_gemini_c_p_p_1_1_grounding_support_a0309ec07b725623f73780b65d5fbebb3}{segment}}
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{struct_gemini_c_p_p_1_1_grounding_support_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{struct_gemini_c_p_p_1_1_grounding_support_a8474cfb5fc7190e2cf74545a44942fa1}\index{GeminiCPP::GroundingSupport@{GeminiCPP::GroundingSupport}!fromJson@{fromJson}}
+\index{fromJson@{fromJson}!GeminiCPP::GroundingSupport@{GeminiCPP::GroundingSupport}}
+\doxysubsubsection{\texorpdfstring{fromJson()}{fromJson()}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_grounding_support_a8474cfb5fc7190e2cf74545a44942fa1} 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_grounding_support}{Grounding\+Support}} Gemini\+CPP\+::\+Grounding\+Support\+::from\+Json (\begin{DoxyParamCaption}\item[{const nlohmann\+::json \&}]{j}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [nodiscard]}}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_grounding_support_a3890fc5bd96d679673df66d8ed09ae8e}\index{GeminiCPP::GroundingSupport@{GeminiCPP::GroundingSupport}!toJson@{toJson}}
+\index{toJson@{toJson}!GeminiCPP::GroundingSupport@{GeminiCPP::GroundingSupport}}
+\doxysubsubsection{\texorpdfstring{toJson()}{toJson()}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_grounding_support_a3890fc5bd96d679673df66d8ed09ae8e} 
+nlohmann\+::json Gemini\+CPP\+::\+Grounding\+Support\+::to\+Json (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Serializes the object to a JSON object. 
+
+\begin{DoxyReturn}{Returns}
+nlohmann\+::json representation of the object. 
+\end{DoxyReturn}
+
+
+Implements \mbox{\hyperlink{struct_gemini_c_p_p_1_1_i_json_serializable_base_ae730d0a60d1b1566ef6b283ab19aae56}{Gemini\+CPP\+::\+IJson\+Serializable\+Base}}.
+
+
+
+\label{doc-variable-members}
+\Hypertarget{struct_gemini_c_p_p_1_1_grounding_support_doc-variable-members}
+\doxysubsection{Member Data Documentation}
+\Hypertarget{struct_gemini_c_p_p_1_1_grounding_support_a92ece45bcfb41312f4653bd0abd46cbf}\index{GeminiCPP::GroundingSupport@{GeminiCPP::GroundingSupport}!confidenceScores@{confidenceScores}}
+\index{confidenceScores@{confidenceScores}!GeminiCPP::GroundingSupport@{GeminiCPP::GroundingSupport}}
+\doxysubsubsection{\texorpdfstring{confidenceScores}{confidenceScores}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_grounding_support_a92ece45bcfb41312f4653bd0abd46cbf} 
+std\+::vector$<$float$>$ Gemini\+CPP\+::\+Grounding\+Support\+::confidence\+Scores}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_grounding_support_a2f7ac50b68e44e7861a3772fb36ce24a}\index{GeminiCPP::GroundingSupport@{GeminiCPP::GroundingSupport}!groundingChunkIndices@{groundingChunkIndices}}
+\index{groundingChunkIndices@{groundingChunkIndices}!GeminiCPP::GroundingSupport@{GeminiCPP::GroundingSupport}}
+\doxysubsubsection{\texorpdfstring{groundingChunkIndices}{groundingChunkIndices}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_grounding_support_a2f7ac50b68e44e7861a3772fb36ce24a} 
+std\+::vector$<$int$>$ Gemini\+CPP\+::\+Grounding\+Support\+::grounding\+Chunk\+Indices}
+
+\Hypertarget{struct_gemini_c_p_p_1_1_grounding_support_a0309ec07b725623f73780b65d5fbebb3}\index{GeminiCPP::GroundingSupport@{GeminiCPP::GroundingSupport}!segment@{segment}}
+\index{segment@{segment}!GeminiCPP::GroundingSupport@{GeminiCPP::GroundingSupport}}
+\doxysubsubsection{\texorpdfstring{segment}{segment}}
+{\footnotesize\ttfamily \label{struct_gemini_c_p_p_1_1_grounding_support_a0309ec07b725623f73780b65d5fbebb3} 
+\mbox{\hyperlink{struct_gemini_c_p_p_1_1_segment}{Segment}} Gemini\+CPP\+::\+Grounding\+Support\+::segment}
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+gemini/types/\mbox{\hyperlink{generating__content__api__types_8h}{generating\+\_\+content\+\_\+api\+\_\+types.\+h}}\end{DoxyCompactItemize}

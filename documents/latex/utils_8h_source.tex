@@ -1,0 +1,35 @@
+\doxysection{utils.\+h}
+\hypertarget{utils_8h_source}{}\label{utils_8h_source}\index{gemini/utils.h@{gemini/utils.h}}
+\mbox{\hyperlink{utils_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#ifndef\ GEMINI\_UTILS\_H}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#define\ GEMINI\_UTILS\_H}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <filesystem>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_gemini_c_p_p}{GeminiCPP}}}
+\DoxyCodeLine{00011\ \{}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_gemini_c_p_p_1_1_utils}{Utils}}}
+\DoxyCodeLine{00016\ \ \ \ \ \{}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::string\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_utils_ab9563766f8caffdb5d12b33d4ab0ba64}{fileToBase64}}(\textcolor{keyword}{const}\ std::string\&\ filepath);}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::string\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_utils_a26366998579d2ae037c1e41eabd0d93a}{getMimeType}}(\textcolor{keyword}{const}\ std::string\&\ filepath);}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::vector<unsigned\ char>\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_utils_ae6a890c8e566753f0ca99dfe1b4e1a9f}{base64Decode}}(\textcolor{keyword}{const}\ std::string\&\ encoded\_string);}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::string\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_utils_a88efc9dde1aa225720d5cad24035f88a}{mimeToExtension}}(\textcolor{keyword}{const}\ std::string\&\ mimeType);}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::string\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_utils_a5dd043603de964b040fd3badd5d3f351}{parseErrorMessage}}(\textcolor{keyword}{const}\ std::string\&\ rawJson);}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{static}\ std::string\ \mbox{\hyperlink{class_gemini_c_p_p_1_1_utils_ac358101de680d4351f6c688d74dc6788}{base64Encode}}(\textcolor{keyword}{const}\ std::vector<unsigned\ char>\&\ data);}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ \};}
+\DoxyCodeLine{00057\ \}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}
