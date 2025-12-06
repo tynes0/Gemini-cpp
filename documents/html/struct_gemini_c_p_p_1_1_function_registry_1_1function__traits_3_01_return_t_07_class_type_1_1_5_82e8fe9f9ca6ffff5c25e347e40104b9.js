@@ -1,5 +1,0 @@
-var struct_gemini_c_p_p_1_1_function_registry_1_1function__traits_3_01_return_t_07_class_type_1_1_5_82e8fe9f9ca6ffff5c25e347e40104b9 =
-[
-    [ "ArgsTuple", "struct_gemini_c_p_p_1_1_function_registry_1_1function__traits_3_01_return_t_07_class_type_1_1_5_82e8fe9f9ca6ffff5c25e347e40104b9.html#ae95b2a097287446403047818f740e148", null ],
-    [ "ReturnType", "struct_gemini_c_p_p_1_1_function_registry_1_1function__traits_3_01_return_t_07_class_type_1_1_5_82e8fe9f9ca6ffff5c25e347e40104b9.html#a8087b2c3035fcc0b50fa2992e973d019", null ]
-];
